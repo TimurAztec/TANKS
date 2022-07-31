@@ -1,12 +1,11 @@
-import {Loader, Sprite, TextStyle, Text} from "pixi.js";
-import {ISceneView} from "../interfaces";
+import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
-import {View} from "../view";
-import {MenuScene} from "./menu-scene-controller";
+import {GameScene} from "../game/game-scene";
+import {Loader, Sprite, Text, TextStyle} from "pixi.js";
+import {EventManager} from "../../event-manager";
 
-export class MenuSceneView extends View implements ISceneView {
+export class MenuScene extends Scene {
 
-    // for making our loader graphics...
     protected startButton: Sprite;
     protected scoreButton: Sprite;
     protected logoText: Text;
@@ -47,11 +46,12 @@ export class MenuSceneView extends View implements ISceneView {
 
     protected initActions() {
         this.startButton.on('click', () => {
-            (this.controller as MenuScene).startGame();
+            this.startGame();
         });
     }
 
-    public update(dt: number): void {
-
+    public startGame(): void {
+        SceneManager.changeScene(new GameScene());
     }
+
 }

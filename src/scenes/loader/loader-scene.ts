@@ -1,15 +1,31 @@
-import {Loader, Sprite} from "pixi.js";
+import {Loader, LoaderResource, Sprite} from "pixi.js";
+import type { Dict } from '@pixi/utils';
+import {Scene} from "../scene";
 import {ISceneView} from "../interfaces";
 import {SceneManager} from "../../scene-manager";
-import {View} from "../view";
+import {MenuScene} from "../menu/menu-scene";
+// @ts-ignore
+import {assets, loaderAssets} from "../../../assets/assets";
 
-export class LoaderSceneView extends View implements ISceneView {
+export class LoaderScene extends Scene {
 
-    // for making our loader graphics...
     protected loaderBar: Sprite;
     protected loaderBarMask: Sprite;
     protected loaderBarBg: Sprite;
-    protected progress: number;
+
+    constructor() {
+        super()
+        Loader.shared.add(loaderAssets);
+        Loader.shared.load((loader: Loader, resources: Dict<LoaderResource>) => {
+            this.initLoader();
+
+            Loader.shared.add(assets);
+            Loader.shared.onProgress.add(this.loaderProgress, this);
+            Loader.shared.onComplete.once(this.gameLoaded, this);
+            Loader.shared.load();
+        });
+
+    }
 
     public initLoader(): void {
         this.loaderBarBg = new Sprite(Loader.shared.resources['loader_bg'].texture);
@@ -34,13 +50,11 @@ export class LoaderSceneView extends View implements ISceneView {
         this.addChild(this.loaderBarMask);
     }
 
-    public updateProgress(progress: number): void {
-        this.progress = progress;
+    private loaderProgress(loader: Loader): void {
+        this.loaderBarMask.width = this.loaderBar.width * (loader.progress / 100);
     }
 
-    public update(dt: number): void {
-        if (this.loaderBarMask) {
-            this.loaderBarMask.width = this.loaderBar.width * this.progress;
-        }
+    private gameLoaded(): void {
+        SceneManager.changeScene(new MenuScene());
     }
 }

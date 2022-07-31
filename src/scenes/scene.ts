@@ -1,16 +1,18 @@
-import {IScene, ISceneView} from "./interfaces";
+import {Container} from "pixi.js";
 
-export abstract class Scene implements IScene {
+export abstract class Scene extends Container {
+    protected paused: boolean = false;
 
-    protected _view: ISceneView;
-
-    public get view(): ISceneView {
-        return this._view;
+    public pause(): void {
+        this.paused = true;
     }
 
-    constructor(view: ISceneView) {
-        this._view = view;
-        this._view.controller = this;
+    public resume(): void {
+        this.paused = false;
+    }
+
+    public update(dt: number): void {
+        if (this.paused) return;
     }
 
 }

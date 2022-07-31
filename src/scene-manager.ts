@@ -22,38 +22,43 @@ export class SceneManager {
     public static get height(): number {
         return SceneManager._height;
     }
+    public static get currentScene(): Scene {
+        return SceneManager._currentScene;
+    }
 
     // Use this function ONCE to start the entire machinery
     public static initialize(width: number, height: number): void {
+        if (!this._app) {
+            // store our width and height
+            SceneManager._width = width;
+            SceneManager._height = height;
 
-        // store our width and height
-        SceneManager._width = width;
-        SceneManager._height = height;
+            // Create our pixi app
+            SceneManager._app = new Application({
+                view: document.getElementById("game-canvas") as HTMLCanvasElement,
+                resolution: window.devicePixelRatio || 1,
+                autoDensity: true,
+                backgroundColor: 0x112233,
+                width: width,
+                height: height
+            });
 
-        // Create our pixi app
-        SceneManager._app = new Application({
-            view: document.getElementById("game-canvas") as HTMLCanvasElement,
-            resolution: window.devicePixelRatio || 1,
-            autoDensity: true,
-            backgroundColor: 0x112233,
-            width: width,
-            height: height
-        });
-
-        requestAnimationFrame(this.tick.bind(this));
+            requestAnimationFrame(this.tick.bind(this));
+        }
     }
 
     // Call this function when you want to go to a new scene
-    public static changeScene(newScene: Scene): void {
+    public static changeScene(scene: Scene): void {
         // Remove and destroy old scene... if we had one..
         if (SceneManager._currentScene) {
+            SceneManager._currentScene.destroy();
             // SceneManager._app.stage.removeChild(SceneManager._currentScene.view);
-            SceneManager._currentScene.view.destroy();
+            // SceneManager._currentScene.destroy();
         }
 
         // Add the new one
-        SceneManager._currentScene = newScene;
-        SceneManager._app.stage.addChild(SceneManager._currentScene.view);
+        SceneManager._currentScene = scene;
+        SceneManager._app.stage.addChild(SceneManager._currentScene);
     }
 
     private static tick(): void {
@@ -73,7 +78,7 @@ export class SceneManager {
         // Let the current scene know that we updated it...
         // Just for funzies, sanity check that it exists first.
         if (SceneManager._currentScene) {
-            SceneManager._currentScene.view.update(dt);
+            SceneManager._currentScene.update(dt);
         }
 
         // as I said before, I HATE the "frame passed" approach. I would rather use `Manager.app.ticker.deltaMS`

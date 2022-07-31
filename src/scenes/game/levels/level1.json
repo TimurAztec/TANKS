@@ -1,0 +1,15 @@
+{
+  "size": {
+    "width": 26,
+    "height": 18
+  },
+  "entities": [
+    {
+      "name": "wall",
+      "position": {
+        "x": 10,
+        "y": 10
+      }
+    }
+  ]
+}
