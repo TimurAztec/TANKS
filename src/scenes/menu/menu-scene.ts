@@ -2,7 +2,6 @@ import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {GameScene} from "../game/game-scene";
 import {Loader, Sprite, Text, TextStyle} from "pixi.js";
-import {EventManager} from "../../event-manager";
 
 export class MenuScene extends Scene {
 
@@ -52,6 +51,7 @@ export class MenuScene extends Scene {
 
     public startGame(): void {
         SceneManager.changeScene(new GameScene());
+        this.destroy();
     }
 
 }

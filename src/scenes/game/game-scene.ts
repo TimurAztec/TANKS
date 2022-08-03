@@ -7,26 +7,40 @@ import {PlayerControlBehavior} from "../../entities/behaviors/control/player-con
 import {IEventListener} from "../../ustils/events/IEventListener";
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
-import {Container, Loader, Sprite, Text, TextStyle} from "pixi.js";
-import {GameSceneState} from "./game-scene-state";
-import {GameSceneStateGame} from "./game-scene-state-game";
+import {Container, DisplayObject, Loader, Sprite, Text, TextStyle} from "pixi.js";
+import {TILE_SIZE, TilesFactory} from "../../entities/tiles/tiles-factory";
+import {PauseScene} from "../menu/pause-scene";
 
-export class GameScene extends Scene implements IEventListener{
+export class GameScene extends Scene implements IEventListener {
 
     tank: Tank;
 
-    protected _state: GameSceneState;
-
-    public pauseMenu: Container;
-    protected _menuStartButton: Sprite;
-    protected _menuText: Text;
-
-    public set state(value: GameSceneState) {
-        this._state = value;
-    }
-
     constructor() {
         super();
+
+        EventManager.subscribe('keydown', this);
+
+        this.loadLevel(level1);
+    }
+
+    protected loadLevel(level: any): void {
+        let x: number = TILE_SIZE/2;
+        let y: number = TILE_SIZE/2;
+        for (let row of level.tilemap) {
+            for (let tileIndex of row) {
+                let tile: Entity = TilesFactory.getTile(tileIndex);
+                if (tile) {
+                    tile.width = TILE_SIZE;
+                    tile.height = TILE_SIZE;
+                    tile.x = x;
+                    tile.y = y;
+                    this.addChild(tile);
+                }
+                x += TILE_SIZE;
+            }
+            x = TILE_SIZE/2;
+            y += TILE_SIZE;
+        }
 
         this.tank = new Tank();
         this.tank.setSkin({
@@ -36,48 +50,21 @@ export class GameScene extends Scene implements IEventListener{
         this.tank.x = 300;
         this.tank.y = 300;
         this.addChild(this.tank);
-
-        this.initPauseMenu();
-
-        EventManager.subscribe('keydown', this);
-        this.state = new GameSceneStateGame(this);
-    }
-
-    protected loadLevel(level: any): void {
-        
-    }
-
-    protected initPauseMenu(): void {
-        this.pauseMenu = new Container();
-        this._menuText = new Text('Pause', new TextStyle({
-            fontSize: 42,
-            align: "center",
-            fill: "#754c24",
-        }));
-        this._menuStartButton = new Sprite(Loader.shared.resources['button'].texture);
-        this._menuText.anchor.set(0.5);
-        this._menuText.x = SceneManager.width / 2;
-        this._menuText.y = SceneManager.height / 3;
-
-        this._menuStartButton.anchor.set(0.5);
-        this._menuStartButton.x = SceneManager.width / 2;
-        this._menuStartButton.y = SceneManager.height / 2;
-        this._menuStartButton.interactive = true;
-        this._menuStartButton.buttonMode = true;
-        this._menuStartButton.on('click', () => { if (this._state) this._state.pausePressed() });
-        this.pauseMenu.addChild(this._menuText);
-        this.pauseMenu.addChild(this._menuStartButton);
-        this.addChild(this.pauseMenu);
     }
 
     public onEvent(event: string, data: any): void {
-        if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
-           this._state.pausePressed();
+        if (!this.paused) {
+            if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
+                SceneManager.changeScene(new PauseScene().setParentScene(this));
+            }
         }
     }
 
     public update(dt: number) {
         super.update(dt);
-        this._state.update(dt);
+        this.children.forEach((entity: DisplayObject) => {
+            (entity as Entity).update(dt);
+            (entity as Entity).checkCollisions(this.children as Entity[]);
+        });
     }
 }

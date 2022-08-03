@@ -51,14 +51,17 @@ export class SceneManager {
     public static changeScene(scene: Scene): void {
         // Remove and destroy old scene... if we had one..
         if (SceneManager._currentScene) {
-            SceneManager._currentScene.destroy();
-            // SceneManager._app.stage.removeChild(SceneManager._currentScene.view);
+            SceneManager._currentScene.visible = false;
             // SceneManager._currentScene.destroy();
+            // SceneManager._app.stage.removeChild(SceneManager._currentScene.view);
         }
 
         // Add the new one
         SceneManager._currentScene = scene;
-        SceneManager._app.stage.addChild(SceneManager._currentScene);
+        if (!SceneManager._app.stage.children.includes(SceneManager._currentScene)) {
+            SceneManager._app.stage.addChild(SceneManager._currentScene);
+        }
+        SceneManager._currentScene.visible = true;
     }
 
     private static tick(): void {

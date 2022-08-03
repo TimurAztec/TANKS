@@ -1,7 +1,6 @@
 import {Loader, LoaderResource, Sprite} from "pixi.js";
 import type { Dict } from '@pixi/utils';
 import {Scene} from "../scene";
-import {ISceneView} from "../interfaces";
 import {SceneManager} from "../../scene-manager";
 import {MenuScene} from "../menu/menu-scene";
 // @ts-ignore
@@ -56,5 +55,6 @@ export class LoaderScene extends Scene {
 
     private gameLoaded(): void {
         SceneManager.changeScene(new MenuScene());
+        this.destroy();
     }
 }

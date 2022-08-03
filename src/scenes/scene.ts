@@ -3,6 +3,11 @@ import {Container} from "pixi.js";
 export abstract class Scene extends Container {
     protected paused: boolean = false;
 
+    constructor() {
+        super();
+        this.name = this.constructor.name;
+    }
+
     public pause(): void {
         this.paused = true;
     }

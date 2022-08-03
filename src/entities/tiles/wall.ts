@@ -9,7 +9,7 @@ class Wall extends Entity {
     }
 
     setSkin(options?: any): void {
-        this.skin = new Sprite(Loader.shared.resources[options.assetName].texture);
+        this._skin = new Sprite(Loader.shared.resources[options.assetName].texture);
         super.setSkin(options);
     }
 }
