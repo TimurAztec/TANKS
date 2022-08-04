@@ -18,15 +18,13 @@ const assets = [
     { name: "tank_blue", url: "./assets/tanks/enemy_blue.png" },
     { name: "tank_red", url: "./assets/tanks/enemy_red.png" },
     { name: "tank_white", url: "./assets/tanks/enemy_white.png" },
-    { name: "tank", url: "./assets/tanks/tank.png" },
+    { name: "tank_player", url: "./assets/tanks/tank_player.png" },
     { name: "eagle", url: "./assets/tiles/eagle.png" },
     { name: "leaves", url: "./assets/tiles/leaves.png" },
-    { name: "small_wall_1", url: "./assets/tiles/small_wall_1.png" },
-    { name: "small_wall_2", url: "./assets/tiles/small_wall_2.png" },
-    { name: "small_wall_3", url: "./assets/tiles/small_wall_3.png" },
-    { name: "small_wall_4", url: "./assets/tiles/small_wall_4.png" },
+    { name: "small_wall", url: "./assets/tiles/small_wall.png" },
     { name: "wall", url: "./assets/tiles/wall.png" },
-    { name: "watter", url: "./assets/tiles/watter.png" },
+    { name: "dirt", url: "./assets/tiles/dirt.png" },
+    { name: "water", url: "./assets/tiles/water.png" },
 ]
 
 export { loaderAssets, assets }

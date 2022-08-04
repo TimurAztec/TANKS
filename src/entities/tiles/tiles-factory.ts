@@ -1,5 +1,12 @@
 import {Entity} from "../entity";
-import {HardWall} from "./interactive/hard-wall";
+import {HardWall} from "./hard-wall";
+import {Tank} from "../interactive/tank";
+import {PlayerControlBehavior} from "../behaviors/control/player-control-behavior";
+import {Floor} from "./floor";
+import {Leaves} from "./leaves";
+import {Trap} from "./trap";
+import {Wall} from "./wall";
+import {SmallWall} from "./small-wall";
 
 const TILE_SIZE: number = 36;
 
@@ -8,8 +15,23 @@ class TilesFactory {
 
     public static getTile(tileIndex: number): Entity {
         switch (tileIndex) {
-            case 1:
+            case 101:
+                return new Floor();
+            case 102:
+                return new Leaves();
+            case 201:
                 return new HardWall();
+            case 202:
+                return new Wall();
+            case 777:
+                return new Trap();
+            case 901:
+                let playerTank = new Tank();
+                playerTank.setSkin({assetName: 'tank_player', width: TILE_SIZE, height: TILE_SIZE});
+                playerTank.controlBehavior = new PlayerControlBehavior();
+                playerTank.width = TILE_SIZE;
+                playerTank.height = TILE_SIZE;
+                return playerTank;
             default:
                 return null;
         }

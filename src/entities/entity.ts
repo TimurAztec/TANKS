@@ -1,5 +1,5 @@
-import {AnimatedSprite, Container, Point, Sprite} from "pixi.js";
-import {IEntity} from "./interfaces";
+import {AnimatedSprite, Container, Loader, Point, Sprite} from "pixi.js";
+import {IEntity, SkinOptions} from "./interfaces";
 import { v4 as uuidv4 } from 'uuid';
 
 abstract class Entity extends Container implements IEntity {
@@ -16,8 +16,13 @@ abstract class Entity extends Container implements IEntity {
         this.name = this.constructor.name + uuidv4();
     }
 
-    public setSkin(options?: any): void {
-        this.addChild(this._skin);
+    public setSkin(options?: SkinOptions): void {
+        if (options?.assetName) {
+            this._skin = new Sprite(Loader.shared.resources[options.assetName].texture);
+            this.addChild(this._skin);
+        }
+        this._skin._width = options?.width || this._skin.width;
+        this._skin._height = options?.width || this._skin.height;
         this.resetPivot();
     }
 

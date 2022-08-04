@@ -3,8 +3,7 @@ import type { Dict } from '@pixi/utils';
 import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {MenuScene} from "../menu/menu-scene";
-// @ts-ignore
-import {assets, loaderAssets} from "../../../assets/assets";
+import {assets, loaderAssets} from "../../assets-list";
 
 export class LoaderScene extends Scene {
 

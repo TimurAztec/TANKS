@@ -1,0 +1,3 @@
+type LevelData = {
+    depthLevels: number[][][]
+}

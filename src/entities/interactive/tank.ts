@@ -33,19 +33,17 @@ class Tank extends Entity {
         });
     }
 
-    public setSkin(options?: any): void {
-        this._skin = new Sprite(Loader.shared.resources[options.assetName].texture);
-        this._skin.width = TILE_SIZE;
-        this._skin.height = TILE_SIZE;
-        super.setSkin();
-    }
-
     protected collidedWith(object: Entity): void {
         super.collidedWith(object);
         switch (object.entityType) {
             case 'HardWall':
                 this._moveVector = new Point();
                 this.position.copyFrom(this._previousPosition);
+                break;
+            case 'SmallWall':
+                this._moveVector = new Point();
+                this.position.copyFrom(this._previousPosition);
+                // object.destroy();
                 break;
         }
     }
@@ -56,6 +54,7 @@ class Tank extends Entity {
         this.y += this._moveVector.y;
         this.angle = this._angle;
         this._moveVector = new Point();
+        this.checkCollisions(this.parent.children as Entity[]);
     }
 
 }
