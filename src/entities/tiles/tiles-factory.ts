@@ -6,7 +6,6 @@ import {Floor} from "./floor";
 import {Leaves} from "./leaves";
 import {Trap} from "./trap";
 import {Wall} from "./wall";
-import {SmallWall} from "./small-wall";
 
 const TILE_SIZE: number = 36;
 
@@ -29,8 +28,6 @@ class TilesFactory {
                 let playerTank = new Tank();
                 playerTank.setSkin({assetName: 'tank_player', width: TILE_SIZE, height: TILE_SIZE});
                 playerTank.controlBehavior = new PlayerControlBehavior();
-                playerTank.width = TILE_SIZE;
-                playerTank.height = TILE_SIZE;
                 return playerTank;
             default:
                 return null;
