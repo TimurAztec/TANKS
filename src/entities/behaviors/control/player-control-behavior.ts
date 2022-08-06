@@ -10,27 +10,22 @@ class PlayerControlBehavior extends AbstractControlBehavior implements IEventLis
     }
 
     public onEvent(event:string, data:any): void {
-        if (event == 'keydown' && typeof data == 'string') {
+        if (event == 'keydown') {
             switch (data) {
                 case 'ArrowUp':
-                    if (this.actionUpCallback)
-                        this.actionUpCallback();
+                    this.triggerActionUp();
                     break;
                 case 'ArrowDown':
-                    if (this.actionDownCallback)
-                        this.actionDownCallback();
+                    this.triggerActionDown();
                     break;
                 case 'ArrowLeft':
-                    if (this.actionLeftCallback)
-                        this.actionLeftCallback();
+                    this.triggerActionLeft();
                     break;
                 case 'ArrowRight':
-                    if (this.actionRightCallback)
-                        this.actionRightCallback();
+                    this.triggerActionRight();
                     break;
                 case ' ':
-                    if (this.actionSpaceCallback)
-                        this.actionSpaceCallback();
+                    this.triggerActionSpace();
                     break;
             }
         }

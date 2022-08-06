@@ -6,11 +6,10 @@ import {SkinOptions} from "../interfaces";
 import {MovingEntity} from "../moving-entity";
 
 class Tank extends MovingEntity {
-    protected _controlBehavior: IControlBehavior;
     protected _speed: number = 4;
 
     public set controlBehavior(value: IControlBehavior) {
-        this._controlBehavior = value;
+        super.controlBehavior = value;
         this._controlBehavior.onActionUp(() => {
             this._moveVector.x = 0;
             this._moveVector.y = -this._speed;
@@ -43,7 +42,6 @@ class Tank extends MovingEntity {
             case 'SmallWall':
                 this._moveVector = new Point();
                 this.position.copyFrom(this._previousPosition);
-                object.destroy();
                 break;
         }
     }
