@@ -1,0 +1,18 @@
+import {AbstractWeaponComponent} from "./abstract-weapon-component";
+import {Bullet} from "../../interactive/bullet";
+import {SceneManager} from "../../../scene-manager";
+
+export class BulletWeaponComponent extends AbstractWeaponComponent {
+
+    public fire(): void {
+        if (!this._reloaded) return;
+        super.fire();
+        const bullet: Bullet = new Bullet();
+        bullet.setSkin({assetName: 'bullet'});
+        bullet.x = this._entity.x;
+        bullet.y = this._entity.y;
+        SceneManager.currentScene.addChild(bullet);
+        bullet.launch(this._entity.angle);
+    }
+
+}

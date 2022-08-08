@@ -1,6 +1,6 @@
-import {IBehavior} from "../IBehavior";
+import {IComponent} from "../IComponent";
 
-export interface IControlBehavior extends IBehavior {
+export interface IControlComponent extends IComponent {
     onActionUp(callback: Function): void;
     onActionDown(callback: Function): void;
     onActionLeft(callback: Function): void;

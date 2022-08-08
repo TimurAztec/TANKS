@@ -1,7 +1,7 @@
 import {Entity} from "../entity";
 import {HardWall} from "./hard-wall";
 import {Tank} from "../interactive/tank";
-import {PlayerControlBehavior} from "../behaviors/control/player-control-behavior";
+import {PlayerControlComponent} from "../behaviors/control/player-control-component";
 import {Floor} from "./floor";
 import {Leaves} from "./leaves";
 import {Trap} from "./trap";
@@ -27,7 +27,7 @@ class TilesFactory {
             case 901:
                 let playerTank = new Tank();
                 playerTank.setSkin({assetName: 'tank_player', width: TILE_SIZE, height: TILE_SIZE});
-                playerTank.controlBehavior = new PlayerControlBehavior();
+                playerTank.setComponent(new PlayerControlComponent());
                 return playerTank;
             default:
                 return null;

@@ -1,61 +1,70 @@
 import {Entity} from "../entity";
 import {Point} from "pixi.js";
-import {IControlBehavior} from "../behaviors/control/IControlBehavior";
 import {TILE_SIZE} from "../tiles/tiles-factory";
 import {SkinOptions} from "../interfaces";
-import {MovingEntity} from "../moving-entity";
+import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
+import {SceneManager} from "../../scene-manager";
+import {BulletWeaponComponent} from "../behaviors/weapon/bullet-weapon-component";
+import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-component";
+import {IComponent} from "../behaviors/IComponent";
+import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
+import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 
-class Tank extends MovingEntity {
+class Tank extends Entity {
     protected _speed: number = 4;
 
-    public set controlBehavior(value: IControlBehavior) {
-        super.controlBehavior = value;
-        this._controlBehavior.onActionUp(() => {
-            this._moveVector.x = 0;
-            this._moveVector.y = -this._speed;
-            this._rotateTo = 0;
-        });
-        this._controlBehavior.onActionDown(() => {
-            this._moveVector.x = 0;
-            this._moveVector.y = this._speed;
-            this._rotateTo = 180;
-        });
-        this._controlBehavior.onActionRight(() => {
-            this._moveVector.x = this._speed;
-            this._moveVector.y = 0;
-            this._rotateTo = 90;
-        });
-        this._controlBehavior.onActionLeft(() => {
-            this._moveVector.x = -this._speed;
-            this._moveVector.y = 0;
-            this._rotateTo = 270;
-        });
+    constructor() {
+        super();
+        this.setComponent(new DirectionalWalkMovementBehavior());
+        this.setComponent(new BulletWeaponComponent());
+        this.getComponent(AbstractWeaponComponent).setReloadTime(50);
+    }
+
+    public setComponent(component: IComponent): void {
+        super.setComponent(component);
+
+        if (Object.getPrototypeOf(component) instanceof AbstractControlComponent) {
+            this.getComponent(AbstractControlComponent).onActionUp(() => {
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, -this._speed));
+            });
+            this.getComponent(AbstractControlComponent).onActionDown(() => {
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, this._speed));
+            });
+            this.getComponent(AbstractControlComponent).onActionRight(() => {
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(this._speed, 0));
+            });
+            this.getComponent(AbstractControlComponent).onActionLeft(() => {
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(-this._speed, 0));
+            });
+            this.getComponent(AbstractControlComponent).onActionSpace(() => {
+                this.getComponent(AbstractWeaponComponent).fire();
+            });
+        }
     }
 
     protected collidedWith(object: Entity): void {
         super.collidedWith(object);
         switch (object.entityType) {
             case 'HardWall':
-                this._moveVector = new Point();
-                this.position.copyFrom(this._previousPosition);
+                this.getComponent(AbstractMovementComponent).stop();
+                this.getComponent(AbstractMovementComponent).resetPosition();
                 break;
             case 'SmallWall':
-                this._moveVector = new Point();
-                this.position.copyFrom(this._previousPosition);
+                this.getComponent(AbstractMovementComponent).stop();
+                this.getComponent(AbstractMovementComponent).resetPosition();
                 break;
         }
     }
 
     public update(dt: number): void {
         super.update(dt);
-        this._moveVector = new Point();
-        this.checkCollisions(this.parent.children as Entity[]);
+        this.checkCollisions(SceneManager.currentScene.children as Entity[]);
     }
 
     public setSkin(options?: SkinOptions): void {
         super.setSkin(options);
-        this.width = TILE_SIZE;
-        this.height = TILE_SIZE;
+        this.width = TILE_SIZE - 2;
+        this.height = TILE_SIZE - 2;
     }
 
 }

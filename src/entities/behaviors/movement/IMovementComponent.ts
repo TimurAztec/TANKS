@@ -1,11 +1,10 @@
-import {IBehavior} from "../IBehavior";
+import {IComponent} from "../IComponent";
 import {Point} from "pixi.js";
 
-export interface IMovementBehavior extends IBehavior {
-    setSpeed(speed: number): void;
+export interface IMovementComponent extends IComponent {
     setRotationSpeed(speed: number): void;
     setMovementVector(vector: Point): void;
-    resetMove(): void;
+    resetPosition(): void;
     stop(): void;
     update(dt: number): void;
 }

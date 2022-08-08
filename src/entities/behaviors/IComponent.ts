@@ -1,5 +1,6 @@
 import { Entity } from "../entity";
 
-export interface IBehavior {
+export interface IComponent {
     setEntity(entity: Entity): void;
+    update(dt: number): void;
 }

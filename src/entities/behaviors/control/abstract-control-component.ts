@@ -1,7 +1,7 @@
-import {IControlBehavior} from "./IControlBehavior";
-import {AbstractBehavior} from "../AbstractBehavior";
+import {IControlComponent} from "./IControlComponent";
+import {AbstractComponent} from "../AbstractComponent";
 
-abstract class AbstractControlBehavior extends AbstractBehavior implements IControlBehavior {
+abstract class AbstractControlComponent extends AbstractComponent implements IControlComponent {
     protected actionUpCallback: Function;
     protected actionDownCallback: Function;
     protected actionLeftCallback: Function;
@@ -48,6 +48,8 @@ abstract class AbstractControlBehavior extends AbstractBehavior implements ICont
     public triggerActionUp(): void {
         if (this.actionUpCallback) this.actionUpCallback();
     }
+
+    public update(dt: number): void {}
 }
 
-export { AbstractControlBehavior }
+export { AbstractControlComponent }

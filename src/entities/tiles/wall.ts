@@ -1,5 +1,6 @@
 import {Entity} from "../entity";
 import {SmallWall} from "./small-wall";
+import {SceneManager} from "../../scene-manager";
 
 class Wall extends Entity {
 
@@ -11,21 +12,9 @@ class Wall extends Entity {
                 swall.setSkin({assetName: `small_wall`});
                 swall.x = (this.x - swall.width/2) + (swall.width * j);
                 swall.y = (this.y - swall.height/2) + (swall.height * i);
-                this.parent.addChild(swall);
+                SceneManager.currentScene.addChild(swall);
             }
         }
-
-        // let swall = new SmallWall();
-        // swall.setSkin({assetName: `small_wall`});
-        // swall.x = this.x - swall.width/2;
-        // swall.y = this.y - swall.height/2;
-        // this.parent.addChild(swall);
-        // let swalla = new SmallWall();
-        // swalla.setSkin({assetName: `small_wall`});
-        // swalla.x = this.x + swall.width/2;
-        // swalla.y = this.y - swalla.height/2;
-        //
-        // this.parent.addChild(swalla);
         this.destroy();
     }
 

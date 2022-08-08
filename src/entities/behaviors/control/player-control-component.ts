@@ -1,8 +1,8 @@
-import {AbstractControlBehavior} from "./abstract-control-behavior";
+import {AbstractControlComponent} from "./abstract-control-component";
 import {IEventListener} from "../../../ustils/events/IEventListener";
 import {EventManager} from "../../../event-manager";
 
-class PlayerControlBehavior extends AbstractControlBehavior implements IEventListener {
+class PlayerControlComponent extends AbstractControlComponent implements IEventListener {
 
     constructor() {
         super();
@@ -32,4 +32,4 @@ class PlayerControlBehavior extends AbstractControlBehavior implements IEventLis
     }
 }
 
-export { PlayerControlBehavior }
+export { PlayerControlComponent }
