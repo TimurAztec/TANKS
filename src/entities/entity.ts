@@ -82,7 +82,7 @@ abstract class Entity extends Container implements IEntity {
         this._components.push(component)
     }
 
-    protected getComponent<C extends IComponent>(componentType: constr<C>): C {
+    public getComponent<C extends IComponent>(componentType: constr<C>): C {
         for (const component of this._components) {
             if (Object.getPrototypeOf(component) instanceof componentType) {
                 return component as C

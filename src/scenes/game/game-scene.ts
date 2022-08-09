@@ -2,12 +2,12 @@ import {Scene} from "../scene";
 import {Entity} from "../../entities/entity";
 
 import * as level1 from './levels/level1.json';
-import {IEventListener} from "../../ustils/events/IEventListener";
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
 import {DisplayObject} from "pixi.js";
-import {TILE_SIZE, TilesFactory} from "../../entities/tiles/tiles-factory";
 import {PauseScene} from "../menu/pause-scene";
+import {EntityFactory, TILE_SIZE} from "../../entities/entity-factory";
+import {IEventListener} from "../../utils/events/IEventListener";
 
 export class GameScene extends Scene implements IEventListener {
 
@@ -25,12 +25,12 @@ export class GameScene extends Scene implements IEventListener {
             let y: number = TILE_SIZE/2;
             for (let row of tilemap) {
                 for (let tileIndex of row) {
-                    let tile: Entity = TilesFactory.getTile(tileIndex);
+                    let tile: Entity = EntityFactory.getTile(tileIndex);
                     if (tile) {
+                        this.addChild(tile);
                         tile.x = x;
                         tile.y = y;
                         tile.zIndex = zindex;
-                        this.addChild(tile);
                     }
                     x += TILE_SIZE;
                 }

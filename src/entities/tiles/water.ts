@@ -1,6 +1,6 @@
 import {Entity} from "../entity";
 
-class Trap extends Entity {
+class Water extends Entity {
 
     constructor() {
         super();
@@ -9,4 +9,4 @@ class Trap extends Entity {
 
 }
 
-export { Trap }
+export { Water }

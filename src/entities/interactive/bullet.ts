@@ -4,6 +4,9 @@ import {ProjectileMovementComponent} from "../behaviors/movement/projectile-move
 import {SceneManager} from "../../scene-manager";
 import {AbstractMovementComponent} from "../behaviors/movement/abstract-movement-component";
 import {SmallExplosionFX} from "../fx/small-explosion";
+import {BigExplosionFX} from "../fx/big-explosion";
+import {BasicTeamComponent} from "../behaviors/team/basic-team-component";
+import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -11,6 +14,7 @@ class Bullet extends Entity {
     constructor() {
         super();
         this.setComponent(new ProjectileMovementComponent());
+        this.setComponent(new BasicTeamComponent());
     }
 
     public launch(angle: number): void {
@@ -24,17 +28,21 @@ class Bullet extends Entity {
         super.collidedWith(object);
         switch (object.entityType) {
             case 'HardWall':
-                this.explode();
+                this.explode(new SmallExplosionFX());
                 break;
             case 'SmallWall':
-                this.explode();
+                this.explode(new SmallExplosionFX());
+                object.destroy();
+                break;
+            case 'Tank':
+                if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                this.explode(new BigExplosionFX());
                 object.destroy();
                 break;
         }
     }
 
-    protected explode(): void {
-        const fx = new SmallExplosionFX();
+    protected explode(fx: Entity): void {
         fx.x = this.x;
         fx.y = this.y;
         SceneManager.currentScene.addChild(fx);

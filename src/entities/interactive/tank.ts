@@ -1,6 +1,5 @@
 import {Entity} from "../entity";
 import {Point} from "pixi.js";
-import {TILE_SIZE} from "../tiles/tiles-factory";
 import {SkinOptions} from "../interfaces";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
 import {SceneManager} from "../../scene-manager";
@@ -9,9 +8,10 @@ import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-compo
 import {IComponent} from "../behaviors/IComponent";
 import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
+import {TILE_SIZE} from "../entity-factory";
 
 class Tank extends Entity {
-    protected _speed: number = 4;
+    public speed: number = 2;
 
     constructor() {
         super();
@@ -25,16 +25,16 @@ class Tank extends Entity {
 
         if (Object.getPrototypeOf(component) instanceof AbstractControlComponent) {
             this.getComponent(AbstractControlComponent).onActionUp(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, -this._speed));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, -this.speed));
             });
             this.getComponent(AbstractControlComponent).onActionDown(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, this._speed));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, this.speed));
             });
             this.getComponent(AbstractControlComponent).onActionRight(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(this._speed, 0));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(this.speed, 0));
             });
             this.getComponent(AbstractControlComponent).onActionLeft(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(-this._speed, 0));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(-this.speed, 0));
             });
             this.getComponent(AbstractControlComponent).onActionSpace(() => {
                 this.getComponent(AbstractWeaponComponent).fire();

@@ -5,8 +5,9 @@ export abstract class AbstractComponent implements IComponent {
 
     protected _entity: Entity;
 
-    public setEntity(entity: Entity): void {
+    public setEntity<T extends Entity>(entity: T): AbstractComponent {
         this._entity = entity;
+        return this;
     }
 
     public update(dt: number) {}
