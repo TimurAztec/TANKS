@@ -7,6 +7,7 @@ import {constr} from "../utils/utils";
 abstract class Entity extends Container implements IEntity {
 
     protected _skin: (Sprite | AnimatedSprite);
+    protected _skinOptions: SkinOptions;
     protected _components: IComponent[] = [];
     protected _initOnUpdate: boolean = true;
 
@@ -20,7 +21,7 @@ abstract class Entity extends Container implements IEntity {
 
     constructor(source?: Entity) {
         super();
-        // this._skin = source?._skin;
+        if (source?._skinOptions) this.setSkin(source._skinOptions);
         if (source?._components) {
             source._components.forEach(component => this.setComponent(Object.create(component)));
         }
@@ -33,6 +34,7 @@ abstract class Entity extends Container implements IEntity {
     public abstract clone(): Entity;
 
     public setSkin(options?: SkinOptions): void {
+        this._skinOptions = options;
         if (options?.assetName) {
             if (!options.numberOfFrames) {
                 this._skin = new Sprite(Loader.shared.resources[options.assetName].texture);

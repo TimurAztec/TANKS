@@ -55,8 +55,8 @@ class EntityFactory {
                 return new AmountBasedSpawner().setPrototypeEntity(tank)
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
-                    .setTimesToSpawn(2)
-                    .setMaxAmountPerTime(2);
+                    .setTimesToSpawn(12)
+                    .setMaxAmountPerTime(3);
             }
             default:
                 return null;

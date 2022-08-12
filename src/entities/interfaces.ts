@@ -1,8 +1,8 @@
 type SkinOptions = {
-    assetName: string
-    scaleX: number
-    scaleY: number
-    numberOfFrames: number
+    assetName?: string
+    scaleX?: number
+    scaleY?: number
+    numberOfFrames?: number
 }
 
 interface IEntity {
