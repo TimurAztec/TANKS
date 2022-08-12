@@ -27,10 +27,10 @@ export class GameScene extends Scene implements IEventListener {
                 for (let tileIndex of row) {
                     let tile: Entity = EntityFactory.getTile(tileIndex);
                     if (tile) {
-                        this.addChild(tile);
                         tile.x = x;
                         tile.y = y;
                         tile.zIndex = zindex;
+                        this.addChild(tile);
                     }
                     x += TILE_SIZE;
                 }

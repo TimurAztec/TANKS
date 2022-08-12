@@ -8,15 +8,29 @@ abstract class Entity extends Container implements IEntity {
 
     protected _skin: (Sprite | AnimatedSprite);
     protected _components: IComponent[] = [];
+    protected _initOnUpdate: boolean = true;
 
     public get entityType(): string {
         return this.constructor.name;
     }
 
-    constructor() {
-        super();
-        this.name = this.constructor.name + uuidv4();
+    public get destroyed(): boolean {
+        return this._destroyed;
     }
+
+    constructor(source?: Entity) {
+        super();
+        // this._skin = source?._skin;
+        if (source?._components) {
+            source._components.forEach(component => this.setComponent(Object.create(component)));
+        }
+
+        this.name = this.constructor.name + uuidv4();
+        if (this._skin) { this.addChild(this._skin); }
+    }
+
+    // Clones entity without PIXI properties
+    public abstract clone(): Entity;
 
     public setSkin(options?: SkinOptions): void {
         if (options?.assetName) {
@@ -35,16 +49,15 @@ abstract class Entity extends Container implements IEntity {
             }
             this.addChild(this._skin);
         }
-        this._skin._width = options?.width || this._skin.width;
-        this._skin._height = options?.width || this._skin.height;
-        this.resetPivot();
-    }
-
-    protected resetPivot(): void {
-        this.pivot.set(this.x + this.width/2, this.y + this.height/2);
+        this._skin.anchor.set(0.5);
+        this._skin.scale.x = options?.scaleX || this._skin.scale.x;
+        this._skin.scale.y = options?.scaleY || this._skin.scale.y;
     }
 
     public update(dt: number): void {
+        if (this._initOnUpdate) {
+            this._initOnUpdate = false;
+        }
         this._components.forEach((component) => component.update(dt));
     }
 

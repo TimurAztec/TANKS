@@ -1,10 +1,12 @@
 type SkinOptions = {
-    assetName?: string
-    width?: number
-    height?: number
-    numberOfFrames?: number
+    assetName: string
+    scaleX: number
+    scaleY: number
+    numberOfFrames: number
 }
 
-interface IEntity {}
+interface IEntity {
+    clone(): IEntity;
+}
 
 export {IEntity, SkinOptions}

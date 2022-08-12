@@ -11,10 +11,15 @@ import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component
 class Bullet extends Entity {
     protected _speed: number = 6;
 
-    constructor() {
+    constructor(source?: Bullet) {
         super();
+        this._speed = source?._speed || 6;
         this.setComponent(new ProjectileMovementComponent());
         this.setComponent(new BasicTeamComponent());
+    }
+
+    public clone(): Bullet {
+        return new Bullet(this);
     }
 
     public launch(angle: number): void {
