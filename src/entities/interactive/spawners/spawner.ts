@@ -20,7 +20,6 @@ abstract class Spawner extends Entity {
         const entity: Entity = this._prototypeEntity.clone();
         entity.x = this.x;
         entity.y = this.y;
-        // entity.setSkin({assetName: 'tank_player', scaleX: 1.2});
         SceneManager.currentScene.addChild(entity);
         return entity;
     }
