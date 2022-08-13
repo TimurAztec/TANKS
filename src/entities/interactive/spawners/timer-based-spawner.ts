@@ -1,10 +1,19 @@
 import { Entity } from "../../entity";
 import { Spawner } from "./spawner";
+import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-collision-component";
 
 class TimerBasedSpawner extends Spawner {
     protected _timeBetweenSpawns: number = 0;
     protected _collisionGroup: string[] = [];
     protected _collides: boolean = false;
+
+    constructor(source?: TimerBasedSpawner) {
+        super(source);
+        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+            if (object == this) return;
+            if (this._collisionGroup.includes(object.entityType)) this._collides = true;
+        }));
+    }
 
     public clone(): TimerBasedSpawner {
         return new TimerBasedSpawner(this);
@@ -30,11 +39,6 @@ class TimerBasedSpawner extends Spawner {
         if (this._dttimer < this._timeBetweenSpawns || this._collides) return;
         this._dttimer = 0;
         this.spawn();
-    }
-
-    protected collidedWith(object: Entity) {
-        if (object == this) return;
-        if (this._collisionGroup.includes(object.entityType)) this._collides = true;
     }
 
 }

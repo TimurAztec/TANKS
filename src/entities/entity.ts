@@ -63,29 +63,6 @@ abstract class Entity extends Container implements IEntity {
         this._components.forEach((component) => component.update(dt));
     }
 
-    public checkCollisionWith(object: Entity): boolean {
-        try {
-            return (this.x - this.width / 2 < object.x + object.width / 2 &&
-                this.x + this.width / 2 > object.x - object.width / 2 &&
-                this.y - this.height / 2 < object.y + object.height / 2 &&
-                this.y + this.height / 2 > object.y - object.height / 2)
-        } catch (e) {
-            return false;
-        }
-    }
-
-    public checkCollisions(objects: Entity[]): void {
-        for (let obj of objects) {
-            if (this.checkCollisionWith(obj)) {
-                this.collidedWith(obj);
-            }
-        }
-    }
-
-    protected collidedWith(object: Entity): void {
-        if (object == this) return;
-    }
-
     public setComponent(component: IComponent): void {
         component.setEntity(this);
         for (const [i, c] of this._components.entries()) {

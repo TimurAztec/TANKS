@@ -8,6 +8,7 @@ import {IComponent} from "../behaviors/IComponent";
 import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 import {AppearFX} from "../fx/appear";
+import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 
 class Tank extends Entity {
     protected _speed: number;
@@ -17,6 +18,27 @@ class Tank extends Entity {
         this._speed = source?._speed || 2;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BulletWeaponComponent());
+        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+            if (object == this) return;
+            switch (object.entityType) {
+                case 'HardWall':
+                    this.getComponent(AbstractMovementComponent).stop();
+                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    break;
+                case 'SmallWall':
+                    this.getComponent(AbstractMovementComponent).stop();
+                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    break;
+                case 'Water':
+                    this.getComponent(AbstractMovementComponent).stop();
+                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    break;
+                case 'Tank':
+                    this.getComponent(AbstractMovementComponent).stop();
+                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    break;
+            }
+        }));
         this.getComponent(AbstractWeaponComponent).setReloadTime(50);
     }
 
@@ -76,7 +98,7 @@ class Tank extends Entity {
             SceneManager.currentScene.addChild(fx);
         }
         super.update(dt);
-        this.checkCollisions(SceneManager.currentScene.children as Entity[]);
+        // this.checkCollisions(SceneManager.currentScene.children as Entity[]);
     }
 
 }

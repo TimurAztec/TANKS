@@ -14,7 +14,6 @@ abstract class Spawner extends Entity {
     public update(dt: number): void {
         super.update(dt);
         this._dttimer += dt;
-        this.checkCollisions(SceneManager.currentScene.children as Entity[]);
     }
 
     public spawn(): Entity {
