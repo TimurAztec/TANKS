@@ -1,5 +1,6 @@
 import { Entity } from "../../entity";
 import {Spawner} from "./spawner";
+import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-collision-component";
 
 class AmountBasedSpawner extends Spawner {
     protected _timesToSpawn: number;
@@ -8,6 +9,14 @@ class AmountBasedSpawner extends Spawner {
     protected _timeBetweenSpawns: number = 0;
     protected _collisionGroup: string[] = [];
     protected _collides: boolean = false;
+
+    constructor(source?: AmountBasedSpawner) {
+        super(source);
+        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+            if (object == this) return;
+            if (this._collisionGroup.includes(object.entityType)) this._collides = true;
+        }));
+    }
 
     public clone(): AmountBasedSpawner {
         return new AmountBasedSpawner(this);
@@ -50,11 +59,6 @@ class AmountBasedSpawner extends Spawner {
                 this._timesToSpawn--;
             }
         }
-    }
-
-    protected collidedWith(object: Entity) {
-        if (object == this) return;
-        if (this._collisionGroup.includes(object.entityType)) this._collides = true;
     }
 
 }
