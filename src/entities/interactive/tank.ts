@@ -22,20 +22,16 @@ class Tank extends Entity {
             if (object == this) return;
             switch (object.entityType) {
                 case 'HardWall':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'SmallWall':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'Water':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'Tank':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
             }
         }));
@@ -68,28 +64,6 @@ class Tank extends Entity {
         }
     }
 
-    protected collidedWith(object: Entity): void {
-        if (object == this) return;
-        switch (object.entityType) {
-            case 'HardWall':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-            case 'SmallWall':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-            case 'Water':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-            case 'Tank':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-        }
-    }
-
     public update(dt: number): void {
         if (this._initOnUpdate) {
             const fx = new AppearFX();
@@ -98,7 +72,6 @@ class Tank extends Entity {
             SceneManager.currentScene.addChild(fx);
         }
         super.update(dt);
-        // this.checkCollisions(SceneManager.currentScene.children as Entity[]);
     }
 
 }

@@ -4,10 +4,11 @@ import {Entity} from "../../entities/entity";
 import * as level1 from './levels/level1.json';
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
-import {DisplayObject} from "pixi.js";
 import {PauseScene} from "../menu/pause-scene";
 import {EntityFactory, TILE_SIZE} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
+import {AbstractCollisionComponent} from "../../entities/behaviors/collision/abstract-collision-component";
+import {AABB} from "../../utils/utils";
 
 export class GameScene extends Scene implements IEventListener {
 
@@ -50,8 +51,30 @@ export class GameScene extends Scene implements IEventListener {
 
     public update(dt: number) {
         super.update(dt);
-        this.children.forEach((entity: DisplayObject) => {
-            (entity as Entity).update(dt);
-        });
+        let i: number = this.children.length;
+        while (i--) {
+            (this.children[i] as Entity).update(dt);
+            const collision = (this.children[i] as Entity).getComponent(AbstractCollisionComponent);
+            if (collision) {
+                let j: number = this.children.length;
+                while (j--) {
+                    if (this.children[i] !== this.children[j] &&
+                        AABB({
+                            x: (this.children[i] as Entity).x,
+                            y: (this.children[i] as Entity).y,
+                            width: (this.children[i] as Entity).width,
+                            height: (this.children[i] as Entity).height
+                        }, {
+                            x: (this.children[j] as Entity).x,
+                            y: (this.children[j] as Entity).y,
+                            width: (this.children[j] as Entity).width,
+                            height: (this.children[j] as Entity).height
+                        })) {
+                        collision.collidedWith(this.children[j] as Entity);
+                        j = 0;
+                    }
+                }
+            }
+        }
     }
 }
