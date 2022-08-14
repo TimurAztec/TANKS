@@ -9,8 +9,11 @@ import {EntityFactory, TILE_SIZE} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {AbstractCollisionComponent} from "../../entities/behaviors/collision/abstract-collision-component";
 import {AABB} from "../../utils/utils";
+import {DisplayObject} from "pixi.js";
 
 export class GameScene extends Scene implements IEventListener {
+
+    public dynamicChildren: Entity[] = [];
 
     constructor() {
         super();
@@ -51,30 +54,32 @@ export class GameScene extends Scene implements IEventListener {
 
     public update(dt: number) {
         super.update(dt);
-        let i: number = this.children.length;
+        console.log(dt);
+
+        this.dynamicChildren = this.dynamicChildren.filter((entity) => {
+            return !entity.destroyed
+        });
+        let i: number = this.dynamicChildren.length;
         while (i--) {
-            (this.children[i] as Entity).update(dt);
-            const collision = (this.children[i] as Entity).getComponent(AbstractCollisionComponent);
+            this.dynamicChildren[i].update(dt);
+            const collision = this.dynamicChildren[i].getComponent(AbstractCollisionComponent);
             if (collision) {
-                let j: number = this.children.length;
+                let group: Entity[] = collision.getCollisionGroup();
+                let j: number = group.length;
                 while (j--) {
-                    if (this.children[i] !== this.children[j] &&
-                        AABB({
-                            x: (this.children[i] as Entity).x,
-                            y: (this.children[i] as Entity).y,
-                            width: (this.children[i] as Entity).width,
-                            height: (this.children[i] as Entity).height
-                        }, {
-                            x: (this.children[j] as Entity).x,
-                            y: (this.children[j] as Entity).y,
-                            width: (this.children[j] as Entity).width,
-                            height: (this.children[j] as Entity).height
-                        })) {
-                        collision.collidedWith(this.children[j] as Entity);
+                    if (this.dynamicChildren[i] !== group[j] &&
+                        AABB(this.dynamicChildren[i].simpleBounds, group[j].simpleBounds)) {
+                        collision.collidedWith(group[j]);
                         j = 0;
                     }
                 }
             }
         }
+    }
+
+    addChild<U extends DisplayObject[]>(...children: U): U[0] {
+        this.dynamicChildren = [...this.dynamicChildren,
+            ...[...children].filter((child: any) => child.getComponent(AbstractCollisionComponent)) as Entity[]];
+        return super.addChild(...children);
     }
 }

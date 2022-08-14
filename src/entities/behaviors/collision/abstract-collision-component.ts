@@ -3,11 +3,18 @@ import {AbstractComponent} from "../AbstractComponent";
 import {Entity} from "../../entity";
 
 abstract class AbstractCollisionComponent extends AbstractComponent implements ICollisionComponent {
-    protected collisionCallback: Function;
+    protected _collisionCallback: Function;
+    protected _collisionGroup: Entity[] = [];
 
-    public onCollidedWith(callback: Function): AbstractCollisionComponent { this.collisionCallback = callback; return this }
+    public onCollidedWith(callback: Function): AbstractCollisionComponent { this._collisionCallback = callback; return this }
 
-    public collidedWith(object: Entity): void { this.collisionCallback(object); }
+    public collidedWith(object: Entity): void { this._collisionCallback(object); }
+
+    public abstract setCollisionGroup(objects: Entity[]): AbstractCollisionComponent;
+
+    public getCollisionGroup(): Entity[] {
+        return this._collisionGroup;
+    };
 }
 
 export { AbstractCollisionComponent }

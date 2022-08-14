@@ -1,8 +1,7 @@
-import {AnimatedSprite, BaseTexture, Container, Loader, Rectangle, Sprite, Texture} from "pixi.js";
+import {AnimatedSprite, BaseTexture, Container, Loader, Rectangle, Sprite, Texture, utils} from "pixi.js";
 import {IEntity, SkinOptions} from "./interfaces";
-import { v4 as uuidv4 } from 'uuid';
 import {IComponent} from "./behaviors/IComponent";
-import {constr} from "../utils/utils";
+import {AABBData, constr} from "../utils/utils";
 
 abstract class Entity extends Container implements IEntity {
 
@@ -19,6 +18,20 @@ abstract class Entity extends Container implements IEntity {
         return this._destroyed;
     }
 
+    public get simpleBounds(): AABBData {
+        return this.destroyed ? {
+            x: 0,
+            y: 0,
+            width: 0,
+            height: 0
+        } : {
+            x: this.x,
+            y: this.y,
+            width: this.width,
+            height: this.height
+        }
+    }
+
     constructor(source?: Entity) {
         super();
         if (source?._skinOptions) this.setSkin(source._skinOptions);
@@ -26,7 +39,7 @@ abstract class Entity extends Container implements IEntity {
             source._components.forEach(component => this.setComponent(Object.create(component)));
         }
 
-        this.name = this.constructor.name + uuidv4();
+        this.name = this.constructor.name + utils.uid()
         if (this._skin) { this.addChild(this._skin); }
     }
 
@@ -57,6 +70,7 @@ abstract class Entity extends Container implements IEntity {
     }
 
     public update(dt: number): void {
+        if (this.destroyed) return;
         if (this._initOnUpdate) {
             this._initOnUpdate = false;
         }

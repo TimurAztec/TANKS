@@ -11,13 +11,13 @@ import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-col
 
 class Bullet extends Entity {
     protected _speed: number = 6;
+    protected _dttimer: number = 0;
 
     constructor(source?: Bullet) {
         super(source);
         this._speed = source?._speed || 6;
-        this.setComponent(new ProjectileMovementComponent());
         this.setComponent(new BasicTeamComponent());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+        this.setComponent(new BasicAabbCollisionComponent().setCollisionGroup(SceneManager.currentScene.children as Entity[]).onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
                 case 'HardWall':
@@ -34,6 +34,7 @@ class Bullet extends Entity {
                     break;
             }
         }));
+        this.setComponent(new ProjectileMovementComponent());
     }
 
     public clone(): Bullet {
@@ -52,6 +53,12 @@ class Bullet extends Entity {
         fx.y = this.y;
         SceneManager.currentScene.addChild(fx);
         this.destroy();
+    }
+
+    public update(dt: number): void {
+        super.update(dt);
+        this._dttimer += dt;
+        if (this._dttimer > 1000) this.destroy();
     }
 
 }

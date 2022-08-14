@@ -3,7 +3,7 @@ import {AbstractMovementComponent} from "./abstract-movement-component";
 
 export class DirectionalWalkMovementBehavior extends AbstractMovementComponent {
 
-    public setMovementVector(vector: Point): void {
+    public setMovementVector(vector: Point): DirectionalWalkMovementBehavior {
         if (vector.y < 0) {
             vector.x = 0;
             this.rotateTo(0);
@@ -20,7 +20,7 @@ export class DirectionalWalkMovementBehavior extends AbstractMovementComponent {
             vector.y = 0;
             this.rotateTo(90);
         }
-        super.setMovementVector(vector);
+        return super.setMovementVector(vector) as DirectionalWalkMovementBehavior;
     }
 
     public update(dt: number): void {

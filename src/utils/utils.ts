@@ -1,4 +1,4 @@
-type AABBData = {
+export type AABBData = {
     x: number,
     y: number,
     width: number,
