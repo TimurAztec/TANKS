@@ -10,6 +10,5 @@ export abstract class AbstractComponent implements IComponent {
         return this;
     }
 
-    public update(dt: number) {}
-
+    public update(dt: number): void {}
 }

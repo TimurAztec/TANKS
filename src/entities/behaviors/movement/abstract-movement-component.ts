@@ -44,8 +44,9 @@ export abstract class AbstractMovementComponent extends AbstractComponent implem
     }
 
     public update(dt: number): void {
+        if (!this._entity || this._entity.destroyed) return;
         if (!this._previousPosition.equals(this._entity.position) && this._onEntityMoved) {
-            this._onEntityMoved();
+            this._onEntityMoved(this._movementVector, this._previousPosition);
         }
         this._previousPosition.copyFrom(this._entity.position);
         this._entity.x += this._ignoreDT ? this._movementVector.x : this._movementVector.x * dt;

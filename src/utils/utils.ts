@@ -1,3 +1,6 @@
+import {Container, Point} from "pixi.js";
+import {TILE_SIZE} from "../entities/entity-factory";
+
 export type AABBData = {
     x: number,
     y: number,
@@ -7,6 +10,12 @@ export type AABBData = {
 
 export function randNum(max: number, min: number = 0): number {
     return Math.random() * max + min;
+}
+
+export function getTitlePosition(cords: Point): Point {
+    const row = Math.floor(cords.y / TILE_SIZE);
+    const column = Math.floor(cords.x / TILE_SIZE);
+    return new Point(column, row);
 }
 
 export function AABB(a: AABBData, b: AABBData): boolean {

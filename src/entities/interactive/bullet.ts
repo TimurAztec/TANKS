@@ -8,6 +8,8 @@ import {BigExplosionFX} from "../fx/big-explosion";
 import {BasicTeamComponent} from "../behaviors/team/basic-team-component";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
+import {IComponent} from "../behaviors/IComponent";
+import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -17,7 +19,7 @@ class Bullet extends Entity {
         super(source);
         this._speed = source?._speed || 6;
         this.setComponent(new BasicTeamComponent());
-        this.setComponent(new BasicAabbCollisionComponent().setCollisionGroup(SceneManager.currentScene.children as Entity[]).onCollidedWith((object: Entity) => {
+        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
                 case 'HardWall':
@@ -42,7 +44,7 @@ class Bullet extends Entity {
     }
 
     public launch(angle: number): void {
-        let radAngle: number = (angle-90) * (Math.PI/180);
+        const radAngle: number = (angle-90) * (Math.PI/180);
         this.getComponent(AbstractMovementComponent).setMovementVector(
             new Point(Math.cos(radAngle) * this._speed,
                 Math.sin(radAngle) * this._speed));
@@ -59,6 +61,17 @@ class Bullet extends Entity {
         super.update(dt);
         this._dttimer += dt;
         if (this._dttimer > 1000) this.destroy();
+    }
+
+    public setComponent(component: IComponent): void {
+        super.setComponent(component);
+
+        if (Object.getPrototypeOf(component) instanceof AbstractMovementComponent) {
+            this.getComponent(AbstractMovementComponent).onEntityMoved(() => {
+                if (this.getComponent(AbstractCollisionComponent))
+                    this.getComponent(AbstractCollisionComponent).setCollisionGroup(SceneManager.currentScene.children as Entity[])
+            })
+        }
     }
 
 }

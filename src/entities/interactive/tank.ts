@@ -8,8 +8,7 @@ import {IComponent} from "../behaviors/IComponent";
 import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 import {AppearFX} from "../fx/appear";
-import {DoubleAabbCollisionComponent} from "../behaviors/collision/double-aabb-collision-component";
-import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
+import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 
 class Tank extends Entity {
     protected _speed: number;
@@ -19,7 +18,7 @@ class Tank extends Entity {
         this._speed = source?._speed || 2;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BulletWeaponComponent());
-        this.setComponent(new DoubleAabbCollisionComponent().onCollidedWith((object: Entity) => {
+        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
                 case 'HardWall':
@@ -62,13 +61,6 @@ class Tank extends Entity {
             this.getComponent(AbstractControlComponent).onActionSpace(() => {
                 this.getComponent(AbstractWeaponComponent).fire();
             });
-        }
-
-        if (Object.getPrototypeOf(component) instanceof AbstractMovementComponent) {
-            this.getComponent(AbstractMovementComponent).onEntityMoved(() => {
-                if (this.getComponent(AbstractCollisionComponent))
-                    this.getComponent(AbstractCollisionComponent).setCollisionGroup(SceneManager.currentScene.children as Entity[])
-            })
         }
     }
 
