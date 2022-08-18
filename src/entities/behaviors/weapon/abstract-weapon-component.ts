@@ -3,12 +3,13 @@ import {IWeaponComponent} from "./IWeaponComponent";
 
 export abstract class AbstractWeaponComponent extends AbstractComponent implements IWeaponComponent {
 
+    protected readonly _typeID: string = 'weapon';
     protected _reloadCounter: number;
     protected _reloadTime: number;
     protected _reloaded: boolean;
 
-    constructor() {
-        super();
+    constructor(source?: AbstractWeaponComponent) {
+        super(source);
         this._reloaded = true;
         this._reloadTime = 1;
         this._reloadCounter = 0;

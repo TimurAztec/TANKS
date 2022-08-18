@@ -27,4 +27,6 @@ export class DirectionalWalkMovementBehavior extends AbstractMovementComponent {
         super.update(dt);
         this.stop();
     }
+
+    public clone(): DirectionalWalkMovementBehavior { return new DirectionalWalkMovementBehavior(this) }
 }

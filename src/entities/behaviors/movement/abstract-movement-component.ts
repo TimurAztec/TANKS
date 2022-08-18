@@ -4,6 +4,7 @@ import {Point} from "pixi.js";
 
 export abstract class AbstractMovementComponent extends AbstractComponent implements IMovementComponent {
 
+    protected readonly _typeID: string = 'movement';
     // IgnoreDT needed for smooth collision
     protected _ignoreDT: boolean = false;
     protected _previousPosition: Point = new Point();

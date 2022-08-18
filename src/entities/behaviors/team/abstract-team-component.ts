@@ -3,6 +3,7 @@ import {AbstractComponent} from "../AbstractComponent";
 
 export abstract class AbstractTeamComponent extends AbstractComponent implements ITeamComponent {
 
+    protected readonly _typeID: string = 'team';
     protected _team: string = '';
     protected _setTeamCallback: Function = () => {};
 

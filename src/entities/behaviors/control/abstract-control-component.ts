@@ -2,6 +2,8 @@ import {IControlComponent} from "./IControlComponent";
 import {AbstractComponent} from "../AbstractComponent";
 
 abstract class AbstractControlComponent extends AbstractComponent implements IControlComponent {
+
+    protected readonly _typeID: string = 'control';
     protected actionUpCallback: Function;
     protected actionDownCallback: Function;
     protected actionLeftCallback: Function;

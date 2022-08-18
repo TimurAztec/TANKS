@@ -46,9 +46,11 @@ abstract class Entity extends Container implements IEntity, IEventListener {
 
     constructor(source?: Entity) {
         super();
+        this._initOnUpdate = true;
         if (source?._skinOptions) this.setSkin(source._skinOptions);
         if (source?._components) {
-            source._components.forEach(component => this.setComponent(Object.create(component)));
+            // source._components.forEach(component => this.setComponent(Object.create(component)));
+            source._components.forEach(component => this.setComponent(component.clone()));
         }
 
         this.name = this.constructor.name + utils.uid()
@@ -94,13 +96,16 @@ abstract class Entity extends Container implements IEntity, IEventListener {
 
     public setComponent(component: IComponent): void {
         component.setEntity(this);
+        let componentExist = false;
         for (const [i, c] of this._components.entries()) {
-            if (Object.getPrototypeOf(c).constructor == Object.getPrototypeOf(component).constructor) {
+            let a = Object.getPrototypeOf(component);
+            if (c.typeID ==  component.typeID) {
                 this._components[i] = component;
+                componentExist = true;
                 return;
             }
         }
-        this._components.push(component);
+        if (!componentExist) { this._components.push(component); }
 
         if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
             this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point, prevPos: Point) => {
@@ -112,7 +117,7 @@ abstract class Entity extends Container implements IEntity, IEventListener {
 
     public getComponent<C extends IComponent>(componentType: constr<C>): C {
         for (const component of this._components) {
-            if (Object.getPrototypeOf(component) instanceof componentType) {
+            if (component instanceof componentType) {
                 return component as C
             }
         }
@@ -124,7 +129,7 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         let index: number;
 
         for (const [i, component] of this._components.entries()) {
-            if (Object.getPrototypeOf(component) instanceof componentType) {
+            if (component instanceof componentType) {
                 toRemove = component
                 index = i
                 break

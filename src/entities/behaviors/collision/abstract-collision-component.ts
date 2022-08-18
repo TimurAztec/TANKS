@@ -3,6 +3,8 @@ import {AbstractComponent} from "../AbstractComponent";
 import {Entity} from "../../entity";
 
 abstract class AbstractCollisionComponent extends AbstractComponent implements ICollisionComponent {
+
+    protected readonly _typeID: string = 'collision';
     protected _collisionCallback: Function;
     protected _collisionGroup: Entity[] = [];
 

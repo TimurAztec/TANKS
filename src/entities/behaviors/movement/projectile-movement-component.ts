@@ -8,4 +8,5 @@ export class ProjectileMovementComponent extends AbstractMovementComponent {
         return super.setMovementVector(vector) as ProjectileMovementComponent;
     }
 
+    public clone(): ProjectileMovementComponent { return new ProjectileMovementComponent(this) }
 }

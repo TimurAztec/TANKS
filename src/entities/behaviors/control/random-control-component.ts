@@ -38,6 +38,8 @@ class RandomControlComponent extends AbstractControlComponent {
             this[`triggerAction${this._nextAction}`]()
         }
     }
+
+    public clone(): RandomControlComponent { return new RandomControlComponent(this) }
 }
 
 export { RandomControlComponent }
