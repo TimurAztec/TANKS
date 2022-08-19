@@ -10,7 +10,7 @@ import { Water } from "./tiles/water";
 import {randNum} from "../utils/utils";
 import { RandomControlComponent } from "./behaviors/control/random-control-component";
 import {EnemyBulletWeaponComponent} from "./behaviors/weapon/enemy-bullet-weapon-component";
-import {AmountBasedSpawner} from "./interactive/spawners/amount-based-spawner";
+import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amount-based-spawner";
 
 const TILE_SIZE: number = 36;
 
@@ -57,7 +57,7 @@ class EntityFactory {
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
-                    .setMaxAmountPerTime(12);
+                    .setMaxAmountPerTime(3);
             }
             default:
                 return null;

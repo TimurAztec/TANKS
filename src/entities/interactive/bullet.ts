@@ -11,6 +11,7 @@ import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-col
 import {IComponent} from "../behaviors/IComponent";
 import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
 import {GameScene} from "../../scenes/game/game-scene";
+import { Tank } from "./tank";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -33,7 +34,7 @@ class Bullet extends Entity {
                 case 'Tank':
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.explode(new BigExplosionFX());
-                    object.destroy();
+                    (object as Tank).takeDamage(1);
                     break;
                 case 'Bullet':
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;

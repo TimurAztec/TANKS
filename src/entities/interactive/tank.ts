@@ -14,13 +14,17 @@ import {TILE_SIZE} from "../entity-factory";
 import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
 import {EventManager} from "../../event-manager";
 import {getTitlePosition} from "../../utils/utils";
+import {BigExplosionFX} from "../fx/big-explosion";
+import {Scene} from "../../scenes/scene";
 
 class Tank extends Entity {
     protected _speed: number;
+    protected _health: number;
 
     constructor(source?: Tank) {
         super(source);
         this._speed = source?._speed || 2;
+        this._health = source?._health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BulletWeaponComponent());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
@@ -45,6 +49,10 @@ class Tank extends Entity {
 
     public clone(): Tank {
         return new Tank(this);
+    }
+
+    public takeDamage(damage: number): void {
+        this._health -= damage;
     }
 
     public setComponent(component: IComponent): void {
@@ -95,6 +103,13 @@ class Tank extends Entity {
     }
 
     public update(dt: number): void {
+        if (this._health <= 0) {
+            const fx = new BigExplosionFX();
+            fx.x = this.x;
+            fx.y = this.y;
+            SceneManager.currentScene.addChild(fx);
+            this.destroy();
+        }
         if (this._initOnUpdate) {
             const fx = new AppearFX();
             fx.x = this.x;

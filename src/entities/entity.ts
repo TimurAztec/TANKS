@@ -40,13 +40,19 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     protected getNextTilePosition(movementVector?: Point): Point {
         const entityTilePos = this.tilePosition;
         let vector = movementVector;
-        if (!vector || (vector.x == 0 && vector.y == 0)) {
-            const radAngle: number = (this.angle-90) * (Math.PI/180);
-            vector = new Point(
-                (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
-                (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
-            );
-        }
+        //TODO prototype code for advanced collision for fast moving objects (doesent work for now)
+        // if (!vector || (vector.x == 0 && vector.y == 0)) {
+        //     const radAngle: number = (this.angle-90) * (Math.PI/180);
+        //     vector = new Point(
+        //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+        //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+        //     );
+        // }
+        const radAngle: number = (this.angle-90) * (Math.PI/180);
+        vector = new Point(
+            (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+            (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+        );
         return new Point(
             entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
             entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
@@ -72,7 +78,6 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         this._initOnUpdate = true;
         if (source?._skinOptions) this.setSkin(source._skinOptions);
         if (source?._components) {
-            // source._components.forEach(component => this.setComponent(Object.create(component)));
             source._components.forEach(component => this.setComponent(component.clone()));
         }
 
