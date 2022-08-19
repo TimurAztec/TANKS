@@ -57,7 +57,7 @@ class EntityFactory {
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
-                    .setMaxAmountPerTime(3);
+                    .setMaxAmountPerTime(12);
             }
             default:
                 return null;

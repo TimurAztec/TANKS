@@ -8,7 +8,6 @@ import {PauseScene} from "../menu/pause-scene";
 import {EntityFactory, TILE_SIZE} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {AbstractCollisionComponent} from "../../entities/behaviors/collision/abstract-collision-component";
-import {AABB} from "../../utils/utils";
 import {DisplayObject, Point} from "pixi.js";
 
 export class GameScene extends Scene implements IEventListener {

@@ -10,6 +10,7 @@ import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 import {IComponent} from "../behaviors/IComponent";
 import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
+import {GameScene} from "../../scenes/game/game-scene";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -32,6 +33,11 @@ class Bullet extends Entity {
                 case 'Tank':
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.explode(new BigExplosionFX());
+                    object.destroy();
+                    break;
+                case 'Bullet':
+                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    this.explode(new SmallExplosionFX());
                     object.destroy();
                     break;
             }
@@ -66,11 +72,17 @@ class Bullet extends Entity {
     public setComponent(component: IComponent): void {
         super.setComponent(component);
 
-        if (Object.getPrototypeOf(component) instanceof AbstractMovementComponent) {
-            this.getComponent(AbstractMovementComponent).onEntityMoved(() => {
-                if (this.getComponent(AbstractCollisionComponent))
-                    this.getComponent(AbstractCollisionComponent).setCollisionGroup(SceneManager.currentScene.children as Entity[])
-            })
+        if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
+            this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
+                const tileMap = (SceneManager.currentScene as GameScene).tileMap;
+                const tilePos = this.tilePosition;
+                const nextTilePos = this.getNextTilePosition(vector);
+                let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+                if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]
+                }
+                this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
+            });
         }
     }
 

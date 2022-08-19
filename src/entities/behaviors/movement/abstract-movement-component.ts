@@ -13,6 +13,10 @@ export abstract class AbstractMovementComponent extends AbstractComponent implem
     protected _rotationTo: number = undefined;
     protected _onEntityMoved: Function;
 
+    public get previousPosition(): Point {
+        return this._previousPosition;
+    }
+
     public setRotationSpeed(speed: number): AbstractMovementComponent {
         this._rotationSpeed = speed;
         return this;

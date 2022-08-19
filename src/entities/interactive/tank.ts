@@ -9,6 +9,11 @@ import {AbstractControlComponent} from "../behaviors/control/abstract-control-co
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 import {AppearFX} from "../fx/appear";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
+import {GameScene} from "../../scenes/game/game-scene";
+import {TILE_SIZE} from "../entity-factory";
+import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
+import {EventManager} from "../../event-manager";
+import {getTitlePosition} from "../../utils/utils";
 
 class Tank extends Entity {
     protected _speed: number;
@@ -45,6 +50,31 @@ class Tank extends Entity {
     public setComponent(component: IComponent): void {
         super.setComponent(component);
 
+        if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
+            this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
+                const tileMap = (SceneManager.currentScene as GameScene).tileMap;
+                const tilePos = this.tilePosition;
+                const nextTilePos = this.getNextTilePosition(vector);
+                let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+                if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]
+                }
+                if (nextTilePos.y != 0 && tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x - 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x - 1]]
+                }
+                if (nextTilePos.y != 0 && tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x + 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x + 1]]
+                }
+                if (nextTilePos.x != 0 && tileMap[nextTilePos.y + 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y + 1][nextTilePos.x]]
+                }
+                if (nextTilePos.x != 0 && tileMap[nextTilePos.y - 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y - 1][nextTilePos.x]]
+                }
+                this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
+            });
+        }
+
         if (Object.getPrototypeOf(component) instanceof AbstractControlComponent) {
             this.getComponent(AbstractControlComponent).onActionUp(() => {
                 this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, -this._speed));
@@ -73,7 +103,6 @@ class Tank extends Entity {
         }
         super.update(dt);
     }
-
 }
 
 export { Tank }

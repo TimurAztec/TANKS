@@ -16,7 +16,6 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     protected _skinOptions: SkinOptions;
     protected _components: IComponent[] = [];
     protected _initOnUpdate: boolean = true;
-    protected _previousTilePosition: Point = new Point();
 
     public get entityType(): string {
         return this.constructor.name;
@@ -26,8 +25,32 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         return this._destroyed;
     }
 
+    public get previousTilePosition(): Point {
+        if (this.getComponent(AbstractMovementComponent)) {
+            return getTitlePosition(new Point()
+                .copyFrom(this.getComponent(AbstractMovementComponent).previousPosition));
+        }
+        return this.tilePosition;
+    }
+
     public get tilePosition(): Point {
         return getTitlePosition(new Point().copyFrom(this.position));
+    }
+
+    protected getNextTilePosition(movementVector?: Point): Point {
+        const entityTilePos = this.tilePosition;
+        let vector = movementVector;
+        if (!vector || (vector.x == 0 && vector.y == 0)) {
+            const radAngle: number = (this.angle-90) * (Math.PI/180);
+            vector = new Point(
+                (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+                (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+            );
+        }
+        return new Point(
+            entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
+            entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
+        )
     }
 
     public get simpleBounds(): AABBData {
@@ -77,7 +100,7 @@ abstract class Entity extends Container implements IEntity, IEventListener {
                     frame.updateUvs();
                     frames.push(frame);
                 }
-                this._skin = new AnimatedSprite(frames, false);
+                this._skin = new AnimatedSprite(frames);
             }
             this.addChild(this._skin);
         }
@@ -92,13 +115,19 @@ abstract class Entity extends Container implements IEntity, IEventListener {
             this._initOnUpdate = false;
         }
         this._components.forEach((component) => component.update(dt));
+        if (!this._destroyed && !this.previousTilePosition.equals(this.tilePosition)) {
+            EventManager.notify('entity_moved_from_tile_to_tile', {
+                entity: this,
+                from: this.previousTilePosition,
+                to: this.tilePosition
+            });
+        }
     }
 
     public setComponent(component: IComponent): void {
         component.setEntity(this);
         let componentExist = false;
         for (const [i, c] of this._components.entries()) {
-            let a = Object.getPrototypeOf(component);
             if (c.typeID ==  component.typeID) {
                 this._components[i] = component;
                 componentExist = true;
@@ -106,13 +135,6 @@ abstract class Entity extends Container implements IEntity, IEventListener {
             }
         }
         if (!componentExist) { this._components.push(component); }
-
-        if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
-            this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point, prevPos: Point) => {
-                this._previousTilePosition = getTitlePosition(new Point().copyFrom(prevPos));
-                this.processTiling(vector);
-            });
-        }
     }
 
     public getComponent<C extends IComponent>(componentType: constr<C>): C {
@@ -143,35 +165,6 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     }
 
     public onEvent(event: string, data: any) {}
-
-    protected processTiling(movementVector?: Point): void {
-        const tileMap = (SceneManager.currentScene as GameScene).tileMap;
-        const entityTilePos = this.tilePosition;
-        let vector = movementVector;
-        if (vector.x == 0 && vector.y == 0) {
-            const radAngle: number = (this.angle-90) * (Math.PI/180);
-            vector = new Point(
-                (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
-                (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
-            );
-        }
-        const tileVectoredPos: Point = new Point(
-            entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
-            entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
-        )
-        this.getComponent(AbstractCollisionComponent).setCollisionGroup([
-            ...tileMap[entityTilePos.y][entityTilePos.x],
-            ...tileMap[tileVectoredPos.y][tileVectoredPos.x]
-        ]);
-
-        if (!this._previousTilePosition.equals(this.tilePosition) && !this._destroyed) {
-            EventManager.notify('entity_moved_from_tile_to_tile', {
-                entity: this,
-                from: this._previousTilePosition,
-                to: this.tilePosition
-            });
-        }
-    }
 
 }
 
