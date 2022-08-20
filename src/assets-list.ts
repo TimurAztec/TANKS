@@ -25,6 +25,9 @@ const assets = [
     { name: "wall", url: "./assets/tiles/wall.png" },
     { name: "dirt", url: "./assets/tiles/dirt.png" },
     { name: "water", url: "./assets/tiles/water.png" },
+    { name: "shot_sound", url: "./assets/sounds/shot.wav" },
+    { name: "explode_sound", url: "./assets/sounds/explode.wav" },
+    { name: "hit_sound", url: "./assets/sounds/hit.wav" },
 ]
 
 export { loaderAssets, assets }

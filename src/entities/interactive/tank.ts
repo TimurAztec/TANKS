@@ -9,33 +9,38 @@ import {AbstractControlComponent} from "../behaviors/control/abstract-control-co
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 import {AppearFX} from "../fx/appear";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
+import {GameScene} from "../../scenes/game/game-scene";
+import {TILE_SIZE} from "../entity-factory";
+import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
+import {EventManager} from "../../event-manager";
+import {getTitlePosition} from "../../utils/utils";
+import {BigExplosionFX} from "../fx/big-explosion";
+import {Scene} from "../../scenes/scene";
 
 class Tank extends Entity {
     protected _speed: number;
+    protected _health: number;
 
     constructor(source?: Tank) {
         super(source);
         this._speed = source?._speed || 2;
+        this._health = source?._health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BulletWeaponComponent());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
                 case 'HardWall':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'SmallWall':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'Water':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'Tank':
-                    this.getComponent(AbstractMovementComponent).stop();
-                    this.getComponent(AbstractMovementComponent).resetPosition();
+                    this.getComponent(AbstractMovementComponent).collides();
                     break;
             }
         }));
@@ -46,8 +51,37 @@ class Tank extends Entity {
         return new Tank(this);
     }
 
+    public takeDamage(damage: number): void {
+        this._health -= damage;
+    }
+
     public setComponent(component: IComponent): void {
         super.setComponent(component);
+
+        if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
+            this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
+                const tileMap = (SceneManager.currentScene as GameScene).tileMap;
+                const tilePos = this.tilePosition;
+                const nextTilePos = this.getNextTilePosition(vector);
+                let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+                if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]
+                }
+                if (nextTilePos.y != 0 && tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x - 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x - 1]]
+                }
+                if (nextTilePos.y != 0 && tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x + 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x + 1]]
+                }
+                if (nextTilePos.x != 0 && tileMap[nextTilePos.y + 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y + 1][nextTilePos.x]]
+                }
+                if (nextTilePos.x != 0 && tileMap[nextTilePos.y - 1]) {
+                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y - 1][nextTilePos.x]]
+                }
+                this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
+            });
+        }
 
         if (Object.getPrototypeOf(component) instanceof AbstractControlComponent) {
             this.getComponent(AbstractControlComponent).onActionUp(() => {
@@ -68,29 +102,14 @@ class Tank extends Entity {
         }
     }
 
-    protected collidedWith(object: Entity): void {
-        if (object == this) return;
-        switch (object.entityType) {
-            case 'HardWall':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-            case 'SmallWall':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-            case 'Water':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-            case 'Tank':
-                this.getComponent(AbstractMovementComponent).stop();
-                this.getComponent(AbstractMovementComponent).resetPosition();
-                break;
-        }
-    }
-
     public update(dt: number): void {
+        if (this._health <= 0) {
+            const fx = new BigExplosionFX();
+            fx.x = this.x;
+            fx.y = this.y;
+            SceneManager.currentScene.addChild(fx);
+            this.destroy();
+        }
         if (this._initOnUpdate) {
             const fx = new AppearFX();
             fx.x = this.x;
@@ -98,9 +117,7 @@ class Tank extends Entity {
             SceneManager.currentScene.addChild(fx);
         }
         super.update(dt);
-        // this.checkCollisions(SceneManager.currentScene.children as Entity[]);
     }
-
 }
 
 export { Tank }

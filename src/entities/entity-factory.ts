@@ -10,7 +10,7 @@ import { Water } from "./tiles/water";
 import {randNum} from "../utils/utils";
 import { RandomControlComponent } from "./behaviors/control/random-control-component";
 import {EnemyBulletWeaponComponent} from "./behaviors/weapon/enemy-bullet-weapon-component";
-import {AmountBasedSpawner} from "./interactive/spawners/amount-based-spawner";
+import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amount-based-spawner";
 
 const TILE_SIZE: number = 36;
 
@@ -29,12 +29,13 @@ class EntityFactory {
                 return new Wall();
             case 777:
                 return new Water();
-            case 901:
+            case 901: {
                 const playerTank = new Tank();
                 playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2});
                 playerTank.setComponent(new PlayerControlComponent());
                 playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
                 return playerTank;
+            }
             case 902: {
                 const tank = new Tank();
                 const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
