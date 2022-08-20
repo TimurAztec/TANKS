@@ -34,7 +34,7 @@ class Bullet extends Entity {
                     break;
                 case Vars.GameObjects.TANK:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
-                    this.explode(new BigExplosionFX());
+                    this.destroy();
                     (object as Tank).takeDamage(1);
                     break;
                 case 'Bullet':
