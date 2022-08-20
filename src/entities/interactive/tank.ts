@@ -24,7 +24,7 @@ class Tank extends Entity {
 
     constructor(source?: Tank) {
         super(source);
-        this._speed = source?._speed || 2;
+        this._speed = source?._speed || 3;
         this._health = source?._health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BulletWeaponComponent());

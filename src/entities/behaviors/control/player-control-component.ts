@@ -1,8 +1,6 @@
 import {AbstractControlComponent} from "./abstract-control-component";
-import {IEventListener} from "../../../ustils/events/IEventListener";
 import {EventManager} from "../../../event-manager";
-import { SceneManager } from "../../../scene-manager";
-import { Point } from "pixi.js";
+import { IEventListener } from "../../../utils/events/IEventListener";
 
 class PlayerControlComponent extends AbstractControlComponent implements IEventListener {
 
@@ -17,13 +15,25 @@ class PlayerControlComponent extends AbstractControlComponent implements IEventL
                 case 'ArrowUp':
                     this.triggerActionUp();
                     break;
+                case 'w':
+                    this.triggerActionUp();
+                    break;
                 case 'ArrowDown':
+                    this.triggerActionDown();
+                    break;
+                case 's':
                     this.triggerActionDown();
                     break;
                 case 'ArrowLeft':
                     this.triggerActionLeft();
                     break;
+                case 'a':
+                    this.triggerActionLeft();
+                    break;
                 case 'ArrowRight':
+                    this.triggerActionRight();
+                    break;
+                case 'd':
                     this.triggerActionRight();
                     break;
                 case ' ':
