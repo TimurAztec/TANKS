@@ -13,6 +13,7 @@ import {EnemyBulletWeaponComponent} from "./behaviors/weapon/enemy-bullet-weapon
 import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amount-based-spawner";
 import { Assets } from "../assets-vars";
 import { Vars } from "../vars";
+import { AmountBasedSpawner } from "./interactive/spawners/amount-based-spawner";
 
 const TILE_SIZE: number = 36;
 
@@ -51,7 +52,7 @@ class EntityFactory {
                 const tank = new Tank();
                 const enemy_skins = [Assets.Tanks.TANK_BLUE, Assets.Tanks.TANK_RED, Assets.Tanks.TANK_WHITE];
                 tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2});
-                tank.setComponent(new PlayerControlComponent());
+                tank.setComponent(new RandomControlComponent);
                 tank.setComponent(new EnemyBulletWeaponComponent());
                 tank.setComponent(new BasicTeamComponent().setTeam(Vars.Teams.TEAM_2));
 

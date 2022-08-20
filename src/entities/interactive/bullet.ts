@@ -58,8 +58,6 @@ class Bullet extends Entity {
                 Math.sin(radAngle) * this._speed));
     }
 
-=======
->>>>>>> cc7160aa229c2cae0c1af19b907b40b14f910f3e
     protected explode(fx: Entity): void {
         fx.x = this.x;
         fx.y = this.y;
