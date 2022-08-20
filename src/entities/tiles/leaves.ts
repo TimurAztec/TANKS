@@ -1,11 +1,12 @@
 import {Entity} from "../entity";
 import {randNum} from "../../utils/utils";
+import { Assets } from "../../assets-vars";
 
 class Leaves extends Entity {
 
     constructor() {
         super();
-        this.setSkin({ assetName: 'leaves' });
+        this.setSkin({ assetName: Assets.Tiles.LAEVES });
     }
 
     update(dt: number) {

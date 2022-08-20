@@ -7,6 +7,7 @@ import {SmallExplosionFX} from "../fx/small-explosion";
 import {BigExplosionFX} from "../fx/big-explosion";
 import {BasicTeamComponent} from "../behaviors/team/basic-team-component";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
+import { Vars } from "../../vars";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -32,14 +33,14 @@ class Bullet extends Entity {
     protected collidedWith(object: Entity): void {
         super.collidedWith(object);
         switch (object.entityType) {
-            case 'HardWall':
+            case Vars.GameObjects.HARD_WALL:
                 this.explode(new SmallExplosionFX());
                 break;
-            case 'SmallWall':
+            case Vars.GameObjects.SMALL_WALL:
                 this.explode(new SmallExplosionFX());
                 object.destroy();
                 break;
-            case 'Tank':
+            case Vars.GameObjects.TANK:
                 if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                 this.explode(new BigExplosionFX());
                 object.destroy();

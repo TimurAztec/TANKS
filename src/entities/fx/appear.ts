@@ -1,11 +1,12 @@
 import {Entity} from "../entity";
 import {AnimatedSprite} from "pixi.js";
+import { Assets } from "../../assets-vars";
 
 class AppearFX extends Entity {
 
     constructor() {
         super();
-        this.setSkin({assetName: 'appear', numberOfFrames: 10});
+        this.setSkin({assetName: Assets.FX.APPEAR, numberOfFrames: 10});
         (this._skin as AnimatedSprite).onComplete = () => { this.destroy(); }
         (this._skin as AnimatedSprite).animationSpeed = 0.2;
         (this._skin as AnimatedSprite).loop = false;

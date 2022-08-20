@@ -8,6 +8,7 @@ import {IComponent} from "../behaviors/IComponent";
 import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 import {AppearFX} from "../fx/appear";
+import { Vars } from "../../vars";
 
 class Tank extends Entity {
     protected _speed: number;
@@ -49,19 +50,19 @@ class Tank extends Entity {
     protected collidedWith(object: Entity): void {
         if (object == this) return;
         switch (object.entityType) {
-            case 'HardWall':
+            case Vars.GameObjects.HARD_WALL:
                 this.getComponent(AbstractMovementComponent).stop();
                 this.getComponent(AbstractMovementComponent).resetPosition();
                 break;
-            case 'SmallWall':
+            case Vars.GameObjects.HARD_WALL:
                 this.getComponent(AbstractMovementComponent).stop();
                 this.getComponent(AbstractMovementComponent).resetPosition();
                 break;
-            case 'Water':
+            case Vars.GameObjects.WATER:
                 this.getComponent(AbstractMovementComponent).stop();
                 this.getComponent(AbstractMovementComponent).resetPosition();
                 break;
-            case 'Tank':
+            case Vars.GameObjects.TANK:
                 this.getComponent(AbstractMovementComponent).stop();
                 this.getComponent(AbstractMovementComponent).resetPosition();
                 break;
