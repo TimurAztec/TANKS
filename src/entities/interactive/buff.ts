@@ -1,3 +1,4 @@
+import { Assets } from "../../assets-vars";
 import { IBuffComponent } from "../behaviors/buffs/IBuffComponent";
 import { SpeedBuffComponent } from "../behaviors/buffs/speed-buff-component copy";
 import { Entity } from "../entity";
@@ -11,11 +12,25 @@ class Buff extends Entity{
     public set type(value: string){
         this._type = value;
     }
-
+    public get type(){
+        return this._type;
+    }
 
     public getBuff(): IBuffComponent{
-        switch(this._type){
+        switch(this._type)/*{
             case 'buff-speed':
+                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+            default: 
+                break;
+        }*/
+        {
+            case Assets.Bonuses.BONUS_SPEED:
+                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+            case Assets.Bonuses.BONUS_IMMORTAL:
+                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+            case Assets.Bonuses.BONUS_LIVE:
+                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+            case Assets.Bonuses.BONUS_SLOW:
                 return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
             default: 
                 break;

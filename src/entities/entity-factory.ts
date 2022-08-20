@@ -66,10 +66,10 @@ class EntityFactory {
                     .setMaxAmountPerTime(3);
             }
             case 921:{
-                const buff = new Buff();
-                buff.type = "buff-speed";
-                buff.setSkin({assetName: Assets.Bonuses.BONUS_SPEED});     
                 /*const buff = new Buff();
+                buff.type = "buff-speed";
+                buff.setSkin({assetName: Assets.Bonuses.BONUS_SPEED});     */
+                const buff = new Buff();
                 const buff_types = [
                     Assets.Bonuses.BONUS_IMMORTAL,
                     Assets.Bonuses.BONUS_LIVE,
@@ -77,7 +77,7 @@ class EntityFactory {
                     Assets.Bonuses.BONUS_SPEED    
                 ];
                 buff.type = buff_types[Math.floor(randNum(buff_types.length))];
-                buff.setSkin({assetName: buff.type});*/
+                buff.setSkin({assetName: buff_types[Math.floor(randNum(buff_types.length))]});
                 return new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
                     .setTimeBetweenSpawns(150)
                     .setCollisionGroup(['Tank'])
