@@ -1,6 +1,5 @@
 import {Scene} from "../scene";
 import {Entity} from "../../entities/entity";
-
 import * as level1 from './levels/level1.json';
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
@@ -47,6 +46,7 @@ export class GameScene extends Scene implements IEventListener {
                 y += TILE_SIZE;
             }
         }
+        SceneManager.moveCameraTo(new Point(12, 12));
     }
 
     public onEvent(event: string, data: any): void {
@@ -63,12 +63,7 @@ export class GameScene extends Scene implements IEventListener {
 
     public update(dt: number) {
         super.update(dt);
-        console.log(dt);
-
-        // let i: number = this.children.length;
-        // while (i--) {
-        //     (this.children[i] as Entity).update(dt);
-        // }
+        // console.log(dt);
 
         this.dynamicChildren = this.dynamicChildren.filter((entity) => {
             return !entity.destroyed
@@ -76,18 +71,6 @@ export class GameScene extends Scene implements IEventListener {
         let i: number = this.dynamicChildren.length;
         while (i--) {
             this.dynamicChildren[i].update(dt);
-            // const collision = this.dynamicChildren[i].getComponent(AbstractCollisionComponent);
-            // if (collision) {
-            //     let group: Entity[] = collision.getCollisionGroup();
-            //     let j: number = group.length;
-            //     while (j--) {
-            //         if (this.dynamicChildren[i] !== group[j] &&
-            //             AABB(this.dynamicChildren[i].simpleBounds, group[j].simpleBounds)) {
-            //             collision.collidedWith(group[j]);
-            //             j = 0;
-            //         }
-            //     }
-            // }
         }
     }
 

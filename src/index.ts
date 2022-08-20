@@ -9,5 +9,10 @@ ClientInputHandler.init();
 const loader: LoaderScene = new LoaderScene();
 SceneManager.changeScene(loader);
 
+SceneManager.resize(document.documentElement.clientWidth, document.documentElement.clientHeight);
+window.onresize = (e) => {
+    SceneManager.resize(document.documentElement.clientWidth, document.documentElement.clientHeight);
+}
+
 // @ts-ignore
 window['PIXI'] = PIXI;

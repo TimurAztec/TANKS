@@ -1,6 +1,8 @@
 import {AbstractControlComponent} from "./abstract-control-component";
 import {IEventListener} from "../../../ustils/events/IEventListener";
 import {EventManager} from "../../../event-manager";
+import { SceneManager } from "../../../scene-manager";
+import { Point } from "pixi.js";
 
 class PlayerControlComponent extends AbstractControlComponent implements IEventListener {
 
