@@ -4,8 +4,8 @@ import {EventManager} from "../../../event-manager";
 
 class PlayerControlComponent extends AbstractControlComponent implements IEventListener {
 
-    constructor() {
-        super();
+    constructor(source?: PlayerControlComponent) {
+        super(source);
         EventManager.subscribe('keydown', this);
     }
 
@@ -30,6 +30,8 @@ class PlayerControlComponent extends AbstractControlComponent implements IEventL
             }
         }
     }
+
+    public clone(): PlayerControlComponent { return new PlayerControlComponent(this) }
 }
 
 export { PlayerControlComponent }

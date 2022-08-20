@@ -4,7 +4,7 @@ import {randNum} from "../../../utils/utils";
 class RandomControlComponent extends AbstractControlComponent {
 
     protected _actionChangeTimer: number = 0;
-    protected _actionChangeDelay: number = 25;
+    protected _actionChangeDelay: number = 75;
     protected _nextAction: string = '';
 
     update(dt: number) {
@@ -38,6 +38,8 @@ class RandomControlComponent extends AbstractControlComponent {
             this[`triggerAction${this._nextAction}`]()
         }
     }
+
+    public clone(): RandomControlComponent { return new RandomControlComponent(this) }
 }
 
 export { RandomControlComponent }

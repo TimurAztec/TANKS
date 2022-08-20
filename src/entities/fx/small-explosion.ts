@@ -1,22 +1,21 @@
 import {Entity} from "../entity";
-import {AnimatedSprite} from "pixi.js";
+import {AnimatedSprite, Loader} from "pixi.js";
+import {Howl} from 'howler';
 import { Assets } from "../../assets-vars";
 
 class SmallExplosionFX extends Entity {
 
-    constructor() {
-        super();
+    constructor(source?: SmallExplosionFX) {
+        super(source);
         this.setSkin({assetName: Assets.FX.EXPLODE_SMALL, numberOfFrames: 8});
-        (this._skin as AnimatedSprite).onComplete = () => { this.destroy(); }
-        (this._skin as AnimatedSprite).animationSpeed = 0.1;
+        (this._skin as AnimatedSprite).onComplete = () => { this.destroy() }
+        (this._skin as AnimatedSprite).animationSpeed = 0.25;
         (this._skin as AnimatedSprite).loop = false;
-        (this._skin as AnimatedSprite).gotoAndPlay(0);
+        (this._skin as AnimatedSprite).play();
+        new Howl({ src: Loader.shared.resources['hit_sound'].url}).play();
     }
 
-    update(dt: number) {
-        super.update(dt);
-        (this._skin as AnimatedSprite).update(dt)
-    }
+    clone(): SmallExplosionFX { return new SmallExplosionFX }
 
 }
 

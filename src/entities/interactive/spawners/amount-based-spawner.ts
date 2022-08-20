@@ -1,5 +1,11 @@
 import { Entity } from "../../entity";
 import {Spawner} from "./spawner";
+import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-collision-component";
+import {AbstractMovementComponent} from "../../behaviors/movement/abstract-movement-component";
+import {AbstractCollisionComponent} from "../../behaviors/collision/abstract-collision-component";
+import {Point} from "pixi.js";
+import {SceneManager} from "../../../scene-manager";
+import {GameScene} from "../../../scenes/game/game-scene";
 
 class AmountBasedSpawner extends Spawner {
     protected _timesToSpawn: number;
@@ -8,6 +14,14 @@ class AmountBasedSpawner extends Spawner {
     protected _timeBetweenSpawns: number = 0;
     protected _collisionGroup: string[] = [];
     protected _collides: boolean = false;
+
+    constructor(source?: AmountBasedSpawner) {
+        super(source);
+        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+            if (object == this) return;
+            if (this._collisionGroup.includes(object.entityType)) this._collides = true;
+        }));
+    }
 
     public clone(): AmountBasedSpawner {
         return new AmountBasedSpawner(this);
@@ -38,6 +52,11 @@ class AmountBasedSpawner extends Spawner {
     }
 
     public update(dt: number): void {
+        if (this.getComponent(AbstractCollisionComponent)) {
+            const tileMap = (SceneManager.currentScene as GameScene).tileMap;
+            const tilePos = this.tilePosition;
+            this.getComponent(AbstractCollisionComponent).setCollisionGroup([...tileMap[tilePos.y][tilePos.x]]);
+        }
         super.update(dt);
         this._collides = false;
         if (this._timesToSpawn && this._dttimer > this._timeBetweenSpawns && !this._collides) {
@@ -50,11 +69,9 @@ class AmountBasedSpawner extends Spawner {
                 this._timesToSpawn--;
             }
         }
-    }
-
-    protected collidedWith(object: Entity) {
-        if (object == this) return;
-        if (this._collisionGroup.includes(object.entityType)) this._collides = true;
+        if (this._timesToSpawn <= 0) {
+            this.destroy();
+        }
     }
 
 }
