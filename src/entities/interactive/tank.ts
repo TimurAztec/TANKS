@@ -17,9 +17,11 @@ import {getTitlePosition} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import {Scene} from "../../scenes/scene";
 import { Vars } from "../../vars";
+import { AbstractBuffComponent } from "../behaviors/buffs/abstract-buff-component";
+import { Buff } from "./buff";
 
 class Tank extends Entity {
-    protected _speed: number;
+    public _speed: number;
     protected _health: number;
 
     constructor(source?: Tank) {
@@ -43,10 +45,17 @@ class Tank extends Entity {
                 case 'Tank':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
+                case 'Buff':
+                    this.setComponent((object as Buff).getBuff());
+                    (object as Buff).destroy();
             }
         }));
         this.getComponent(AbstractWeaponComponent).setReloadTime(50);
     }
+
+    public set speed(value: number) {
+        this._speed = value;
+    } 
 
     public clone(): Tank {
         return new Tank(this);
@@ -101,6 +110,8 @@ class Tank extends Entity {
                 this.getComponent(AbstractWeaponComponent).fire();
             });
         }
+
+       
     }
 
     public update(dt: number): void {

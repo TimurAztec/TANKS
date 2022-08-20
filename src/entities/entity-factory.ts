@@ -14,6 +14,9 @@ import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amou
 import { Assets } from "../assets-vars";
 import { Vars } from "../vars";
 import { AmountBasedSpawner } from "./interactive/spawners/amount-based-spawner";
+import { SpeedBuffComponent } from "./behaviors/buffs/speed-buff-component copy";
+import { Buffer } from "pixi.js";
+import { Buff } from "./interactive/buff";
 
 const TILE_SIZE: number = 36;
 
@@ -56,11 +59,30 @@ class EntityFactory {
                 tank.setComponent(new EnemyBulletWeaponComponent());
                 tank.setComponent(new BasicTeamComponent().setTeam(Vars.Teams.TEAM_2));
 
-                return new AmountBasedSpawner().setPrototypeEntity(tank)
+                return new WanderingAmountBasedSpawner().setPrototypeEntity(tank)
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
                     .setMaxAmountPerTime(3);
+            }
+            case 921:{
+                const buff = new Buff();
+                buff.type = "buff-speed";
+                buff.setSkin({assetName: Assets.Bonuses.BONUS_SPEED});     
+                /*const buff = new Buff();
+                const buff_types = [
+                    Assets.Bonuses.BONUS_IMMORTAL,
+                    Assets.Bonuses.BONUS_LIVE,
+                    Assets.Bonuses.BONUS_SLOW,
+                    Assets.Bonuses.BONUS_SPEED    
+                ];
+                buff.type = buff_types[Math.floor(randNum(buff_types.length))];
+                buff.setSkin({assetName: buff.type});*/
+                return new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
+                    .setTimeBetweenSpawns(150)
+                    .setCollisionGroup(['Tank'])
+                    .setTimesToSpawn(1000)
+                    .setMaxAmountPerTime(1);
             }
             default:
                 return null;
