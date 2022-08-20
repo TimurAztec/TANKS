@@ -2,6 +2,7 @@ import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {GameScene} from "../game/game-scene";
 import {Loader, Sprite, Text, TextStyle} from "pixi.js";
+import { Assets } from "../../assets-vars";
 
 export class MenuScene extends Scene {
 
@@ -17,8 +18,8 @@ export class MenuScene extends Scene {
             align: "center",
             fill: "#754c24",
         }));
-        this.startButton = new Sprite(Loader.shared.resources['button'].texture);
-        this.scoreButton = new Sprite(Loader.shared.resources['button_scores'].texture);
+        this.startButton = new Sprite(Loader.shared.resources[Assets.Buttons.BUTTON].texture);
+        this.scoreButton = new Sprite(Loader.shared.resources[Assets.Buttons.BUTTON_SCORES].texture);
 
         this.logoText.anchor.set(0.5);
         this.logoText.x = SceneManager.width / 2;

@@ -11,6 +11,9 @@ import {randNum} from "../utils/utils";
 import { RandomControlComponent } from "./behaviors/control/random-control-component";
 import {EnemyBulletWeaponComponent} from "./behaviors/weapon/enemy-bullet-weapon-component";
 import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amount-based-spawner";
+import { Assets } from "../assets-vars";
+import { Vars } from "../vars";
+import { AmountBasedSpawner } from "./interactive/spawners/amount-based-spawner";
 
 const TILE_SIZE: number = 36;
 
@@ -31,27 +34,27 @@ class EntityFactory {
                 return new Water();
             case 901: {
                 const playerTank = new Tank();
-                playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2});
+                playerTank.setSkin({assetName: Assets.Tanks.TANK_PLAYER, scaleX: 1.2});
                 playerTank.setComponent(new PlayerControlComponent());
-                playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
+                playerTank.setComponent(new BasicTeamComponent().setTeam(Vars.Teams.TEAM_1));
                 return playerTank;
             }
             case 902: {
                 const tank = new Tank();
-                const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
+                const enemy_skins = [Assets.Tanks.TANK_BLUE, Assets.Tanks.TANK_RED, Assets.Tanks.TANK_WHITE];
                 tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2});
                 tank.setComponent(new RandomControlComponent());
                 tank.setComponent(new EnemyBulletWeaponComponent());
-                tank.setComponent(new BasicTeamComponent().setTeam('player2'));
+                tank.setComponent(new BasicTeamComponent().setTeam(Vars.Teams.TEAM_2));
                 return tank;
             }
             case 912: {
                 const tank = new Tank();
-                const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
+                const enemy_skins = [Assets.Tanks.TANK_BLUE, Assets.Tanks.TANK_RED, Assets.Tanks.TANK_WHITE];
                 tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2});
-                tank.setComponent(new RandomControlComponent());
+                tank.setComponent(new RandomControlComponent);
                 tank.setComponent(new EnemyBulletWeaponComponent());
-                tank.setComponent(new BasicTeamComponent().setTeam('player2'));
+                tank.setComponent(new BasicTeamComponent().setTeam(Vars.Teams.TEAM_2));
 
                 return new AmountBasedSpawner().setPrototypeEntity(tank)
                     .setTimeBetweenSpawns(250)

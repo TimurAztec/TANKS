@@ -3,6 +3,7 @@ import {Bullet} from "../../interactive/bullet";
 import {SceneManager} from "../../../scene-manager";
 import {AbstractTeamComponent} from "../team/abstract-team-component";
 import {BasicTeamComponent} from "../team/basic-team-component";
+import { Assets } from "../../../assets-vars";
 
 export class BulletWeaponComponent extends AbstractWeaponComponent {
 
@@ -10,7 +11,7 @@ export class BulletWeaponComponent extends AbstractWeaponComponent {
         if (!this._reloaded) return;
         super.fire();
         const bullet: Bullet = new Bullet();
-        bullet.setSkin({assetName: 'bullet'});
+        bullet.setSkin({assetName: Assets.Bullets.BULLET});
         if (this._entity.getComponent(AbstractTeamComponent)) {
             bullet.setComponent(new BasicTeamComponent().setTeam(
                 this._entity.getComponent(AbstractTeamComponent).getTeam()

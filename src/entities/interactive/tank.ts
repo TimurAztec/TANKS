@@ -16,6 +16,7 @@ import {EventManager} from "../../event-manager";
 import {getTitlePosition} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import {Scene} from "../../scenes/scene";
+import { Vars } from "../../vars";
 
 class Tank extends Entity {
     protected _speed: number;

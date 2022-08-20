@@ -12,6 +12,7 @@ import {IComponent} from "../behaviors/IComponent";
 import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
 import {GameScene} from "../../scenes/game/game-scene";
 import { Tank } from "./tank";
+import { Vars } from "../../vars";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -24,16 +25,16 @@ class Bullet extends Entity {
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
-                case 'HardWall':
+                case Vars.GameObjects.HARD_WALL:
                     this.explode(new SmallExplosionFX());
                     break;
-                case 'SmallWall':
+                case Vars.GameObjects.SMALL_WALL:
                     this.explode(new SmallExplosionFX());
                     object.destroy();
                     break;
-                case 'Tank':
+                case Vars.GameObjects.TANK:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
-                    this.explode(new BigExplosionFX());
+                    this.destroy();
                     (object as Tank).takeDamage(1);
                     break;
                 case 'Bullet':
