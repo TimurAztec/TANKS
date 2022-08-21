@@ -95,7 +95,20 @@ export class GameScene extends Scene implements IEventListener {
 
     protected moveEntityFromTileToTile(entity: Entity, from: Point, to: Point): void {
         const index = this.tileMap[from.y][from.x].indexOf(entity);
-        if (index < 0) return;
-        this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
+        if (index >= 0) {
+            this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
+        } else {
+            let i: number = this.tileMap.length;
+            while(i--) {
+                let j: number = this.tileMap[i].length;
+                while(j--) {
+                    const findex = this.tileMap[i][j].indexOf(entity);
+                    if (findex >= 0) {
+                        this.tileMap[to.y][to.x].push(this.tileMap[i][j].splice(findex, 1)[0]);
+                        i = j = 0;
+                    }
+                }
+            }
+        }
     }
 }

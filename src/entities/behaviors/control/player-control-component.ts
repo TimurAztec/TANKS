@@ -4,43 +4,54 @@ import { IEventListener } from "../../../utils/events/IEventListener";
 
 class PlayerControlComponent extends AbstractControlComponent implements IEventListener {
 
+    protected action: Function = () => {}
+
     constructor(source?: PlayerControlComponent) {
         super(source);
         EventManager.subscribe('keydown', this);
+        EventManager.subscribe('keyup', this);
     }
 
     public onEvent(event:string, data:any): void {
         if (event == 'keydown') {
             switch (data) {
                 case 'ArrowUp':
-                    this.triggerActionUp();
+                    this.action = this.triggerActionUp;
                     break;
                 case 'w':
-                    this.triggerActionUp();
+                    this.action = this.triggerActionUp;
                     break;
                 case 'ArrowDown':
-                    this.triggerActionDown();
+                    this.action = this.triggerActionDown;
                     break;
                 case 's':
-                    this.triggerActionDown();
+                    this.action = this.triggerActionDown;
                     break;
                 case 'ArrowLeft':
-                    this.triggerActionLeft();
+                    this.action = this.triggerActionLeft;
                     break;
                 case 'a':
-                    this.triggerActionLeft();
+                    this.action = this.triggerActionLeft;
                     break;
                 case 'ArrowRight':
-                    this.triggerActionRight();
+                    this.action = this.triggerActionRight;
                     break;
                 case 'd':
-                    this.triggerActionRight();
+                    this.action = this.triggerActionRight;
                     break;
                 case ' ':
-                    this.triggerActionSpace();
+                    this.action = this.triggerActionSpace;
                     break;
             }
         }
+        if (event == 'keyup') {
+            this.action = () => {}
+        }
+    }
+
+    public update(dt: number): void {
+        super.update(dt);
+        this.action();
     }
 
     public clone(): PlayerControlComponent { return new PlayerControlComponent(this) }

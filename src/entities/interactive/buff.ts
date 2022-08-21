@@ -17,21 +17,16 @@ class Buff extends Entity{
     }
 
     public getBuff(): IBuffComponent{
-        switch(this._type)/*{
-            case 'buff-speed':
-                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
-            default: 
-                break;
-        }*/
+        switch(this._type)
         {
             case Assets.Bonuses.BONUS_SPEED:
-                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
             case Assets.Bonuses.BONUS_IMMORTAL:
-                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
             case Assets.Bonuses.BONUS_LIVE:
-                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
             case Assets.Bonuses.BONUS_SLOW:
-                return new SpeedBuffComponent().applyBuff('_speed', 15, 500);
+                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
             default: 
                 break;
         }

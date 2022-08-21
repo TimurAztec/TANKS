@@ -21,12 +21,12 @@ import { AbstractBuffComponent } from "../behaviors/buffs/abstract-buff-componen
 import { Buff } from "./buff";
 
 class Tank extends Entity {
-    public _speed: number;
+    protected _speed: number;
     protected _health: number;
 
     constructor(source?: Tank) {
         super(source);
-        this._speed = source?._speed || 3;
+        this._speed = source?._speed || 2;
         this._health = source?._health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BulletWeaponComponent());

@@ -58,16 +58,15 @@ class EntityFactory {
                 tank.setComponent(new EnemyBulletWeaponComponent());
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
 
-                return new WanderingAmountBasedSpawner().setPrototypeEntity(tank)
+                let spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(tank)
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
                     .setMaxAmountPerTime(3);
+                    spawner.setSkin({assetName: 'eagle'})
+                    return spawner
             }
             case 921:{
-                /*const buff = new Buff();
-                buff.type = "buff-speed";
-                buff.setSkin({assetName: Assets.Bonuses.BONUS_SPEED});     */
                 const buff = new Buff();
                 const buff_types = [
                     Assets.Bonuses.BONUS_IMMORTAL,
@@ -77,11 +76,13 @@ class EntityFactory {
                 ];
                 buff.type = buff_types[Math.floor(randNum(buff_types.length))];
                 buff.setSkin({assetName: buff_types[Math.floor(randNum(buff_types.length))]});
-                return new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
+                let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
                     .setTimeBetweenSpawns(150)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(1000)
                     .setMaxAmountPerTime(1);
+                    spawner.setSkin({assetName: 'eagle'})
+                    return spawner
             }
             default:
                 return null;
