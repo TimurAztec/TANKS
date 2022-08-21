@@ -15,6 +15,7 @@ import { AmountBasedSpawner } from "./interactive/spawners/amount-based-spawner"
 import { SpeedBuffComponent } from "./behaviors/buffs/speed-buff-component copy";
 import { Buffer } from "pixi.js";
 import { Buff } from "./interactive/buff";
+import { Assets } from "../assets-vars";
 
 const TILE_SIZE: number = 36;
 
