@@ -42,6 +42,10 @@ class Bullet extends Entity {
                     this.explode(new SmallExplosionFX());
                     object.destroy();
                     break;
+                case 'Base':
+                    this.explode(new BigExplosionFX());
+                    object.destroy();
+                    break;
             }
         }));
         this.setComponent(new ProjectileMovementComponent());

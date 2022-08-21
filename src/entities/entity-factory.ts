@@ -16,6 +16,7 @@ import { SpeedBuffComponent } from "./behaviors/buffs/speed-buff-component copy"
 import { Buffer } from "pixi.js";
 import { Buff } from "./interactive/buff";
 import { Assets } from "../assets-vars";
+import { Base } from "./interactive/base";
 
 const TILE_SIZE: number = 36;
 
@@ -32,7 +33,7 @@ class EntityFactory {
                 return new HardWall();
             case 202:
                 return new Wall();
-            case 777:
+            case 211:
                 return new Water();
             case 901: {
                 const playerTank = new Tank();
@@ -83,6 +84,12 @@ class EntityFactory {
                     .setMaxAmountPerTime(1);
                     spawner.setSkin({assetName: 'eagle'})
                     return spawner
+            }
+            case 777:{
+                const base = new Base();
+                base.setComponent(new BasicTeamComponent().setTeam('player1'));
+                base.setSkin({assetName: 'eagle'});
+                return base;
             }
             default:
                 return null;

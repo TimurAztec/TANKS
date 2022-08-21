@@ -8,17 +8,21 @@ import {EntityFactory, TILE_SIZE} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {AbstractCollisionComponent} from "../../entities/behaviors/collision/abstract-collision-component";
 import {DisplayObject, Point} from "pixi.js";
+import { MenuScene } from "../menu/menu-scene";
 
 export class GameScene extends Scene implements IEventListener {
 
     public dynamicChildren: Entity[] = [];
     public tileMap: (Entity | undefined)[][][] = [];
 
+    protected _preUpdateAction: Function = () => {};
+
     constructor() {
         super();
 
         EventManager.subscribe('keydown', this);
         EventManager.subscribe('entity_moved_from_tile_to_tile', this);
+        EventManager.subscribe('team_lost', this);
 
         this.loadLevel(level1);
     }
@@ -52,16 +56,32 @@ export class GameScene extends Scene implements IEventListener {
     public onEvent(event: string, data: any): void {
         if (!this.paused) {
             if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
-                console.log(this.tileMap);
-                SceneManager.changeScene(new PauseScene().setParentScene(this));
+                this._preUpdateAction = () => {
+                    SceneManager.changeScene(new PauseScene().setParentScene(this));
+                    this._preUpdateAction = () => {};
+                }
             }
             if (event == 'entity_moved_from_tile_to_tile') {
-                this.moveEntityFromTileToTile(data.entity, data.from, data.to);
+                this._preUpdateAction = () => {
+                    this.moveEntityFromTileToTile(data.entity, data.from, data.to);
+                    this._preUpdateAction = () => {};
+                }
+            }
+            if (event == 'team_lost') {
+                this._preUpdateAction = () => {
+                    this.pause();
+                    this.dynamicChildren.length = 0;
+                    this.tileMap.length = 0;
+                    SceneManager.changeScene(new MenuScene());
+                    this.destroy();
+                    this._preUpdateAction = () => {};
+                }
             }
         }
     }
 
     public update(dt: number) {
+        this._preUpdateAction();
         super.update(dt);
         // console.log(dt);
 
