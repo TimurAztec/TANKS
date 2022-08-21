@@ -1,4 +1,4 @@
-import {Container, Point} from "pixi.js";
+import {Point} from "pixi.js";
 import {TILE_SIZE} from "../entities/entity-factory";
 
 export type AABBData = {
@@ -27,3 +27,22 @@ export function AABB(a: AABBData, b: AABBData): boolean {
 
 // export type constr<T> = { new(...args: unknown[]): T }
 export type constr<T> = Function & { prototype: T }
+
+export type IfEquals<X, Y, A=X, B=never> =
+  (<T>() => T extends X ? 1 : 2) extends
+  (<T>() => T extends Y ? 1 : 2) ? A : B;
+
+export type WritableKeys<T> = {
+  [P in keyof T]-?: IfEquals<{ 
+    [Q in P]: T[P];
+  }, { 
+    -readonly [Q in P]: T[P];
+  }, P>
+}[keyof T];
+
+export type Mapper<T> = Pick<{
+    [K in keyof T]: { 
+      name: K;
+      type: T[K];
+    };
+}, WritableKeys<T>>;
