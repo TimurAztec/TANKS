@@ -8,17 +8,21 @@ import {EntityFactory, TILE_SIZE} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {AbstractCollisionComponent} from "../../entities/behaviors/collision/abstract-collision-component";
 import {DisplayObject, Point} from "pixi.js";
+import { MenuScene } from "../menu/menu-scene";
 
 export class GameScene extends Scene implements IEventListener {
 
     public dynamicChildren: Entity[] = [];
     public tileMap: (Entity | undefined)[][][] = [];
 
+    protected _preUpdateAction: Function = () => {};
+
     constructor() {
         super();
 
         EventManager.subscribe('keydown', this);
         EventManager.subscribe('entity_moved_from_tile_to_tile', this);
+        EventManager.subscribe('team_lost', this);
 
         this.loadLevel(level1);
     }
@@ -52,16 +56,32 @@ export class GameScene extends Scene implements IEventListener {
     public onEvent(event: string, data: any): void {
         if (!this.paused) {
             if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
-                console.log(this.tileMap);
-                SceneManager.changeScene(new PauseScene().setParentScene(this));
+                this._preUpdateAction = () => {
+                    SceneManager.changeScene(new PauseScene().setParentScene(this));
+                    this._preUpdateAction = () => {};
+                }
             }
             if (event == 'entity_moved_from_tile_to_tile') {
-                this.moveEntityFromTileToTile(data.entity, data.from, data.to);
+                this._preUpdateAction = () => {
+                    this.moveEntityFromTileToTile(data.entity, data.from, data.to);
+                    this._preUpdateAction = () => {};
+                }
+            }
+            if (event == 'team_lost') {
+                this._preUpdateAction = () => {
+                    this.pause();
+                    this.dynamicChildren.length = 0;
+                    this.tileMap.length = 0;
+                    SceneManager.changeScene(new MenuScene());
+                    this.destroy();
+                    this._preUpdateAction = () => {};
+                }
             }
         }
     }
 
     public update(dt: number) {
+        this._preUpdateAction();
         super.update(dt);
         // console.log(dt);
 
@@ -95,7 +115,20 @@ export class GameScene extends Scene implements IEventListener {
 
     protected moveEntityFromTileToTile(entity: Entity, from: Point, to: Point): void {
         const index = this.tileMap[from.y][from.x].indexOf(entity);
-        if (index < 0) return;
-        this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
+        if (index >= 0) {
+            this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
+        } else {
+            let i: number = this.tileMap.length;
+            while(i--) {
+                let j: number = this.tileMap[i].length;
+                while(j--) {
+                    const findex = this.tileMap[i][j].indexOf(entity);
+                    if (findex >= 0) {
+                        this.tileMap[to.y][to.x].push(this.tileMap[i][j].splice(findex, 1)[0]);
+                        i = j = 0;
+                    }
+                }
+            }
+        }
     }
 }

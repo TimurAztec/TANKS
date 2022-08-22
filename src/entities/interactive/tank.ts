@@ -21,7 +21,7 @@ import { AbstractBuffComponent } from "../behaviors/buffs/abstract-buff-componen
 import { Buff } from "./buff";
 
 class Tank extends Entity {
-    public _speed: number;
+    protected _speed: number;
     protected _health: number;
 
     constructor(source?: Tank) {
