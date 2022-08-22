@@ -25,9 +25,17 @@ class EntityFactory {
 
     public static getTile(tileIndex: number): Entity {
         switch (tileIndex) {
-            case 101:
-                return new Floor();
-            case 102:
+            case 101: {
+                const floor = new Floor();
+                floor.setSkin({assetName: 'dirt'});
+                return floor;
+            }
+            case 102: {
+                const floor = new Floor();
+                floor.setSkin({assetName: 'grass'});
+                return floor;
+            }
+            case 112:
                 return new Leaves();
             case 201:
                 return new HardWall();
@@ -37,7 +45,7 @@ class EntityFactory {
                 return new Water();
             case 901: {
                 const playerTank = new Tank();
-                playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2});
+                playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2, numberOfFrames: 4});
                 playerTank.setComponent(new PlayerControlComponent());
                 playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
                 return playerTank;
@@ -45,7 +53,7 @@ class EntityFactory {
             case 902: {
                 const tank = new Tank();
                 const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
-                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2});
+                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
                 tank.setComponent(new EnemyBulletWeaponComponent());
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
@@ -54,12 +62,12 @@ class EntityFactory {
             case 912: {
                 const tank = new Tank();
                 const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
-                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2});
+                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
                 tank.setComponent(new EnemyBulletWeaponComponent());
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
 
-                let spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(tank)
+                let spawner =  new AmountBasedSpawner().setPrototypeEntity(tank)
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
@@ -77,7 +85,7 @@ class EntityFactory {
                 ];
                 buff.type = buff_types[Math.floor(randNum(buff_types.length))];
                 buff.setSkin({assetName: buff_types[Math.floor(randNum(buff_types.length))]});
-                let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
+                let spawner = new AmountBasedSpawner().setPrototypeEntity(buff)
                     .setTimeBetweenSpawns(150)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(1000)

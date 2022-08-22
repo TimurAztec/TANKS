@@ -1,5 +1,5 @@
 import {Entity} from "../entity";
-import {Point} from "pixi.js";
+import {AnimatedSprite, Point} from "pixi.js";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
 import {SceneManager} from "../../scene-manager";
 import {BulletWeaponComponent} from "../behaviors/weapon/bullet-weapon-component";
@@ -70,9 +70,16 @@ class Tank extends Entity {
 
         if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
             this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
+
+                (this._skin as AnimatedSprite).loop = false;
+                if (!(this._skin as AnimatedSprite).playing) {
+                    (this._skin as AnimatedSprite).gotoAndPlay(0);
+                }
+
                 const tileMap = (SceneManager.currentScene as GameScene).tileMap;
                 const tilePos = this.tilePosition;
                 const nextTilePos = this.getNextTilePosition(vector);
+                if (!tileMap) return;
                 let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
                 if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
                     collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]

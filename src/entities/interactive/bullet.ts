@@ -83,6 +83,7 @@ class Bullet extends Entity {
                 const tileMap = (SceneManager.currentScene as GameScene).tileMap;
                 const tilePos = this.tilePosition;
                 const nextTilePos = this.getNextTilePosition(vector);
+                if (!tileMap) return;
                 let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
                 if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
                     collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]

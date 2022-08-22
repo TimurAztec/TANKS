@@ -55,6 +55,7 @@ class AmountBasedSpawner extends Spawner {
         if (this.getComponent(AbstractCollisionComponent)) {
             const tileMap = (SceneManager.currentScene as GameScene).tileMap;
             const tilePos = this.tilePosition;
+            if (!tileMap) return;
             this.getComponent(AbstractCollisionComponent).setCollisionGroup([...tileMap[tilePos.y][tilePos.x]]);
         }
         super.update(dt);
