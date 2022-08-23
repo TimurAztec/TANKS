@@ -12,6 +12,10 @@ export function randNum(max: number, min: number = 0): number {
     return Math.random() * max + min;
 }
 
+export function validatePointIsPositive(point: Point): boolean {
+    return (point.x !== null && point.x !== undefined && point.x >= 0) && (point.y !== null && point.y !== undefined && point.y >= 0)
+}
+
 export function getTitlePosition(cords: Point): Point {
     const row = Math.floor(cords.y / TILE_SIZE);
     const column = Math.floor(cords.x / TILE_SIZE);
@@ -28,21 +32,6 @@ export function AABB(a: AABBData, b: AABBData): boolean {
 // export type constr<T> = { new(...args: unknown[]): T }
 export type constr<T> = Function & { prototype: T }
 
-export type IfEquals<X, Y, A=X, B=never> =
-  (<T>() => T extends X ? 1 : 2) extends
-  (<T>() => T extends Y ? 1 : 2) ? A : B;
-
-export type WritableKeys<T> = {
-  [P in keyof T]-?: IfEquals<{ 
-    [Q in P]: T[P];
-  }, { 
-    -readonly [Q in P]: T[P];
-  }, P>
-}[keyof T];
-
-export type Mapper<T> = Pick<{
-    [K in keyof T]: { 
-      name: K;
-      type: T[K];
-    };
-}, WritableKeys<T>>;
+export interface IIndexable {
+  [key: string]: any;
+}

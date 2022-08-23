@@ -1,3 +1,4 @@
+import { IIndexable } from "../../../utils/utils";
 import { AbstractComponent } from "../AbstractComponent";
 import { IComponent } from "../IComponent";
 import { IBuffComponent } from "./IBuffComponent";
@@ -34,18 +35,15 @@ abstract class AbstractBuffComponent extends AbstractComponent implements IBuffC
         if(!this._buffDuration){
             return
         }
-        this._timePassed += dt;
-        if(this._buffDuration <= this._timePassed){
-            
-            //@ts-ignore
-            this._entity[this._propToChange] = this._defaultValue
-            this._entity.removeComponent(AbstractBuffComponent);
-        }
         if(!this._isFirstUpdate){
             this._defaultValue = this._entity[this._propToChange as keyof typeof this._entity];
-            //@ts-ignore
-            this._entity[this._propToChange] = this._changeTo;
+            (this._entity as IIndexable)[this._propToChange] = this._changeTo;
             this._isFirstUpdate = true;
+        }
+        this._timePassed += dt;
+        if(this._buffDuration <= this._timePassed){
+            (this._entity as IIndexable)[this._propToChange] = this._defaultValue
+            this._entity.removeComponent(AbstractBuffComponent);
         }
     }
 }

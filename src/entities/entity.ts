@@ -1,7 +1,7 @@
 import {AnimatedSprite, Container, Loader, Point, Rectangle, Sprite, Texture, utils} from "pixi.js";
 import {IEntity, SkinOptions} from "./interfaces";
 import {IComponent} from "./behaviors/IComponent";
-import {AABBData, constr, getTitlePosition} from "../utils/utils";
+import {AABBData, constr, getTitlePosition, validatePointIsPositive} from "../utils/utils";
 import {AbstractMovementComponent} from "./behaviors/movement/abstract-movement-component";
 import {IEventListener} from "../utils/events/IEventListener";
 import {EventManager} from "../event-manager";
@@ -120,7 +120,10 @@ abstract class Entity extends Container implements IEntity, IEventListener {
             this._initOnUpdate = false;
         }
         this._components.forEach((component) => component.update(dt));
-        if (!this._destroyed && !this.previousTilePosition.equals(this.tilePosition)) {
+        if (!this._destroyed &&
+            !this.previousTilePosition.equals(this.tilePosition) &&
+            validatePointIsPositive(this.previousTilePosition) &&
+            validatePointIsPositive(this.tilePosition)) {
             EventManager.notify('entity_moved_from_tile_to_tile', {
                 entity: this,
                 from: this.previousTilePosition,

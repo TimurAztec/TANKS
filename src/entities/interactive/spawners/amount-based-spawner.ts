@@ -6,6 +6,7 @@ import {AbstractCollisionComponent} from "../../behaviors/collision/abstract-col
 import {Point} from "pixi.js";
 import {SceneManager} from "../../../scene-manager";
 import {GameScene} from "../../../scenes/game/game-scene";
+import { validatePointIsPositive } from "../../../utils/utils";
 
 class AmountBasedSpawner extends Spawner {
     protected _timesToSpawn: number;
@@ -55,7 +56,7 @@ class AmountBasedSpawner extends Spawner {
         if (this.getComponent(AbstractCollisionComponent)) {
             const tileMap = (SceneManager.currentScene as GameScene).tileMap;
             const tilePos = this.tilePosition;
-            if (!tileMap) return;
+            if (!tileMap || !validatePointIsPositive(tilePos)) return;
             this.getComponent(AbstractCollisionComponent).setCollisionGroup([...tileMap[tilePos.y][tilePos.x]]);
         }
         super.update(dt);

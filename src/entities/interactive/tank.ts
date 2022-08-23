@@ -13,7 +13,7 @@ import {GameScene} from "../../scenes/game/game-scene";
 import {TILE_SIZE} from "../entity-factory";
 import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
 import {EventManager} from "../../event-manager";
-import {getTitlePosition} from "../../utils/utils";
+import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import {Scene} from "../../scenes/scene";
 import { Vars } from "../../vars";
@@ -79,7 +79,7 @@ class Tank extends Entity {
                 const tileMap = (SceneManager.currentScene as GameScene).tileMap;
                 const tilePos = this.tilePosition;
                 const nextTilePos = this.getNextTilePosition(vector);
-                if (!tileMap) return;
+                if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(nextTilePos)) return;
                 let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
                 if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
                     collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]

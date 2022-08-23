@@ -13,6 +13,7 @@ import { AbstractCollisionComponent } from "../behaviors/collision/abstract-coll
 import {GameScene} from "../../scenes/game/game-scene";
 import { Tank } from "./tank";
 import { Vars } from "../../vars";
+import { validatePointIsPositive } from "../../utils/utils";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -83,7 +84,7 @@ class Bullet extends Entity {
                 const tileMap = (SceneManager.currentScene as GameScene).tileMap;
                 const tilePos = this.tilePosition;
                 const nextTilePos = this.getNextTilePosition(vector);
-                if (!tileMap) return;
+                if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(nextTilePos)) return;
                 let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
                 if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
                     collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]

@@ -1,5 +1,5 @@
 import {AbstractControlComponent} from "./abstract-control-component";
-import {randNum} from "../../../utils/utils";
+import {IIndexable, randNum} from "../../../utils/utils";
 
 class RandomControlComponent extends AbstractControlComponent {
 
@@ -34,8 +34,8 @@ class RandomControlComponent extends AbstractControlComponent {
                     break;
             }
         }
-        if (this._nextAction) { // @ts-ignore
-            this[`triggerAction${this._nextAction}`]()
+        if (this._nextAction) {
+            (this as IIndexable)[`triggerAction${this._nextAction}`]()
         }
     }
 
