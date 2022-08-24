@@ -12,13 +12,10 @@ import { RandomControlComponent } from "./behaviors/control/random-control-compo
 import {EnemyBulletWeaponComponent} from "./behaviors/weapon/enemy-bullet-weapon-component";
 import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amount-based-spawner";
 import { AmountBasedSpawner } from "./interactive/spawners/amount-based-spawner";
-import { SpeedBuffComponent } from "./behaviors/buffs/speed-buff-component copy";
-import { Buffer } from "pixi.js";
 import { Buff } from "./interactive/buff";
 import { Assets } from "../assets-vars";
 import { Base } from "./interactive/base";
-
-const TILE_SIZE: number = 36;
+import { BulletWeaponComponent } from "./behaviors/weapon/bullet-weapon-component";
 
 class EntityFactory {
     private constructor() {}
@@ -45,29 +42,27 @@ class EntityFactory {
                 return new Water();
             case 901: {
                 const playerTank = new Tank();
-                playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2, numberOfFrames: 4});
+                playerTank.setSkin({assetName: 'tank_player', numberOfFrames: 4});
                 playerTank.setComponent(new PlayerControlComponent());
+                const weapon = new BulletWeaponComponent();
+                weapon.setReloadTime(50);
+                playerTank.setComponent(weapon);
                 playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
                 return playerTank;
             }
             case 902: {
                 const tank = new Tank();
                 const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
-                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
+                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
-                tank.setComponent(new EnemyBulletWeaponComponent());
+                const weapon = new EnemyBulletWeaponComponent();
+                weapon.setReloadTime(50);
+                tank.setComponent(weapon);
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
                 return tank;
             }
             case 912: {
-                const tank = new Tank();
-                const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
-                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
-                tank.setComponent(new RandomControlComponent());
-                tank.setComponent(new EnemyBulletWeaponComponent());
-                tank.setComponent(new BasicTeamComponent().setTeam('player2'));
-
-                let spawner =  new AmountBasedSpawner().setPrototypeEntity(tank)
+                const spawner =  new AmountBasedSpawner().setPrototypeEntity(EntityFactory.getTile(902))
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
@@ -105,4 +100,4 @@ class EntityFactory {
     }
 }
 
-export { EntityFactory, TILE_SIZE }
+export { EntityFactory }

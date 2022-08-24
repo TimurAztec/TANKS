@@ -9,15 +9,9 @@ import {AbstractControlComponent} from "../behaviors/control/abstract-control-co
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
 import {AppearFX} from "../fx/appear";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
-import {GameScene} from "../../scenes/game/game-scene";
-import {TILE_SIZE} from "../entity-factory";
 import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
-import {EventManager} from "../../event-manager";
 import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
-import {Scene} from "../../scenes/scene";
-import { Vars } from "../../vars";
-import { AbstractBuffComponent } from "../behaviors/buffs/abstract-buff-component";
 import { Buff } from "./buff";
 
 class Tank extends Entity {
@@ -29,7 +23,6 @@ class Tank extends Entity {
         this._speed = source?._speed || 2;
         this._health = source?._health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BulletWeaponComponent());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
@@ -50,7 +43,6 @@ class Tank extends Entity {
                     (object as Buff).destroy();
             }
         }));
-        this.getComponent(AbstractWeaponComponent).setReloadTime(50);
     }
 
     public set speed(value: number) {
@@ -76,27 +68,6 @@ class Tank extends Entity {
                     (this._skin as AnimatedSprite).gotoAndPlay(0);
                 }
 
-                const tileMap = (SceneManager.currentScene as GameScene).tileMap;
-                const tilePos = this.tilePosition;
-                const nextTilePos = this.getNextTilePosition(vector);
-                if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(nextTilePos)) return;
-                let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-                if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
-                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]
-                }
-                if (nextTilePos.y != 0 && tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x - 1]) {
-                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x - 1]]
-                }
-                if (nextTilePos.y != 0 && tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x + 1]) {
-                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x + 1]]
-                }
-                if (nextTilePos.x != 0 && tileMap[nextTilePos.y + 1]) {
-                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y + 1][nextTilePos.x]]
-                }
-                if (nextTilePos.x != 0 && tileMap[nextTilePos.y - 1]) {
-                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y - 1][nextTilePos.x]]
-                }
-                this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
             });
         }
 
@@ -118,7 +89,29 @@ class Tank extends Entity {
             });
         }
 
-       
+    }
+
+    public updateTilingData(tileMap: any[][], tileSize: number): void {
+        const tilePos = getTitlePosition(this.position, tileSize);
+        const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
+        if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
+        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
+        }
+        // if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
+        //     collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
+        // }
+        // if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
+        //     collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
+        // }
+        // if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y + 1]) {
+        //     collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
+        // }
+        // if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y - 1]) {
+        //     collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
+        // }
+        this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }
 
     public update(dt: number): void {

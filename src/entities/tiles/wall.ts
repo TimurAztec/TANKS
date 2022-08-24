@@ -1,8 +1,8 @@
 import {Entity} from "../entity";
 import {SmallWall} from "./small-wall";
 import {SceneManager} from "../../scene-manager";
-import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 import { Assets } from "../../assets-vars";
+import { ProjectileMovementComponent } from "../behaviors/movement/projectile-movement-component";
 
 class Wall extends Entity {
 
@@ -22,7 +22,7 @@ class Wall extends Entity {
 
     constructor() {
         super();
-        this.setComponent(new BasicAabbCollisionComponent().setCollisionGroup([]));
+        this.setComponent(new ProjectileMovementComponent());
     }
 
 }

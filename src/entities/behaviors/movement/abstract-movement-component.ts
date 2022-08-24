@@ -17,6 +17,18 @@ export abstract class AbstractMovementComponent extends AbstractComponent implem
         return this._previousPosition;
     }
 
+    public get rotationVector(): Point {
+        const radAngle: number = (this._entity.angle-90) * (Math.PI/180);
+        const vector = new Point(
+            (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)) * this._entity.width,
+            (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle)) * this._entity.height
+        );
+        return new Point(
+            this._entity.x + (vector.x >= 0 ? Math.ceil(vector.x) : Math.floor(vector.x)),
+            this._entity.y + (vector.y >= 0 ? Math.ceil(vector.y) : Math.floor(vector.y))
+        )
+    }
+
     public setRotationSpeed(speed: number): AbstractMovementComponent {
         this._rotationSpeed = speed;
         return this;

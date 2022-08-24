@@ -8,12 +8,10 @@ import {BigExplosionFX} from "../fx/big-explosion";
 import {BasicTeamComponent} from "../behaviors/team/basic-team-component";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
-import {IComponent} from "../behaviors/IComponent";
 import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
-import {GameScene} from "../../scenes/game/game-scene";
 import { Tank } from "./tank";
 import { Vars } from "../../vars";
-import { validatePointIsPositive } from "../../utils/utils";
+import { getTitlePosition, validatePointIsPositive } from "../../utils/utils";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -70,28 +68,21 @@ class Bullet extends Entity {
         this.destroy();
     }
 
+    public updateTilingData(tileMap: any[][], tileSize: number): void {
+        const tilePos = getTitlePosition(this.position, tileSize);
+        const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
+        if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
+        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
+        }
+        this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
+    }
+
     public update(dt: number): void {
         super.update(dt);
         this._dttimer += dt;
         if (this._dttimer > 1000) this.destroy();
-    }
-
-    public setComponent(component: IComponent): void {
-        super.setComponent(component);
-
-        if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
-            this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
-                const tileMap = (SceneManager.currentScene as GameScene).tileMap;
-                const tilePos = this.tilePosition;
-                const nextTilePos = this.getNextTilePosition(vector);
-                if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(nextTilePos)) return;
-                let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-                if (tileMap[nextTilePos.y] && tileMap[nextTilePos.y][nextTilePos.x]) {
-                    collisionGroup = [...collisionGroup, ...tileMap[nextTilePos.y][nextTilePos.x]]
-                }
-                this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
-            });
-        }
     }
 
 }

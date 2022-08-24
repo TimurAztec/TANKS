@@ -4,7 +4,7 @@ import {IIndexable, randNum} from "../../../utils/utils";
 class RandomControlComponent extends AbstractControlComponent {
 
     protected _actionChangeTimer: number = 0;
-    protected _actionChangeDelay: number = 75;
+    protected _actionChangeDelay: number = 50;
     protected _nextAction: string = '';
 
     update(dt: number) {

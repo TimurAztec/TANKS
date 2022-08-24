@@ -1,5 +1,4 @@
 import {Point} from "pixi.js";
-import {TILE_SIZE} from "../entities/entity-factory";
 
 export type AABBData = {
     x: number,
@@ -16,9 +15,9 @@ export function validatePointIsPositive(point: Point): boolean {
     return (point.x !== null && point.x !== undefined && point.x >= 0) && (point.y !== null && point.y !== undefined && point.y >= 0)
 }
 
-export function getTitlePosition(cords: Point): Point {
-    const row = Math.floor(cords.y / TILE_SIZE);
-    const column = Math.floor(cords.x / TILE_SIZE);
+export function getTitlePosition(cords: Point, tileSize: number): Point {
+    const row = Math.floor(cords.y / tileSize);
+    const column = Math.floor(cords.x / tileSize);
     return new Point(column, row);
 }
 

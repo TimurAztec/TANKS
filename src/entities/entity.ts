@@ -1,14 +1,8 @@
 import {AnimatedSprite, Container, Loader, Point, Rectangle, Sprite, Texture, utils} from "pixi.js";
 import {IEntity, SkinOptions} from "./interfaces";
 import {IComponent} from "./behaviors/IComponent";
-import {AABBData, constr, getTitlePosition, validatePointIsPositive} from "../utils/utils";
-import {AbstractMovementComponent} from "./behaviors/movement/abstract-movement-component";
+import {AABBData, constr} from "../utils/utils";
 import {IEventListener} from "../utils/events/IEventListener";
-import {EventManager} from "../event-manager";
-import {GameScene} from "../scenes/game/game-scene";
-import {SceneManager} from "../scene-manager";
-import {AbstractCollisionComponent} from "./behaviors/collision/abstract-collision-component";
-import {TILE_SIZE} from "./entity-factory";
 
 abstract class Entity extends Container implements IEntity, IEventListener {
 
@@ -25,39 +19,27 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         return this._destroyed;
     }
 
-    public get previousTilePosition(): Point {
-        if (this.getComponent(AbstractMovementComponent)) {
-            return getTitlePosition(new Point()
-                .copyFrom(this.getComponent(AbstractMovementComponent).previousPosition));
-        }
-        return this.tilePosition;
-    }
-
-    public get tilePosition(): Point {
-        return getTitlePosition(new Point().copyFrom(this.position));
-    }
-
-    protected getNextTilePosition(movementVector?: Point): Point {
-        const entityTilePos = this.tilePosition;
-        let vector = movementVector;
-        //TODO prototype code for advanced collision for fast moving objects (doesent work for now)
-        // if (!vector || (vector.x == 0 && vector.y == 0)) {
-        //     const radAngle: number = (this.angle-90) * (Math.PI/180);
-        //     vector = new Point(
-        //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
-        //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
-        //     );
-        // }
-        const radAngle: number = (this.angle-90) * (Math.PI/180);
-        vector = new Point(
-            (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
-            (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
-        );
-        return new Point(
-            entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
-            entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
-        )
-    }
+    // protected getNextTilePosition(movementVector?: Point): Point {
+    //     const entityTilePos = this.tilePosition;
+    //     let vector = movementVector;
+    //     //TODO prototype code for advanced collision for fast moving objects (doesent work for now)
+    //     // if (!vector || (vector.x == 0 && vector.y == 0)) {
+    //     //     const radAngle: number = (this.angle-90) * (Math.PI/180);
+    //     //     vector = new Point(
+    //     //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+    //     //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+    //     //     );
+    //     // }
+    //     const radAngle: number = (this.angle-90) * (Math.PI/180);
+    //     vector = new Point(
+    //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+    //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+    //     );
+    //     return new Point(
+    //         entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
+    //         entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
+    //     )
+    // }
 
     public get simpleBounds(): AABBData {
         return this.destroyed ? {
@@ -72,6 +54,8 @@ abstract class Entity extends Container implements IEntity, IEventListener {
             height: this.height
         }
     }
+
+    public updateTilingData(tileMap: any[][], tileSize: number): void {};
 
     constructor(source?: Entity) {
         super();
@@ -120,16 +104,6 @@ abstract class Entity extends Container implements IEntity, IEventListener {
             this._initOnUpdate = false;
         }
         this._components.forEach((component) => component.update(dt));
-        if (!this._destroyed &&
-            !this.previousTilePosition.equals(this.tilePosition) &&
-            validatePointIsPositive(this.previousTilePosition) &&
-            validatePointIsPositive(this.tilePosition)) {
-            EventManager.notify('entity_moved_from_tile_to_tile', {
-                entity: this,
-                from: this.previousTilePosition,
-                to: this.tilePosition
-            });
-        }
     }
 
     public setComponent(component: IComponent): void {
