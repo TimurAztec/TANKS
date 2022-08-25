@@ -12,6 +12,7 @@ export namespace Assets {
         public static readonly BONUS_LIVE: string = 'bonus_live';// none for now
         public static readonly BONUS_SLOW: string = 'bonus_slow';// none for now
         public static readonly BONUS_SPEED: string = 'bonus_speed';// none for now
+        public static readonly BONUS_TRACTOR: string = 'bonus_tractor';// none for now
     }
     export class Buttons{
         public static readonly BUTTON: string = 'button';//+

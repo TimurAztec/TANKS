@@ -8,6 +8,7 @@ const assets = [
     { name: "bonus_live", url: "./assets/bonus/bonus_live.png" },
     { name: "bonus_slow", url: "./assets/bonus/bonus_slow.png" },
     { name: "bonus_speed", url: "./assets/bonus/bonus_speed.png" },
+    { name: "bonus_tractor", url: "./assets/bonus/bonus_tractor.png" },
     { name: "button", url: "./assets/buttons/button.png" },
     { name: "button_scores", url: "./assets/buttons/scores.png" },
     { name: "appear", url: "./assets/effects/appear.png" },

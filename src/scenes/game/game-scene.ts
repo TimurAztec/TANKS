@@ -102,11 +102,23 @@ export class GameScene extends Scene implements IEventListener {
     public addChild<U extends DisplayObject[]>(...children: U): U[0] {
         this.dynamicChildren = [...this.dynamicChildren,
             ...[...children].filter((child: any) => child.getComponent(AbstractMovementComponent)) as Entity[]];
+        let canBeAdded = true;
         for (const child of [...children] as Entity[]) {
             const pos = getTitlePosition(child.position, this.tileSize);
-            this.tileMap[pos.y][pos.x].push(child);
+            if (this.tileMap[pos.y] && this.tileMap[pos.y][pos.x]) {
+                this.tileMap[pos.y][pos.x].push(child);
+            } else {
+                canBeAdded = false;
+            }
         }
-        return super.addChild(...children);
+        if (canBeAdded) {
+            return super.addChild(...children);
+        } else {
+            for (const child of [...children] as Entity[]) {
+                child.destroy();
+            }
+            return [...children][0];
+        }
     }
 
     public removeChild<U extends DisplayObject[]>(...children: U): U[0] {

@@ -16,13 +16,13 @@ import { Tank } from "./tank";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 
 class Tractor extends Entity {
-    protected _speed: number;
-    protected _health: number;
+    public speed: number;
+    public health: number;
 
     constructor(source?: Tractor) {
         super(source);
-        this._speed = source?._speed || 3;
-        this._health = source?._health || 1;
+        this.speed = source?.speed || 3;
+        this.health = source?.health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
@@ -53,20 +53,12 @@ class Tractor extends Entity {
         }));
     }
 
-    public set speed(value: number) {
-        this._speed = value;
-    } 
-
-    public get speed(): number {
-        return this._speed;
-    } 
-
     public clone(): Tractor {
         return new Tractor(this);
     }
 
     public takeDamage(damage: number): void {
-        this._health -= damage;
+        this.health -= damage;
     }
 
     public setComponent(component: IComponent): void {
@@ -85,16 +77,16 @@ class Tractor extends Entity {
 
         if (Object.getPrototypeOf(component) instanceof AbstractControlComponent) {
             this.getComponent(AbstractControlComponent).onActionUp(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, -this._speed));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, -this.speed));
             });
             this.getComponent(AbstractControlComponent).onActionDown(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, this._speed));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(0, this.speed));
             });
             this.getComponent(AbstractControlComponent).onActionRight(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(this._speed, 0));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(this.speed, 0));
             });
             this.getComponent(AbstractControlComponent).onActionLeft(() => {
-                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(-this._speed, 0));
+                this.getComponent(AbstractMovementComponent).setMovementVector(new Point(-this.speed, 0));
             });
             this.getComponent(AbstractControlComponent).onActionSpace(() => {
                 if (this.getComponent(AbstractWeaponComponent)) this.getComponent(AbstractWeaponComponent).fire();
@@ -127,7 +119,7 @@ class Tractor extends Entity {
     }
 
     public update(dt: number): void {
-        if (this._health <= 0) {
+        if (this.health <= 0) {
             const fx = new BigExplosionFX();
             fx.x = this.x;
             fx.y = this.y;

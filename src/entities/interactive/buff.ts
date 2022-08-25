@@ -1,5 +1,9 @@
 import { Assets } from "../../assets-vars";
 import { IBuffComponent } from "../behaviors/buffs/IBuffComponent";
+import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-component";
+import { LiveBuffComponent } from "../behaviors/buffs/live-buff-component";
+import { SlowBuffComponent } from "../behaviors/buffs/slow-buff-component";
+import { SpawnTractorBuffComponent } from "../behaviors/buffs/spawn-tractor-buff-component copy";
 import { SpeedBuffComponent } from "../behaviors/buffs/speed-buff-component copy";
 import { Entity } from "../entity";
 
@@ -20,13 +24,15 @@ class Buff extends Entity{
         switch(this._type)
         {
             case Assets.Bonuses.BONUS_SPEED:
-                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
+                return new SpeedBuffComponent().applyBuff(180);
             case Assets.Bonuses.BONUS_IMMORTAL:
-                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
+                return new ImmortalBuffComponent().applyBuff(180);
             case Assets.Bonuses.BONUS_LIVE:
-                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
+                return new LiveBuffComponent().applyBuff(0);
             case Assets.Bonuses.BONUS_SLOW:
-                return new SpeedBuffComponent().applyBuff('speed', 5, 120);
+                return new SlowBuffComponent().applyBuff(180);
+            case Assets.Bonuses.BONUS_TRACTOR:
+                return new SpawnTractorBuffComponent().applyBuff(0);
             default: 
                 break;
         }

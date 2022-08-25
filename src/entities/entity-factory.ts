@@ -53,6 +53,7 @@ class EntityFactory {
             }
             case 902: {
                 const tank = new Tank();
+                tank.takeDamage = function () {}
                 const enemy_skins = ['tank_enemy1', 'tank_enemy2', 'tank_enemy3'];
                 tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
@@ -84,16 +85,17 @@ class EntityFactory {
                     Assets.Bonuses.BONUS_IMMORTAL,
                     Assets.Bonuses.BONUS_LIVE,
                     Assets.Bonuses.BONUS_SLOW,
-                    Assets.Bonuses.BONUS_SPEED    
+                    Assets.Bonuses.BONUS_SPEED,
+                    Assets.Bonuses.BONUS_TRACTOR    
                 ];
                 buff.type = buff_types[Math.floor(randNum(buff_types.length))];
-                buff.setSkin({assetName: buff_types[Math.floor(randNum(buff_types.length))]});
+                buff.setSkin({assetName: buff.type});
                 let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
                     .setTimeBetweenSpawns(150)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(1000)
                     .setMaxAmountPerTime(1);
-                    spawner.setSkin({assetName: 'empty'})
+                    spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }
             case 777:{

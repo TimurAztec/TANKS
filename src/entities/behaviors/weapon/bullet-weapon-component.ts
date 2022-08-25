@@ -4,6 +4,7 @@ import {SceneManager} from "../../../scene-manager";
 import {AbstractTeamComponent} from "../team/abstract-team-component";
 import {BasicTeamComponent} from "../team/basic-team-component";
 import { Assets } from "../../../assets-vars";
+import { AbstractMovementComponent } from "../movement/abstract-movement-component";
 
 export class BulletWeaponComponent extends AbstractWeaponComponent {
 
@@ -17,8 +18,14 @@ export class BulletWeaponComponent extends AbstractWeaponComponent {
                 this._entity.getComponent(AbstractTeamComponent).getTeam()
             ));
         }
-        bullet.x = this._entity.x;
-        bullet.y = this._entity.y;
+        if (this._entity.getComponent(AbstractMovementComponent)) {
+            const vec = this._entity.getComponent(AbstractMovementComponent).rotationVector;
+            bullet.x = vec.x;
+            bullet.y = vec.y;
+        } else {
+            bullet.x = this._entity.x;
+            bullet.y = this._entity.y;
+        }
         SceneManager.currentScene.addChild(bullet);
         bullet.launch(this._entity.angle);
     }

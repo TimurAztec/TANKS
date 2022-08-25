@@ -7,6 +7,8 @@ import {Point} from "pixi.js";
 import {IComponent} from "../../behaviors/IComponent";
 import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-collision-component";
 import {Entity} from "../../entity";
+import { getTitlePosition, validatePointIsPositive } from "../../../utils/utils";
+import { AbstractCollisionComponent } from "../../behaviors/collision/abstract-collision-component";
 
 class WanderingAmountBasedSpawner extends AmountBasedSpawner {
 
@@ -51,6 +53,29 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
                 this.getComponent(AbstractMovementComponent).setMovementVector(new Point(-1, 0));
             });
         }
+    }
+
+    public updateTilingData(tileMap: any[][], tileSize: number): void {
+        const tilePos = getTitlePosition(this.position, tileSize);
+        const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
+        if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
+        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
+        }
+        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
+        }
+        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
+        }
+        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y + 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
+        }
+        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y - 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
+        }
+        this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }
 }
 
