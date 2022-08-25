@@ -3,6 +3,7 @@ import {Spawner} from "./spawner";
 import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-collision-component";
 import {AbstractCollisionComponent} from "../../behaviors/collision/abstract-collision-component";
 import { getTitlePosition, validatePointIsPositive } from "../../../utils/utils";
+import { ProjectileMovementComponent } from "../../behaviors/movement/projectile-movement-component";
 
 class AmountBasedSpawner extends Spawner {
     protected _timesToSpawn: number;
@@ -18,6 +19,7 @@ class AmountBasedSpawner extends Spawner {
             if (object == this) return;
             if (this._collisionGroup.includes(object.entityType)) this._collides = true;
         }));
+        this.setComponent(new ProjectileMovementComponent());
     }
 
     public clone(): AmountBasedSpawner {
@@ -57,7 +59,6 @@ class AmountBasedSpawner extends Spawner {
 
     public update(dt: number): void {
         super.update(dt);
-        this._collides = false;
         if (this._timesToSpawn && this._dttimer > this._timeBetweenSpawns && !this._collides) {
             this._dttimer = 0;
             this._entities = this._entities.filter((entity) => {
@@ -71,6 +72,7 @@ class AmountBasedSpawner extends Spawner {
         if (this._timesToSpawn <= 0) {
             this.destroy();
         }
+        this._collides = false;
     }
 
 }

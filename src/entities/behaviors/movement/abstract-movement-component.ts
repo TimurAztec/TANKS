@@ -24,8 +24,8 @@ export abstract class AbstractMovementComponent extends AbstractComponent implem
             (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle)) * this._entity.height
         );
         return new Point(
-            this._entity.x + (vector.x >= 0 ? Math.ceil(vector.x) : Math.floor(vector.x)),
-            this._entity.y + (vector.y >= 0 ? Math.ceil(vector.y) : Math.floor(vector.y))
+            this._entity.x + (vector.x >= 0 ? Math.ceil(vector.x / this._entity.width) : Math.floor(vector.x / this._entity.width)),
+            this._entity.y + (vector.y >= 0 ? Math.ceil(vector.y / this._entity.width) : Math.floor(vector.y / this._entity.width))
         )
     }
 

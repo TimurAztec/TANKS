@@ -36,6 +36,11 @@ class Bullet extends Entity {
                     this.destroy();
                     (object as Tank).takeDamage(1);
                     break;
+                case 'Tractor':
+                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    this.destroy();
+                    (object as Tank).takeDamage(1);
+                    break;
                 case 'Bullet':
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.explode(new SmallExplosionFX());

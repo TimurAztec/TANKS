@@ -11,7 +11,7 @@ export abstract class AbstractWeaponComponent extends AbstractComponent implemen
     constructor(source?: AbstractWeaponComponent) {
         super(source);
         this._reloaded = true;
-        this._reloadTime = 1;
+        this._reloadTime = source?._reloadTime || 1;
         this._reloadCounter = 0;
     }
 

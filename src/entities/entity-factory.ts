@@ -16,6 +16,7 @@ import { Buff } from "./interactive/buff";
 import { Assets } from "../assets-vars";
 import { Base } from "./interactive/base";
 import { BulletWeaponComponent } from "./behaviors/weapon/bullet-weapon-component";
+import { Tractor } from "./interactive/tractor";
 
 class EntityFactory {
     private constructor() {}
@@ -42,7 +43,7 @@ class EntityFactory {
                 return new Water();
             case 901: {
                 const playerTank = new Tank();
-                playerTank.setSkin({assetName: 'tank_player', numberOfFrames: 4});
+                playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2, numberOfFrames: 4});
                 playerTank.setComponent(new PlayerControlComponent());
                 const weapon = new BulletWeaponComponent();
                 weapon.setReloadTime(50);
@@ -52,14 +53,21 @@ class EntityFactory {
             }
             case 902: {
                 const tank = new Tank();
-                const enemy_skins = ['tank_blue', 'tank_red', 'tank_white'];
-                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], numberOfFrames: 4});
+                const enemy_skins = ['tank_enemy1', 'tank_enemy2', 'tank_enemy3'];
+                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
                 const weapon = new EnemyBulletWeaponComponent();
                 weapon.setReloadTime(50);
                 tank.setComponent(weapon);
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
                 return tank;
+            }
+            case 903: {
+                const playerTractor = new Tractor();
+                playerTractor.setSkin({assetName: 'tractor', scaleX: 1.2, numberOfFrames: 4});
+                playerTractor.setComponent(new RandomControlComponent());
+                playerTractor.setComponent(new BasicTeamComponent().setTeam('player1'));
+                return playerTractor;
             }
             case 912: {
                 const spawner =  new AmountBasedSpawner().setPrototypeEntity(EntityFactory.getTile(902))
@@ -80,12 +88,12 @@ class EntityFactory {
                 ];
                 buff.type = buff_types[Math.floor(randNum(buff_types.length))];
                 buff.setSkin({assetName: buff_types[Math.floor(randNum(buff_types.length))]});
-                let spawner = new AmountBasedSpawner().setPrototypeEntity(buff)
+                let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
                     .setTimeBetweenSpawns(150)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(1000)
                     .setMaxAmountPerTime(1);
-                    spawner.setSkin({assetName: 'eagle'})
+                    spawner.setSkin({assetName: 'empty'})
                     return spawner
             }
             case 777:{

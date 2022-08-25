@@ -6,7 +6,6 @@ import {SceneManager} from "../../scene-manager";
 import {PauseScene} from "../menu/pause-scene";
 import {EntityFactory} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
-import {AbstractCollisionComponent} from "../../entities/behaviors/collision/abstract-collision-component";
 import {DisplayObject, Point} from "pixi.js";
 import { MenuScene } from "../menu/menu-scene";
 import { AbstractMovementComponent } from "../../entities/behaviors/movement/abstract-movement-component";
@@ -18,8 +17,6 @@ export class GameScene extends Scene implements IEventListener {
     public tileMap: (Entity | undefined)[][][] = [];
     
     public readonly tileSize: number = 36;
-
-    protected _preUpdateAction: Function = () => {};
 
     constructor() {
         super();
@@ -82,7 +79,6 @@ export class GameScene extends Scene implements IEventListener {
     // Тимур отвечает ему "Работает и х*й с ним, не трогай"
     // Так и с кодом ниже
     public update(dt: number) {
-        this._preUpdateAction();
         super.update(dt);
         // console.log(dt);
 
@@ -96,7 +92,6 @@ export class GameScene extends Scene implements IEventListener {
                 !dynamicEntity.position.equals(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition)) {
                 const prevTilePos = getTitlePosition(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition, this.tileSize);
                 const tilePos = getTitlePosition(dynamicEntity.position, this.tileSize);
-                const vectorTilePos = getTitlePosition(dynamicEntity.getComponent(AbstractMovementComponent).rotationVector, this.tileSize);
                 this.moveEntityFromTileToTile(dynamicEntity, prevTilePos, tilePos);
             }
             dynamicEntity.updateTilingData(this.tileMap, this.tileSize);

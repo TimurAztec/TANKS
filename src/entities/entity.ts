@@ -6,10 +6,12 @@ import {IEventListener} from "../utils/events/IEventListener";
 
 abstract class Entity extends Container implements IEntity, IEventListener {
 
-    protected _skin: (Sprite | AnimatedSprite);
+    protected _skin: AnimatedSprite;
     protected _skinOptions: SkinOptions;
     protected _components: IComponent[] = [];
     protected _initOnUpdate: boolean = true;
+    protected _hitboxWidth: number;
+    protected _hitboxHeight: number;
 
     public get entityType(): string {
         return this.constructor.name;
@@ -50,8 +52,8 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         } : {
             x: this.x,
             y: this.y,
-            width: this.width,
-            height: this.height
+            width: this._hitboxWidth || this.width,
+            height: this._hitboxHeight || this.height
         }
     }
 
@@ -75,27 +77,25 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     public setSkin(options?: SkinOptions): void {
         this._skinOptions = options;
         if (options?.assetName) {
-            if (!options.numberOfFrames) {
-                this._skin = new Sprite(Loader.shared.resources[options.assetName].texture);
+            const numberOfFrames = options?.numberOfFrames || 1;
+            const sheet = Loader.shared.resources[options.assetName].texture;
+            const frameWidth = sheet.width / numberOfFrames;
+            const frameHeight = sheet.height;
+            const frames: Texture[] = [];
+            for (let i = 0 ; i < numberOfFrames ; i++) {
+                const frame = sheet.clone();
+                frame.frame = new Rectangle(i * frameWidth, 0, frameWidth, frameHeight);
+                frame.updateUvs();
+                frames.push(frame);
             }
-            if (options.numberOfFrames) {
-                const sheet = Loader.shared.resources[options.assetName].texture;
-                const frameWidth = sheet.width/options.numberOfFrames;
-                const frameHeight = sheet.height;
-                const frames: Texture[] = [];
-                for (let i = 0 ; i < options.numberOfFrames ; i++) {
-                    const frame = sheet.clone();
-                    frame.frame = new Rectangle(i * frameWidth, 0, frameWidth, frameHeight);
-                    frame.updateUvs();
-                    frames.push(frame);
-                }
-                this._skin = new AnimatedSprite(frames);
-            }
+            this._skin = new AnimatedSprite(frames);
             this.addChild(this._skin);
         }
         this._skin.anchor.set(0.5);
         this._skin.scale.x = options?.scaleX || this._skin.scale.x;
         this._skin.scale.y = options?.scaleY || this._skin.scale.y;
+        if (options?.hitboxWidth) this._hitboxWidth = options.hitboxWidth;
+        if (options?.hitboxHeight) this._hitboxHeight = options.hitboxHeight;
     }
 
     public update(dt: number): void {

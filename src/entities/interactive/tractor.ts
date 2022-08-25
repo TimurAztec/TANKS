@@ -12,14 +12,16 @@ import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collis
 import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import { Buff } from "./buff";
+import { Tank } from "./tank";
+import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 
-class Tank extends Entity {
+class Tractor extends Entity {
     protected _speed: number;
     protected _health: number;
 
-    constructor(source?: Tank) {
+    constructor(source?: Tractor) {
         super(source);
-        this._speed = source?._speed || 2;
+        this._speed = source?._speed || 3;
         this._health = source?._health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
@@ -36,9 +38,13 @@ class Tank extends Entity {
                     break;
                 case 'Tank':
                     this.getComponent(AbstractMovementComponent).collides();
+                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    (object as Tank).takeDamage(1);
                     break;
                 case 'Tractor':
                     this.getComponent(AbstractMovementComponent).collides();
+                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    (object as Tank).takeDamage(1);
                     break;
                 case 'Buff':
                     this.setComponent((object as Buff).getBuff());
@@ -55,8 +61,8 @@ class Tank extends Entity {
         return this._speed;
     } 
 
-    public clone(): Tank {
-        return new Tank(this);
+    public clone(): Tractor {
+        return new Tractor(this);
     }
 
     public takeDamage(damage: number): void {
@@ -138,4 +144,4 @@ class Tank extends Entity {
     }
 }
 
-export { Tank }
+export { Tractor }

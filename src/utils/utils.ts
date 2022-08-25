@@ -22,7 +22,7 @@ export function getTitlePosition(cords: Point, tileSize: number): Point {
 }
 
 export function AABB(a: AABBData, b: AABBData): boolean {
-    return (a.x - a.width / 2 < b.x + b.width / 2 &&
+    return (a.x - (a.width / 2) < b.x + b.width / 2 &&
         a.x + a.width / 2 > b.x - b.width / 2 &&
         a.y - a.height / 2 < b.y + b.height / 2 &&
         a.y + a.height / 2 > b.y - b.height / 2)
