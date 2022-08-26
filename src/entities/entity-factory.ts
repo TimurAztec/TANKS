@@ -66,6 +66,9 @@ class EntityFactory {
                 weapon.setReloadTime(50);
                 tank.setComponent(weapon);
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
+                tank.setComponent(new BasicDestroyComponent().onDestroy(() => {
+                    EventManager.notify('entity_destroyed', tank);
+                }));
                 return tank;
             }
             case 903: {
