@@ -33,9 +33,9 @@ class Tank extends Entity {
                 case 'SmallWall':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
-                case 'Water':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
+                // case 'Water':
+                //     this.getComponent(AbstractMovementComponent).collides();
+                //     break;
                 case 'Tank':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;

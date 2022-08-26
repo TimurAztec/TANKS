@@ -7,6 +7,11 @@ class RandomControlComponent extends AbstractControlComponent {
     protected _actionChangeDelay: number = 50;
     protected _nextAction: string = '';
 
+    constructor(source?: RandomControlComponent) {
+        super(source);
+        this._actionChangeDelay = randNum(100, 10)
+    }
+
     update(dt: number) {
         super.update(dt);
         this._actionChangeTimer += dt;

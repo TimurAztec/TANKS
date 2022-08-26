@@ -8,7 +8,7 @@ class SpeedBuffComponent extends AbstractBuffComponent implements IBuffComponent
 
     protected firstUpdate(): void {
         this._propToChange = 'speed';
-        this._changeTo = (this._entity as IIndexable)[this._propToChange] * 2;
+        this._changeTo = 4;
         super.firstUpdate();
     }
 

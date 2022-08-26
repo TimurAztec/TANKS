@@ -1,6 +1,5 @@
 import {Scene} from "../scene";
 import {Entity} from "../../entities/entity";
-import * as level1 from './levels/level1.json';
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
 import {PauseScene} from "../menu/pause-scene";
@@ -11,7 +10,7 @@ import { MenuScene } from "../menu/menu-scene";
 import { AbstractMovementComponent } from "../../entities/behaviors/movement/abstract-movement-component";
 import { getTitlePosition } from "../../utils/utils";
 
-export class GameScene extends Scene implements IEventListener {
+export abstract class GameScene extends Scene implements IEventListener {
 
     public dynamicChildren: Entity[] = [];
     public tileMap: (Entity | undefined)[][][] = [];
@@ -22,9 +21,6 @@ export class GameScene extends Scene implements IEventListener {
         super();
 
         EventManager.subscribe('keydown', this);
-        EventManager.subscribe('team_lost', this);
-
-        this.loadLevel(level1);
     }
 
     protected loadLevel(level: LevelData): void {
@@ -55,20 +51,9 @@ export class GameScene extends Scene implements IEventListener {
 
     public onEvent(event: string, data: any): void {
         if (!this.paused) {
-            if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
+            if (event == 'keydown' && data == 'Escape') {
                 this._preUpdateAction = () => {
-                    console.log(this.tileMap);
                     SceneManager.changeScene(new PauseScene().setParentScene(this));
-                    this._preUpdateAction = () => {};
-                }
-            }
-            if (event == 'team_lost') {
-                this._preUpdateAction = () => {
-                    this.pause();
-                    this.dynamicChildren.length = 0;
-                    this.tileMap.length = 0;
-                    SceneManager.changeScene(new MenuScene());
-                    this.destroy();
                     this._preUpdateAction = () => {};
                 }
             }

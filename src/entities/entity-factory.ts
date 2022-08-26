@@ -49,7 +49,7 @@ class EntityFactory {
                 playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2, numberOfFrames: 4});
                 playerTank.setComponent(new PlayerControlComponent());
                 const weapon = new BulletWeaponComponent();
-                weapon.setReloadTime(1);
+                weapon.setReloadTime(50);
                 playerTank.setComponent(weapon);
                 playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
                 playerTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
@@ -80,11 +80,11 @@ class EntityFactory {
                 return playerTractor;
             }
             case 912: {
-                const spawner =  new AmountBasedSpawner().setPrototypeEntity(EntityFactory.getTile(902))
+                const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getTile(902))
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
-                    .setMaxAmountPerTime(3);
+                    .setMaxAmountPerTime(1);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }
@@ -95,16 +95,16 @@ class EntityFactory {
                     .timesToCount(12)
                     .setEventToCount('entity_destroyed_player2')
                     .onCountEnded(() => {
-                        EventManager.notify('team_lost', counter.getComponent(AbstractTeamComponent).getTeam);
+                        EventManager.notify('team_won', 'player1');
                     });
                 return counter
             }
             case 921:{
                 const buff = new Buff();
                 let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
-                    .setTimeBetweenSpawns(1200)
+                    .setTimeBetweenSpawns(600)
                     .setCollisionGroup(['Tank'])
-                    .setTimesToSpawn(1000)
+                    .setTimesToSpawn(9999)
                     .setMaxAmountPerTime(1);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner

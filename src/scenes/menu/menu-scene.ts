@@ -3,6 +3,7 @@ import {SceneManager} from "../../scene-manager";
 import {GameScene} from "../game/game-scene";
 import {Loader, Sprite, Text, TextStyle} from "pixi.js";
 import { Assets } from "../../assets-vars";
+import { Level1Scene } from "../game/levels/level1/level1";
 
 export class MenuScene extends Scene {
 
@@ -51,7 +52,7 @@ export class MenuScene extends Scene {
     }
 
     public startGame(): void {
-        SceneManager.changeScene(new GameScene());
+        SceneManager.changeScene(new Level1Scene());
         this.destroy();
     }
 
