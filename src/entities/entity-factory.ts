@@ -19,6 +19,7 @@ import { Tractor } from "./interactive/tractor";
 import {BasicDestroyComponent} from "./behaviors/destroy/basic-destroy-component";
 import {EventManager} from "../event-manager";
 import {AbstractTeamComponent} from "./behaviors/team/abstract-team-component";
+import {InWorldEventCounter} from "./interactive/in-world-event-counter";
 
 class EntityFactory {
     private constructor() {}
@@ -67,7 +68,7 @@ class EntityFactory {
                 tank.setComponent(weapon);
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
                 tank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    EventManager.notify('entity_destroyed', tank);
+                    EventManager.notify('entity_destroyed_player2', tank);
                 }));
                 return tank;
             }
@@ -86,6 +87,17 @@ class EntityFactory {
                     .setMaxAmountPerTime(3);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
+            }
+            case 919: {
+                const counter = new InWorldEventCounter();
+                counter.setComponent(new BasicTeamComponent().setTeam('player2'));
+                counter
+                    .timesToCount(12)
+                    .setEventToCount('entity_destroyed_player2')
+                    .onCountEnded(() => {
+                        EventManager.notify('team_lost', counter.getComponent(AbstractTeamComponent).getTeam);
+                    });
+                return counter
             }
             case 921:{
                 const buff = new Buff();

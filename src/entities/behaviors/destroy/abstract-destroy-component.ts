@@ -6,6 +6,13 @@ export abstract class AbstractDestroyComponent extends AbstractComponent impleme
     protected readonly _typeID: string = 'destroy';
     protected _destroyCallback: Function = () => {};
 
+    constructor(source?: AbstractDestroyComponent) {
+        super(source);
+        if (source?._destroyCallback) {
+            this._destroyCallback = source._destroyCallback;
+        }
+    }
+
     public onDestroy(callback: Function): AbstractDestroyComponent {
         this._destroyCallback = callback;
         return this;
