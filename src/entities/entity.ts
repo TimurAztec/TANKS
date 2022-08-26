@@ -1,8 +1,9 @@
-import {AnimatedSprite, Container, Loader, Point, Rectangle, Sprite, Texture, utils} from "pixi.js";
+import {AnimatedSprite, Container, IDestroyOptions, Loader, Point, Rectangle, Sprite, Texture, utils} from "pixi.js";
 import {IEntity, SkinOptions} from "./interfaces";
 import {IComponent} from "./behaviors/IComponent";
 import {AABBData, constr} from "../utils/utils";
 import {IEventListener} from "../utils/events/IEventListener";
+import {AbstractDestroyComponent} from "./behaviors/destroy/abstract-destroy-component";
 
 abstract class Entity extends Container implements IEntity, IEventListener {
 
@@ -147,6 +148,13 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     }
 
     public onEvent(event: string, data: any) {}
+
+    public destroy(_options?: IDestroyOptions | boolean): void {
+        super.destroy(_options);
+        if (this.getComponent(AbstractDestroyComponent)) {
+            this.getComponent(AbstractDestroyComponent).destroy();
+        }
+    }
 
 }
 

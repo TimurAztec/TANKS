@@ -20,8 +20,8 @@ export class BulletWeaponComponent extends AbstractWeaponComponent {
         }
         if (this._entity.getComponent(AbstractMovementComponent)) {
             const vec = this._entity.getComponent(AbstractMovementComponent).rotationVector;
-            bullet.x = vec.x;
-            bullet.y = vec.y;
+            bullet.x = (this._entity.x + vec.x) / 2;
+            bullet.y = (this._entity.y + vec.y) / 2;
         } else {
             bullet.x = this._entity.x;
             bullet.y = this._entity.y;

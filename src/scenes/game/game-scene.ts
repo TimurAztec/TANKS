@@ -80,7 +80,7 @@ export class GameScene extends Scene implements IEventListener {
     // Так и с кодом ниже
     public update(dt: number) {
         super.update(dt);
-        // console.log(dt);
+        console.log(dt);
 
         this.dynamicChildren = this.dynamicChildren.filter((entity) => {
             return !entity.destroyed
@@ -88,6 +88,7 @@ export class GameScene extends Scene implements IEventListener {
         let i: number = this.dynamicChildren.length;
         while (i--) {
             const dynamicEntity = this.dynamicChildren[i];
+            if (dynamicEntity.destroyed) continue;
             if (dynamicEntity.getComponent(AbstractMovementComponent) &&
                 !dynamicEntity.position.equals(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition)) {
                 const prevTilePos = getTitlePosition(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition, this.tileSize);

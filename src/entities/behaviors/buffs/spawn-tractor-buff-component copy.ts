@@ -23,8 +23,8 @@ class SpawnTractorBuffComponent extends AbstractBuffComponent implements IBuffCo
 
         if (this._entity.getComponent(AbstractMovementComponent)) {
             const vec = this._entity.getComponent(AbstractMovementComponent).rotationVector;
-            tractor.x = vec.x * 1.1;
-            tractor.y = vec.y * 1.1;
+            tractor.x = this._entity.x * (this._entity.x / vec.x);
+            tractor.y = this._entity.y * (this._entity.y / vec.y);
         } else {
             tractor.x = this._entity.x;
             tractor.y = this._entity.y;

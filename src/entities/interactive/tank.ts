@@ -98,19 +98,31 @@ class Tank extends Entity {
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
         let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x - 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x - 1]]
+        }
+        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x + 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x + 1]]
+        }
+        if (tileMap[tilePos.y + 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y + 1][tilePos.x]]
+        }
+        if (tileMap[tilePos.y - 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y - 1][tilePos.x]]
+        }
         if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
         }
-        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
         }
-        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
         }
-        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y + 1]) {
+        if (tileMap[vectorTilePos.y + 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
         }
-        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y - 1]) {
+        if (tileMap[vectorTilePos.y - 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
         }
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);

@@ -14,10 +14,12 @@ import {BigExplosionFX} from "../fx/big-explosion";
 import { Buff } from "./buff";
 import { Tank } from "./tank";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
+import {ImmortalBuffComponent} from "../behaviors/buffs/immortal-buff-component";
 
 class Tractor extends Entity {
     public speed: number;
     public health: number;
+    public immortal: boolean;
 
     constructor(source?: Tractor) {
         super(source);
@@ -58,7 +60,9 @@ class Tractor extends Entity {
     }
 
     public takeDamage(damage: number): void {
+        if (this.immortal) return;
         this.health -= damage;
+        this.setComponent(new ImmortalBuffComponent().applyBuff(60));
     }
 
     public setComponent(component: IComponent): void {
@@ -100,19 +104,31 @@ class Tractor extends Entity {
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
         let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x - 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x - 1]]
+        }
+        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x + 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x + 1]]
+        }
+        if (tileMap[tilePos.y + 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y + 1][tilePos.x]]
+        }
+        if (tileMap[tilePos.y - 1]) {
+            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y - 1][tilePos.x]]
+        }
         if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
         }
-        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
         }
-        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
+        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
         }
-        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y + 1]) {
+        if (tileMap[vectorTilePos.y + 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
         }
-        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y - 1]) {
+        if (tileMap[vectorTilePos.y - 1]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
         }
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);

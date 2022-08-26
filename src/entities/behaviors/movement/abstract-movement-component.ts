@@ -23,10 +23,14 @@ export abstract class AbstractMovementComponent extends AbstractComponent implem
             (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)) * this._entity.width,
             (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle)) * this._entity.height
         );
+        // return new Point(
+        //     this._entity.x + (vector.x >= 0 ? Math.ceil(vector.x / this._entity.width) : Math.floor(vector.x / this._entity.width)),
+        //     this._entity.y + (vector.y >= 0 ? Math.ceil(vector.y / this._entity.width) : Math.floor(vector.y / this._entity.width))
+        // )
         return new Point(
-            this._entity.x + (vector.x >= 0 ? Math.ceil(vector.x / this._entity.width) : Math.floor(vector.x / this._entity.width)),
-            this._entity.y + (vector.y >= 0 ? Math.ceil(vector.y / this._entity.width) : Math.floor(vector.y / this._entity.width))
-        )
+            this._entity.x + vector.x,
+            this._entity.y + vector.y
+        );
     }
 
     public setRotationSpeed(speed: number): AbstractMovementComponent {

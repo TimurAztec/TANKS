@@ -13,10 +13,12 @@ import {EnemyBulletWeaponComponent} from "./behaviors/weapon/enemy-bullet-weapon
 import {WanderingAmountBasedSpawner} from "./interactive/spawners/wandering-amount-based-spawner";
 import { AmountBasedSpawner } from "./interactive/spawners/amount-based-spawner";
 import { Buff } from "./interactive/buff";
-import { Assets } from "../assets-vars";
 import { Base } from "./interactive/base";
 import { BulletWeaponComponent } from "./behaviors/weapon/bullet-weapon-component";
 import { Tractor } from "./interactive/tractor";
+import {BasicDestroyComponent} from "./behaviors/destroy/basic-destroy-component";
+import {EventManager} from "../event-manager";
+import {AbstractTeamComponent} from "./behaviors/team/abstract-team-component";
 
 class EntityFactory {
     private constructor() {}
@@ -46,9 +48,12 @@ class EntityFactory {
                 playerTank.setSkin({assetName: 'tank_player', scaleX: 1.2, numberOfFrames: 4});
                 playerTank.setComponent(new PlayerControlComponent());
                 const weapon = new BulletWeaponComponent();
-                weapon.setReloadTime(50);
+                weapon.setReloadTime(1);
                 playerTank.setComponent(weapon);
                 playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
+                playerTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
+                    EventManager.notify('team_lost', playerTank.getComponent(AbstractTeamComponent).getTeam);
+                }));
                 return playerTank;
             }
             case 902: {
@@ -76,22 +81,13 @@ class EntityFactory {
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)
                     .setMaxAmountPerTime(3);
-                    spawner.setSkin({assetName: 'eagle'})
+                    spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }
             case 921:{
                 const buff = new Buff();
-                const buff_types = [
-                    Assets.Bonuses.BONUS_IMMORTAL,
-                    Assets.Bonuses.BONUS_LIVE,
-                    Assets.Bonuses.BONUS_SLOW,
-                    Assets.Bonuses.BONUS_SPEED,
-                    Assets.Bonuses.BONUS_TRACTOR    
-                ];
-                buff.type = buff_types[Math.floor(randNum(buff_types.length))];
-                buff.setSkin({assetName: buff.type});
                 let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
-                    .setTimeBetweenSpawns(150)
+                    .setTimeBetweenSpawns(1200)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(1000)
                     .setMaxAmountPerTime(1);
