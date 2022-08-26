@@ -1,5 +1,5 @@
+import { IIndexable } from "../../../utils/utils";
 import { AbstractComponent } from "../AbstractComponent";
-import { IComponent } from "../IComponent";
 import { IBuffComponent } from "./IBuffComponent";
 
 abstract class AbstractBuffComponent extends AbstractComponent implements IBuffComponent{
@@ -17,36 +17,40 @@ abstract class AbstractBuffComponent extends AbstractComponent implements IBuffC
         super(source);
         this._timePassed = 0;
         this._buffDuration = 0;
-        this._isFirstUpdate = false;
+        this._isFirstUpdate = true;
     }
 
-    public applyBuff(propToChange: string, changeTo: any, duration?: number): IBuffComponent {
+    public applyBuff(duration?: number): IBuffComponent {
         
         this._buffDuration = duration;
-        this._changeTo = changeTo;
-        this._propToChange = propToChange;
+        // this._changeTo = changeTo;
+        // this._propToChange = propToChange;
         
         return this;
 
     }
 
     public update(dt: number): void {
+        if(this._isFirstUpdate){ this.firstUpdate() }
         if(!this._buffDuration){
+            this._entity.removeComponent(AbstractBuffComponent);
             return
         }
         this._timePassed += dt;
         if(this._buffDuration <= this._timePassed){
-            
-            //@ts-ignore
-            this._entity[this._propToChange] = this._defaultValue
-            this._entity.removeComponent(AbstractBuffComponent);
+            this.endBuff()
         }
-        if(!this._isFirstUpdate){
-            this._defaultValue = this._entity[this._propToChange as keyof typeof this._entity];
-            //@ts-ignore
-            this._entity[this._propToChange] = this._changeTo;
-            this._isFirstUpdate = true;
-        }
+    }
+
+    protected firstUpdate(): void {
+        this._defaultValue = this._entity[this._propToChange as keyof typeof this._entity];
+        (this._entity as IIndexable)[this._propToChange] = this._changeTo;
+        this._isFirstUpdate = false;
+    }
+
+    protected endBuff(): void {
+        (this._entity as IIndexable)[this._propToChange] = this._defaultValue
+        this._entity.removeComponent(AbstractBuffComponent);
     }
 }
 

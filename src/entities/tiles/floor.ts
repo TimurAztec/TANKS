@@ -1,13 +1,14 @@
-import { Assets } from "../../assets-vars";
 import {Entity} from "../entity";
 
 class Floor extends Entity {
 
-    constructor() {
-        super();
-        this.setSkin({ assetName: Assets.Tiles.DIRT });
+    constructor(source?: Floor) {
+        super(source)
     }
 
+    public clone(): Floor {
+        return new Floor(this);
+    }
 }
 
 export { Floor }

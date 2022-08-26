@@ -2,6 +2,7 @@ import {Container} from "pixi.js";
 
 export abstract class Scene extends Container {
     protected paused: boolean = false;
+    protected _preUpdateAction: Function = () => {};
 
     constructor() {
         super();
@@ -19,6 +20,7 @@ export abstract class Scene extends Container {
 
     public update(dt: number): void {
         if (this.paused) return;
+        this._preUpdateAction();
     }
 
 }

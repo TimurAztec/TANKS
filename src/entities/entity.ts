@@ -1,21 +1,17 @@
 import {AnimatedSprite, Container, Loader, Point, Rectangle, Sprite, Texture, utils} from "pixi.js";
 import {IEntity, SkinOptions} from "./interfaces";
 import {IComponent} from "./behaviors/IComponent";
-import {AABBData, constr, getTitlePosition} from "../utils/utils";
-import {AbstractMovementComponent} from "./behaviors/movement/abstract-movement-component";
+import {AABBData, constr} from "../utils/utils";
 import {IEventListener} from "../utils/events/IEventListener";
-import {EventManager} from "../event-manager";
-import {GameScene} from "../scenes/game/game-scene";
-import {SceneManager} from "../scene-manager";
-import {AbstractCollisionComponent} from "./behaviors/collision/abstract-collision-component";
-import {TILE_SIZE} from "./entity-factory";
 
 abstract class Entity extends Container implements IEntity, IEventListener {
 
-    protected _skin: (Sprite | AnimatedSprite);
+    protected _skin: AnimatedSprite;
     protected _skinOptions: SkinOptions;
     protected _components: IComponent[] = [];
     protected _initOnUpdate: boolean = true;
+    protected _hitboxWidth: number;
+    protected _hitboxHeight: number;
 
     public get entityType(): string {
         return this.constructor.name;
@@ -25,39 +21,27 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         return this._destroyed;
     }
 
-    public get previousTilePosition(): Point {
-        if (this.getComponent(AbstractMovementComponent)) {
-            return getTitlePosition(new Point()
-                .copyFrom(this.getComponent(AbstractMovementComponent).previousPosition));
-        }
-        return this.tilePosition;
-    }
-
-    public get tilePosition(): Point {
-        return getTitlePosition(new Point().copyFrom(this.position));
-    }
-
-    protected getNextTilePosition(movementVector?: Point): Point {
-        const entityTilePos = this.tilePosition;
-        let vector = movementVector;
-        //TODO prototype code for advanced collision for fast moving objects (doesent work for now)
-        // if (!vector || (vector.x == 0 && vector.y == 0)) {
-        //     const radAngle: number = (this.angle-90) * (Math.PI/180);
-        //     vector = new Point(
-        //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
-        //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
-        //     );
-        // }
-        const radAngle: number = (this.angle-90) * (Math.PI/180);
-        vector = new Point(
-            (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
-            (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
-        );
-        return new Point(
-            entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
-            entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
-        )
-    }
+    // protected getNextTilePosition(movementVector?: Point): Point {
+    //     const entityTilePos = this.tilePosition;
+    //     let vector = movementVector;
+    //     //TODO prototype code for advanced collision for fast moving objects (doesent work for now)
+    //     // if (!vector || (vector.x == 0 && vector.y == 0)) {
+    //     //     const radAngle: number = (this.angle-90) * (Math.PI/180);
+    //     //     vector = new Point(
+    //     //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+    //     //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+    //     //     );
+    //     // }
+    //     const radAngle: number = (this.angle-90) * (Math.PI/180);
+    //     vector = new Point(
+    //         (Math.abs(Math.cos(radAngle)) != 1 ? 0 : Math.cos(radAngle)),
+    //         (Math.abs(Math.sin(radAngle)) != 1 ? 0 : Math.sin(radAngle))
+    //     );
+    //     return new Point(
+    //         entityTilePos.x + (vector.x >= 0 ? Math.ceil(vector.x / TILE_SIZE) : Math.floor(vector.x / TILE_SIZE)),
+    //         entityTilePos.y + (vector.y >= 0 ? Math.ceil(vector.y / TILE_SIZE) : Math.floor(vector.y / TILE_SIZE))
+    //     )
+    // }
 
     public get simpleBounds(): AABBData {
         return this.destroyed ? {
@@ -68,10 +52,12 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         } : {
             x: this.x,
             y: this.y,
-            width: this.width,
-            height: this.height
+            width: this._hitboxWidth || this.width,
+            height: this._hitboxHeight || this.height
         }
     }
+
+    public updateTilingData(tileMap: any[][], tileSize: number): void {};
 
     constructor(source?: Entity) {
         super();
@@ -91,27 +77,25 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     public setSkin(options?: SkinOptions): void {
         this._skinOptions = options;
         if (options?.assetName) {
-            if (!options.numberOfFrames) {
-                this._skin = new Sprite(Loader.shared.resources[options.assetName].texture);
+            const numberOfFrames = options?.numberOfFrames || 1;
+            const sheet = Loader.shared.resources[options.assetName].texture;
+            const frameWidth = sheet.width / numberOfFrames;
+            const frameHeight = sheet.height;
+            const frames: Texture[] = [];
+            for (let i = 0 ; i < numberOfFrames ; i++) {
+                const frame = sheet.clone();
+                frame.frame = new Rectangle(i * frameWidth, 0, frameWidth, frameHeight);
+                frame.updateUvs();
+                frames.push(frame);
             }
-            if (options.numberOfFrames) {
-                const sheet = Loader.shared.resources[options.assetName].texture;
-                const frameWidth = sheet.width/options.numberOfFrames;
-                const frameHeight = sheet.height;
-                const frames: Texture[] = [];
-                for (let i = 0 ; i < options.numberOfFrames ; i++) {
-                    const frame = sheet.clone();
-                    frame.frame = new Rectangle(i * frameWidth, 0, frameWidth, frameHeight);
-                    frame.updateUvs();
-                    frames.push(frame);
-                }
-                this._skin = new AnimatedSprite(frames);
-            }
+            this._skin = new AnimatedSprite(frames);
             this.addChild(this._skin);
         }
         this._skin.anchor.set(0.5);
         this._skin.scale.x = options?.scaleX || this._skin.scale.x;
         this._skin.scale.y = options?.scaleY || this._skin.scale.y;
+        if (options?.hitboxWidth) this._hitboxWidth = options.hitboxWidth;
+        if (options?.hitboxHeight) this._hitboxHeight = options.hitboxHeight;
     }
 
     public update(dt: number): void {
@@ -120,13 +104,6 @@ abstract class Entity extends Container implements IEntity, IEventListener {
             this._initOnUpdate = false;
         }
         this._components.forEach((component) => component.update(dt));
-        if (!this._destroyed && !this.previousTilePosition.equals(this.tilePosition)) {
-            EventManager.notify('entity_moved_from_tile_to_tile', {
-                entity: this,
-                from: this.previousTilePosition,
-                to: this.tilePosition
-            });
-        }
     }
 
     public setComponent(component: IComponent): void {

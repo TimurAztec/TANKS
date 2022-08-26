@@ -1,10 +1,10 @@
 import {AbstractControlComponent} from "./abstract-control-component";
-import {randNum} from "../../../utils/utils";
+import {IIndexable, randNum} from "../../../utils/utils";
 
 class RandomControlComponent extends AbstractControlComponent {
 
     protected _actionChangeTimer: number = 0;
-    protected _actionChangeDelay: number = 75;
+    protected _actionChangeDelay: number = 50;
     protected _nextAction: string = '';
 
     update(dt: number) {
@@ -34,8 +34,8 @@ class RandomControlComponent extends AbstractControlComponent {
                     break;
             }
         }
-        if (this._nextAction) { // @ts-ignore
-            this[`triggerAction${this._nextAction}`]()
+        if (this._nextAction) {
+            (this as IIndexable)[`triggerAction${this._nextAction}`]()
         }
     }
 

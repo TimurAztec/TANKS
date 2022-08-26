@@ -1,8 +1,10 @@
 type SkinOptions = {
     assetName?: string
+    numberOfFrames?: number
     scaleX?: number
     scaleY?: number
-    numberOfFrames?: number
+    hitboxWidth?: number
+    hitboxHeight?: number
 }
 
 interface IEntity {

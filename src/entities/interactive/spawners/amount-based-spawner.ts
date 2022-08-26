@@ -1,11 +1,9 @@
 import { Entity } from "../../entity";
 import {Spawner} from "./spawner";
 import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-collision-component";
-import {AbstractMovementComponent} from "../../behaviors/movement/abstract-movement-component";
 import {AbstractCollisionComponent} from "../../behaviors/collision/abstract-collision-component";
-import {Point} from "pixi.js";
-import {SceneManager} from "../../../scene-manager";
-import {GameScene} from "../../../scenes/game/game-scene";
+import { getTitlePosition, validatePointIsPositive } from "../../../utils/utils";
+import { ProjectileMovementComponent } from "../../behaviors/movement/projectile-movement-component";
 
 class AmountBasedSpawner extends Spawner {
     protected _timesToSpawn: number;
@@ -21,6 +19,7 @@ class AmountBasedSpawner extends Spawner {
             if (object == this) return;
             if (this._collisionGroup.includes(object.entityType)) this._collides = true;
         }));
+        this.setComponent(new ProjectileMovementComponent());
     }
 
     public clone(): AmountBasedSpawner {
@@ -51,14 +50,15 @@ class AmountBasedSpawner extends Spawner {
         return super.setPrototypeEntity(entity) as AmountBasedSpawner;
     }
 
+    public updateTilingData(tileMap: any[][], tileSize: number): void {
+        const tilePos = getTitlePosition(this.position, tileSize);
+        if (!tileMap || !validatePointIsPositive(tilePos)) return;
+        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
+    }
+
     public update(dt: number): void {
-        if (this.getComponent(AbstractCollisionComponent)) {
-            const tileMap = (SceneManager.currentScene as GameScene).tileMap;
-            const tilePos = this.tilePosition;
-            this.getComponent(AbstractCollisionComponent).setCollisionGroup([...tileMap[tilePos.y][tilePos.x]]);
-        }
         super.update(dt);
-        this._collides = false;
         if (this._timesToSpawn && this._dttimer > this._timeBetweenSpawns && !this._collides) {
             this._dttimer = 0;
             this._entities = this._entities.filter((entity) => {
@@ -72,6 +72,7 @@ class AmountBasedSpawner extends Spawner {
         if (this._timesToSpawn <= 0) {
             this.destroy();
         }
+        this._collides = false;
     }
 
 }
