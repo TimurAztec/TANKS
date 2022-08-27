@@ -1,5 +1,5 @@
 import {Entity} from "../entity";
-import {AnimatedSprite, Point} from "pixi.js";
+import {AnimatedSprite, Loader, Point} from "pixi.js";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
 import {SceneManager} from "../../scene-manager";
 import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-component";
@@ -18,6 +18,7 @@ import { RandomControlComponent } from "../behaviors/control/random-control-comp
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 import { BasicTeamComponent } from "../behaviors/team/basic-team-component";
 import { DeadTank } from "../tiles/dead-tank";
+import { Howl } from "howler";
 
 class Tank extends Entity {
     public speed: number;
@@ -33,6 +34,9 @@ class Tank extends Entity {
             if (object == this) return;
             switch (object.entityType) {
                 case 'HardWall':
+                    this.getComponent(AbstractMovementComponent).collides();
+                    break;
+                case 'ATHedgehogs':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'SmallWall':
@@ -79,6 +83,7 @@ class Tank extends Entity {
                 (this._skin as AnimatedSprite).loop = false;
                 if (!(this._skin as AnimatedSprite).playing) {
                     (this._skin as AnimatedSprite).gotoAndPlay(0);
+                    new Howl({ src: Loader.shared.resources['motor_sound'].url}).play();
                 }
 
             });
@@ -146,7 +151,7 @@ class Tank extends Entity {
             dead.y = this.y;
             dead.angle = this.angle;
             SceneManager.currentScene.addChild(dead);
-            let i: number = Math.floor(randNum(5));
+            let i: number = Math.floor(randNum(3));
             while(i--) {
                 const soldier = new Soldier();
                 soldier.setSkin({assetName: 'soldier', numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});

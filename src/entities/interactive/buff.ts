@@ -29,13 +29,13 @@ class Buff extends Entity{
         switch(this._type)
         {
             case Assets.Bonuses.BONUS_SPEED:
-                return new SpeedBuffComponent().applyBuff(180);
+                return new SpeedBuffComponent().applyBuff(240);
             case Assets.Bonuses.BONUS_IMMORTAL:
-                return new ImmortalBuffComponent().applyBuff(180);
+                return new ImmortalBuffComponent().applyBuff(300);
             case Assets.Bonuses.BONUS_LIVE:
                 return new LiveBuffComponent().applyBuff(0);
             case Assets.Bonuses.BONUS_SLOW:
-                return new SlowBuffComponent().applyBuff(180);
+                return new SlowBuffComponent().applyBuff(300);
             case Assets.Bonuses.BONUS_TRACTOR:
                 return new SpawnTractorBuffComponent().applyBuff(0);
             default: 

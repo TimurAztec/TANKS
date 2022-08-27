@@ -33,6 +33,9 @@ class Tractor extends Entity {
                 case 'HardWall':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
+                case 'ATHedgehogs':
+                    this.getComponent(AbstractMovementComponent).collides();
+                    break;
                 case 'SmallWall':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;

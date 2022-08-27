@@ -21,6 +21,7 @@ import {EventManager} from "../event-manager";
 import {AbstractTeamComponent} from "./behaviors/team/abstract-team-component";
 import {InWorldEventCounter} from "./interactive/in-world-event-counter";
 import { Soldier } from "./interactive/soldier";
+import { ATHedgehogs } from "./tiles/at-hedgehogs";
 
 class EntityFactory {
     private constructor() {}
@@ -43,6 +44,8 @@ class EntityFactory {
                 return new HardWall();
             case 202:
                 return new Wall();
+            case 203:
+                return new ATHedgehogs();
             case 211:
                 return new Water();
             case 901: {
@@ -91,8 +94,8 @@ class EntityFactory {
                 const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getEntity(902))
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank', 'Tractor', 'DeadTank', 'HardWall', 'SmallWall', 'Water'])
-                    .setTimesToSpawn(12)
-                    .setMaxAmountPerTime(3);
+                    .setTimesToSpawn(4)
+                    .setMaxAmountPerTime(1);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }

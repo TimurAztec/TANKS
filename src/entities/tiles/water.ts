@@ -1,10 +1,12 @@
 import { Assets } from "../../assets-vars";
+import { SceneManager } from "../../scene-manager";
 import { getTitlePosition, validatePointIsPositive } from "../../utils/utils";
 import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
 import { BasicAabbCollisionComponent } from "../behaviors/collision/basic-aabb-collision-component";
 import { AbstractControlComponent } from "../behaviors/control/abstract-control-component";
 import { ProjectileMovementComponent } from "../behaviors/movement/projectile-movement-component";
 import {Entity} from "../entity";
+import { Splash } from "../fx/splash";
 
 class Water extends Entity {
     protected _objectToDrown: Entity;
@@ -53,6 +55,10 @@ class Water extends Entity {
             this._objectToDrown.scale.x = this._objectToDrown.scale.y -= 0.005;
             if (this._objectToDrown.scale.x <= 0.75) {
                 this._objectToDrown.destroy();
+                const fx = new Splash();
+                fx.x = this.x;
+                fx.y = this.y;
+                SceneManager.currentScene.addChild(fx);
             }
         }
     }
