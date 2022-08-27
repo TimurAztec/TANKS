@@ -50,8 +50,8 @@ class Water extends Entity {
     public update(dt: number): void {
         super.update(dt);
         if (this._objectToDrown && !this._objectToDrown.destroyed) {
-            this._objectToDrown.scale.x = this._objectToDrown.scale.y -= 0.01;
-            if (this._objectToDrown.scale.x <= 0) {
+            this._objectToDrown.scale.x = this._objectToDrown.scale.y -= 0.005;
+            if (this._objectToDrown.scale.x <= 0.75) {
                 this._objectToDrown.destroy();
             }
         }

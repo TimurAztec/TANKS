@@ -23,6 +23,7 @@ const assets = [
     { name: "dead_tank", url: "./assets/tanks/tank_dead_move.png" },
     { name: "tractor", url: "./assets/tanks/tractor_move.png" },
     { name: "soldier", url: "./assets/entities/soldier.png" },
+    { name: "dead_soldier", url: "./assets/entities/good_russian.png" },
     { name: "empty", url: "./assets/tanks/empty.png" },
     { name: "eagle", url: "./assets/tiles/eagle.png" },
     { name: "leaves", url: "./assets/tiles/leaves.png" },

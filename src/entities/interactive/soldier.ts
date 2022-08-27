@@ -11,6 +11,7 @@ import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collis
 import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-component";
+import { DeadSoldier } from "../tiles/dead-soldier";
 
 class Soldier extends Entity {
     public speed: number;
@@ -110,10 +111,10 @@ class Soldier extends Entity {
 
     public update(dt: number): void {
         if (this.health <= 0) {
-            const fx = new BigExplosionFX();
-            fx.x = this.x;
-            fx.y = this.y;
-            SceneManager.currentScene.addChild(fx);
+            const dead = new DeadSoldier();
+            dead.x = this.x;
+            dead.y = this.y;
+            SceneManager.currentScene.addChild(dead);
             this.destroy();
         }
         super.update(dt);
