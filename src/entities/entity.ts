@@ -97,6 +97,7 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         this._skin.scale.y = options?.scaleY || this._skin.scale.y;
         if (options?.hitboxWidth) this._hitboxWidth = options.hitboxWidth;
         if (options?.hitboxHeight) this._hitboxHeight = options.hitboxHeight;
+        if (options?.animationSpeed) this._skin.animationSpeed = options.animationSpeed
     }
 
     public update(dt: number): void {

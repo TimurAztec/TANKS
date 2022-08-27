@@ -21,6 +21,7 @@ const assets = [
     { name: "tank_enemy3", url: "./assets/tanks/tank_enemy3_move.png" },
     { name: "tank_player", url: "./assets/tanks/tank_player_move.png" },
     { name: "tractor", url: "./assets/tanks/tractor_move.png" },
+    { name: "soldier", url: "./assets/entities/soldier.png" },
     { name: "empty", url: "./assets/tanks/empty.png" },
     { name: "eagle", url: "./assets/tiles/eagle.png" },
     { name: "leaves", url: "./assets/tiles/leaves.png" },

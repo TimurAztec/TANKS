@@ -1,6 +1,7 @@
 type SkinOptions = {
     assetName?: string
     numberOfFrames?: number
+    animationSpeed?: number
     scaleX?: number
     scaleY?: number
     hitboxWidth?: number

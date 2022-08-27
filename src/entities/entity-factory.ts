@@ -20,12 +20,13 @@ import {BasicDestroyComponent} from "./behaviors/destroy/basic-destroy-component
 import {EventManager} from "../event-manager";
 import {AbstractTeamComponent} from "./behaviors/team/abstract-team-component";
 import {InWorldEventCounter} from "./interactive/in-world-event-counter";
+import { Soldier } from "./interactive/soldier";
 
 class EntityFactory {
     private constructor() {}
 
-    public static getTile(tileIndex: number): Entity {
-        switch (tileIndex) {
+    public static getEntity(entityID: number): Entity {
+        switch (entityID) {
             case 101: {
                 const floor = new Floor();
                 floor.setSkin({assetName: 'dirt'});
@@ -79,8 +80,15 @@ class EntityFactory {
                 playerTractor.setComponent(new BasicTeamComponent().setTeam('player1'));
                 return playerTractor;
             }
+            case 904: {
+                const soldier = new Soldier();
+                soldier.setSkin({assetName: 'soldier', numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
+                soldier.setComponent(new RandomControlComponent());
+                soldier.setComponent(new BasicTeamComponent().setTeam('player2'));
+                return soldier;
+            }
             case 912: {
-                const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getTile(902))
+                const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getEntity(902))
                     .setTimeBetweenSpawns(250)
                     .setCollisionGroup(['Tank'])
                     .setTimesToSpawn(12)

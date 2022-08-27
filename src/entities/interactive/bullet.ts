@@ -12,6 +12,7 @@ import { AbstractCollisionComponent } from "../behaviors/collision/abstract-coll
 import { Tank } from "./tank";
 import { Vars } from "../../vars";
 import { getTitlePosition, validatePointIsPositive } from "../../utils/utils";
+import { Soldier } from "./soldier";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -40,6 +41,11 @@ class Bullet extends Entity {
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.destroy();
                     (object as Tank).takeDamage(1);
+                    break;
+                case 'Soldier':
+                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    this.explode(new SmallExplosionFX());
+                    (object as Soldier).takeDamage(9999);
                     break;
                 case 'Bullet':
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;

@@ -6,26 +6,20 @@ import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-compo
 import {IComponent} from "../behaviors/IComponent";
 import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
 import { AbstractMovementComponent } from "../behaviors/movement/abstract-movement-component";
-import {AppearFX} from "../fx/appear";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
 import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
-import { Buff } from "./buff";
 import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-component";
-import { Soldier } from "./soldier";
-import { RandomControlComponent } from "../behaviors/control/random-control-component";
-import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
-import { BasicTeamComponent } from "../behaviors/team/basic-team-component";
 
-class Tank extends Entity {
+class Soldier extends Entity {
     public speed: number;
     public health: number;
     public immortal: boolean;
 
-    constructor(source?: Tank) {
+    constructor(source?: Soldier) {
         super(source);
-        this.speed = source?.speed || 2;
+        this.speed = source?.speed || 0.5;
         this.health = source?.health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
@@ -37,27 +31,18 @@ class Tank extends Entity {
                 case 'SmallWall':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
-                // case 'Water':
-                //     this.getComponent(AbstractMovementComponent).collides();
-                //     break;
                 case 'Tank':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'Tractor':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
-                case 'Soldier':
-                    (object as Soldier).takeDamage(9999);
-                    break;
-                case 'Buff':
-                    this.setComponent((object as Buff).getBuff());
-                    (object as Buff).destroy();
             }
         }));
     }
 
-    public clone(): Tank {
-        return new Tank(this);
+    public clone(): Soldier {
+        return new Soldier(this);
     }
 
     public takeDamage(damage: number): void {
@@ -72,9 +57,9 @@ class Tank extends Entity {
         if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
             this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
 
-                (this._skin as AnimatedSprite).loop = false;
-                if (!(this._skin as AnimatedSprite).playing) {
-                    (this._skin as AnimatedSprite).gotoAndPlay(0);
+                this._skin.loop = false;
+                if (!this._skin.playing) {
+                    this._skin.gotoAndPlay(1);
                 }
 
             });
@@ -105,18 +90,6 @@ class Tank extends Entity {
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
         let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x - 1]]
-        }
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x + 1]]
-        }
-        if (tileMap[tilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y + 1][tilePos.x]]
-        }
-        if (tileMap[tilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y - 1][tilePos.x]]
-        }
         if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
         }
@@ -141,26 +114,22 @@ class Tank extends Entity {
             fx.x = this.x;
             fx.y = this.y;
             SceneManager.currentScene.addChild(fx);
-            let i: number = 3;
-            while(i--) {
-                const soldier = new Soldier();
-                soldier.setSkin({assetName: 'soldier', numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
-                soldier.setComponent(new RandomControlComponent());
-                soldier.setComponent(new BasicTeamComponent().setTeam(this.getComponent(AbstractTeamComponent).getTeam()));
-                soldier.x = this.x;
-                soldier.y = this.y;
-                SceneManager.currentScene.addChild(soldier);
-            }
             this.destroy();
         }
-        if (this._initOnUpdate) {
-            const fx = new AppearFX();
-            fx.x = this.x;
-            fx.y = this.y;
-            SceneManager.currentScene.addChild(fx);
-        }
         super.update(dt);
+        if (this.destroyed) return;
+        if (!this._skin.playing) {
+            this._skin.gotoAndStop(0);
+        }
+        const scaleX = Math.abs(this._skin.scale.x);
+        if (this.angle == 90) {
+            this._skin.scale.x = scaleX;
+        }
+        if (this.angle == 270) {
+            this._skin.scale.x = -scaleX;
+        }
+        this._skin.angle = -this.angle;
     }
 }
 
-export { Tank }
+export { Soldier }

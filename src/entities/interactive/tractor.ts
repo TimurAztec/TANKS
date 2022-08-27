@@ -15,6 +15,7 @@ import { Buff } from "./buff";
 import { Tank } from "./tank";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 import {ImmortalBuffComponent} from "../behaviors/buffs/immortal-buff-component";
+import { Soldier } from "./soldier";
 
 class Tractor extends Entity {
     public speed: number;
@@ -35,9 +36,6 @@ class Tractor extends Entity {
                 case 'SmallWall':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
-                case 'Water':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
                 case 'Tank':
                     this.getComponent(AbstractMovementComponent).collides();
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
@@ -47,6 +45,9 @@ class Tractor extends Entity {
                     this.getComponent(AbstractMovementComponent).collides();
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     (object as Tank).takeDamage(1);
+                    break;
+                case 'Soldier':
+                    (object as Soldier).takeDamage(9999);
                     break;
                 case 'Buff':
                     this.setComponent((object as Buff).getBuff());

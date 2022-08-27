@@ -33,7 +33,7 @@ export abstract class GameScene extends Scene implements IEventListener {
                 if (!this.tileMap[rowIndex]) this.tileMap[rowIndex] = [];
                 for (let [tileIndex, tileID] of row.entries()) {
                     if (!this.tileMap[rowIndex][tileIndex]) this.tileMap[rowIndex][tileIndex] = [];
-                    let tile: Entity = EntityFactory.getTile(tileID);
+                    let tile: Entity = EntityFactory.getEntity(tileID);
                     if (tile) {
                         tile.x = x;
                         tile.y = y;
