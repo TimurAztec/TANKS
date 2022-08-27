@@ -8,6 +8,11 @@ abstract class AbstractCollisionComponent extends AbstractComponent implements I
     protected _collisionCallback: Function;
     protected _collisionGroup: Entity[] = [];
 
+    constructor(source?: AbstractCollisionComponent) {
+        super(source);
+        if (source?._collisionCallback) this._collisionCallback = source._collisionCallback;
+    }
+
     public onCollidedWith(callback: Function): AbstractCollisionComponent { this._collisionCallback = callback; return this }
 
     public collidedWith(object: Entity): void { this._collisionCallback(object); }

@@ -18,6 +18,9 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
+            if (this._collisionGroup.includes(object.entityType)) {
+                this._collides = true;
+            }
             switch (object.entityType) {
                 case 'HardWall':
                     this.getComponent(AbstractMovementComponent).collides();

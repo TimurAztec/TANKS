@@ -90,9 +90,9 @@ class EntityFactory {
             case 912: {
                 const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getEntity(902))
                     .setTimeBetweenSpawns(250)
-                    .setCollisionGroup(['Tank', 'Tractor', 'DeadTank'])
+                    .setCollisionGroup(['Tank', 'Tractor', 'DeadTank', 'HardWall', 'SmallWall', 'Water'])
                     .setTimesToSpawn(12)
-                    .setMaxAmountPerTime(1);
+                    .setMaxAmountPerTime(3);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }
