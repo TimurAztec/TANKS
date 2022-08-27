@@ -41,6 +41,9 @@ class Tractor extends Entity {
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     (object as Tank).takeDamage(1);
                     break;
+                case 'DeadTank':
+                    this.getComponent(AbstractMovementComponent).collides();
+                    break;
                 case 'Tractor':
                     this.getComponent(AbstractMovementComponent).collides();
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;

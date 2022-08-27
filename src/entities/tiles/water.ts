@@ -22,6 +22,9 @@ class Water extends Entity {
                 case 'Tractor':
                     this.drown(object);
                     break;
+                case 'Soldier':
+                    this.drown(object);
+                    break;
             }
         }));
     }

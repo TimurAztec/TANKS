@@ -9,7 +9,7 @@ import { AbstractMovementComponent } from "../behaviors/movement/abstract-moveme
 import {AppearFX} from "../fx/appear";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
-import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
+import {getTitlePosition, randNum, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import { Buff } from "./buff";
 import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-component";
@@ -17,6 +17,7 @@ import { Soldier } from "./soldier";
 import { RandomControlComponent } from "../behaviors/control/random-control-component";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 import { BasicTeamComponent } from "../behaviors/team/basic-team-component";
+import { DeadTank } from "../tiles/dead-tank";
 
 class Tank extends Entity {
     public speed: number;
@@ -41,6 +42,9 @@ class Tank extends Entity {
                 //     this.getComponent(AbstractMovementComponent).collides();
                 //     break;
                 case 'Tank':
+                    this.getComponent(AbstractMovementComponent).collides();
+                    break;
+                case 'DeadTank':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
                 case 'Tractor':
@@ -137,11 +141,12 @@ class Tank extends Entity {
 
     public update(dt: number): void {
         if (this.health <= 0) {
-            const fx = new BigExplosionFX();
-            fx.x = this.x;
-            fx.y = this.y;
-            SceneManager.currentScene.addChild(fx);
-            let i: number = 3;
+            const dead = new DeadTank();
+            dead.x = this.x;
+            dead.y = this.y;
+            dead.angle = this.angle;
+            SceneManager.currentScene.addChild(dead);
+            let i: number = Math.floor(randNum(5));
             while(i--) {
                 const soldier = new Soldier();
                 soldier.setSkin({assetName: 'soldier', numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
@@ -151,6 +156,10 @@ class Tank extends Entity {
                 soldier.y = this.y;
                 SceneManager.currentScene.addChild(soldier);
             }
+            const fx = new BigExplosionFX();
+            fx.x = this.x;
+            fx.y = this.y;
+            SceneManager.currentScene.addChild(fx);
             this.destroy();
         }
         if (this._initOnUpdate) {
