@@ -22,6 +22,8 @@ import {AbstractTeamComponent} from "./behaviors/team/abstract-team-component";
 import {InWorldEventCounter} from "./interactive/in-world-event-counter";
 import { Soldier } from "./interactive/soldier";
 import { ATHedgehogs } from "./tiles/at-hedgehogs";
+import { SavesHandler } from "../utils/saves-handler";
+import { SceneManager } from "../scene-manager";
 
 class EntityFactory {
     private constructor() {}
@@ -73,6 +75,7 @@ class EntityFactory {
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
                 tank.setComponent(new BasicDestroyComponent().onDestroy(() => {
                     EventManager.notify('entity_destroyed_player2', tank);
+                    SavesHandler.saveData('score', (SavesHandler.loadData('score') as number) + (10 - SceneManager.currentScene.sceneTime * 0.01));
                 }));
                 return tank;
             }

@@ -4,10 +4,10 @@ import { EventManager } from '../../../../event-manager';
 import { SceneManager } from '../../../../scene-manager';
 import { MenuScene } from '../../../menu/menu-scene';
 import { GameScene } from '../../game-scene';
-import { Level3Scene } from '../level3/level3';
-import * as levelData from './level2.json';
+import { GameWonScene } from '../../game_won_screen';
+import * as levelData from './level3.json';
 
-export class Level2Scene extends GameScene {
+export class Level3Scene extends GameScene {
     
     constructor() {
         super();
@@ -37,7 +37,7 @@ export class Level2Scene extends GameScene {
                 this.dynamicChildren.length = 0;
                 this.tileMap.length = 0;
                 new Howl({ src: Loader.shared.resources['win_sound'].url}).play();
-                SceneManager.changeScene(new Level3Scene());
+                SceneManager.changeScene(new GameWonScene());
                 this.destroy();
                 this._preUpdateAction = () => {};
             }

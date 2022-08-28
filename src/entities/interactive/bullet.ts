@@ -1,5 +1,5 @@
 import {Entity} from "../entity";
-import {Point} from "pixi.js";
+import {Loader, Point} from "pixi.js";
 import {ProjectileMovementComponent} from "../behaviors/movement/projectile-movement-component";
 import {SceneManager} from "../../scene-manager";
 import {AbstractMovementComponent} from "../behaviors/movement/abstract-movement-component";
@@ -14,6 +14,7 @@ import { Vars } from "../../vars";
 import { getTitlePosition, validatePointIsPositive } from "../../utils/utils";
 import { Soldier } from "./soldier";
 import { DeadTank } from "../tiles/dead-tank";
+import { Howl } from "howler";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -71,6 +72,7 @@ class Bullet extends Entity {
     }
 
     public launch(angle: number): void {
+        new Howl({ src: Loader.shared.resources['shot_sound'].url}).play();
         const radAngle: number = (angle-90) * (Math.PI/180);
         this.getComponent(AbstractMovementComponent).setMovementVector(
             new Point(Math.cos(radAngle) * this._speed,

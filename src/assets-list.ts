@@ -9,8 +9,10 @@ const assets = [
     { name: "bonus_slow", url: "./assets/bonus/bonus_slow.png" },
     { name: "bonus_speed", url: "./assets/bonus/bonus_speed.png" },
     { name: "bonus_tractor", url: "./assets/bonus/bonus_tractor.png" },
-    { name: "button", url: "./assets/buttons/button.png" },
-    { name: "button_scores", url: "./assets/buttons/scores.png" },
+    { name: "button_play", url: "./assets/buttons/play.png" },
+    { name: "button_exit", url: "./assets/buttons/exit.png" },
+    { name: "menu_background", url: "./assets/game_background.png" },
+    { name: "win_background", url: "./assets/win_screen_background.png" },
     { name: "appear", url: "./assets/effects/appear.png" },
     { name: "splash", url: "./assets/effects/splash.png" },
     { name: "bullet", url: "./assets/effects/bullet.png" },
@@ -36,8 +38,12 @@ const assets = [
     { name: "water", url: "./assets/tiles/water.png" },
     { name: "motor_sound", url: "./assets/sounds/shot.wav" },
     { name: "shot_sound", url: "./assets/sounds/shot.wav" },
+    { name: "bonus_sound", url: "./assets/sounds/bonus.wav" },
+    { name: "win_sound", url: "./assets/sounds/win.wav" },
+    { name: "lose_sound", url: "./assets/sounds/lose.wav" },
     { name: "explode_sound", url: "./assets/sounds/explode.wav" },
     { name: "hit_sound", url: "./assets/sounds/hit.wav" },
+    { name: "endgame_music", url: "./assets/sounds/endgame_music.mp3" },
 ]
 
 export { loaderAssets, assets }

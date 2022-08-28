@@ -36,7 +36,7 @@ export class SceneManager {
                 view: document.getElementById("game-canvas") as HTMLCanvasElement,
                 resolution: window.devicePixelRatio || 1,
                 autoDensity: true,
-                backgroundColor: 0x112233,
+                backgroundColor: 0x000000,
                 width: width,
                 height: height
             });

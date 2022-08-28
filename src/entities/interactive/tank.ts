@@ -58,6 +58,7 @@ class Tank extends Entity {
                     (object as Soldier).takeDamage(9999);
                     break;
                 case 'Buff':
+                    new Howl({ src: Loader.shared.resources['bonus_sound'].url}).play();
                     this.setComponent((object as Buff).getBuff());
                     (object as Buff).destroy();
             }

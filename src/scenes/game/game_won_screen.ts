@@ -1,27 +1,27 @@
 import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
-import {GameScene} from "../game/game-scene";
 import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
-import { Assets } from "../../assets-vars";
-import { Level1Scene } from "../game/levels/level1/level1";
+import { MenuScene } from "../menu/menu-scene";
+import { Howl } from "howler";
 
-export class MenuScene extends Scene {
+export class GameWonScene extends Scene {
 
     protected background: Sprite;
     protected startButton: Sprite;
     protected scoreButton: Sprite;
     protected logoText: Text;
+    protected music: Howl;
 
     constructor() {
         super();
 
-        this.background = new Sprite(Loader.shared.resources['menu_background'].texture);
-        this.logoText = new Text('Orcs Thunder', new TextStyle({
-            fontSize: 84,
+        this.background = new Sprite(Loader.shared.resources['win_background'].texture);
+        this.logoText = new Text('You`ve completed the game!', new TextStyle({
+            fontSize: 64,
             align: "center",
             fill: "#ffffff",
         }));
-        this.startButton = new Sprite(Loader.shared.resources['button_play'].texture);
+        this.startButton = new Sprite(Loader.shared.resources['button_exit'].texture);
         // this.scoreButton = new Sprite(Loader.shared.resources[Assets.Buttons.BUTTON_SCORES].texture);
 
         this.background.anchor.set(0.5);
@@ -32,7 +32,7 @@ export class MenuScene extends Scene {
 
         this.logoText.anchor.set(0.5);
         this.logoText.x = SceneManager.width / 2;
-        this.logoText.y = SceneManager.height / 4;
+        this.logoText.y = SceneManager.height / 6;
 
         this.startButton.anchor.set(0.5);
         this.startButton.x = SceneManager.width / 2;
@@ -57,14 +57,14 @@ export class MenuScene extends Scene {
     }
 
     protected initActions() {
-        this.startButton.on('click', () => {
-            this.startGame();
-        });
-    }
+        this.music = new Howl({ src: Loader.shared.resources['endgame_music'].url});
+        this.music.play();
 
-    public startGame(): void {
-        SceneManager.changeScene(new Level1Scene());
-        this.destroy();
+        this.startButton.on('click', () => {
+            SceneManager.changeScene(new MenuScene());
+            this.music.stop();
+            this.destroy();
+        });
     }
 
 }

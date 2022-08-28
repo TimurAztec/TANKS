@@ -1,5 +1,5 @@
 import {Entity} from "../entity";
-import {AnimatedSprite, Point} from "pixi.js";
+import {AnimatedSprite, Loader, Point} from "pixi.js";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
 import {SceneManager} from "../../scene-manager";
 import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-component";
@@ -16,6 +16,7 @@ import { Tank } from "./tank";
 import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 import {ImmortalBuffComponent} from "../behaviors/buffs/immortal-buff-component";
 import { Soldier } from "./soldier";
+import { Howl } from "howler";
 
 class Tractor extends Entity {
     public speed: number;
@@ -56,6 +57,7 @@ class Tractor extends Entity {
                     (object as Soldier).takeDamage(9999);
                     break;
                 case 'Buff':
+                    new Howl({ src: Loader.shared.resources['bonus_sound'].url}).play();
                     this.setComponent((object as Buff).getBuff());
                     (object as Buff).destroy();
             }

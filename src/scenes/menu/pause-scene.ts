@@ -1,11 +1,12 @@
 import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
-import {Loader, Sprite, Text, TextStyle} from "pixi.js";
+import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
 import {EventManager} from "../../event-manager";
 import {IEventListener} from "../../ustils/events/IEventListener";
 
 class PauseScene extends Scene implements IEventListener {
 
+    protected _background: Sprite;
     protected _menuStartButton: Sprite;
     protected _menuText: Text;
     protected _parentScene: Scene;
@@ -17,15 +18,22 @@ class PauseScene extends Scene implements IEventListener {
 
         this.initVisuals();
         this.initActions();
+        SceneManager.moveCameraTo(new Point(0, 0));
     }
 
     protected initVisuals(): void {
+        this._background = new Sprite(Loader.shared.resources['menu_background'].texture);
+        this._background.anchor.set(0.5);
+        this._background.x = SceneManager.width / 2;
+        this._background.y = SceneManager.height / 2;
+        this._background.width = SceneManager.width;
+        this._background.height = SceneManager.height;
         this._menuText = new Text('Pause', new TextStyle({
-            fontSize: 42,
+            fontSize: 64,
             align: "center",
-            fill: "#754c24",
+            fill: "#FFFFFF",
         }));
-        this._menuStartButton = new Sprite(Loader.shared.resources['button'].texture);
+        this._menuStartButton = new Sprite(Loader.shared.resources['button_play'].texture);
         this._menuText.anchor.set(0.5);
         this._menuText.x = SceneManager.width / 2;
         this._menuText.y = SceneManager.height / 3;
@@ -35,6 +43,7 @@ class PauseScene extends Scene implements IEventListener {
         this._menuStartButton.y = SceneManager.height / 2;
         this._menuStartButton.interactive = true;
         this._menuStartButton.buttonMode = true;
+        this.addChild(this._background);
         this.addChild(this._menuStartButton);
         this.addChild(this._menuText);
     }
