@@ -83,7 +83,7 @@ class Tank extends Entity {
                 (this._skin as AnimatedSprite).loop = false;
                 if (!(this._skin as AnimatedSprite).playing) {
                     (this._skin as AnimatedSprite).gotoAndPlay(0);
-                    new Howl({ src: Loader.shared.resources['motor_sound'].url}).play();
+                    // new Howl({ src: Loader.shared.resources['motor_sound'].url}).play();
                 }
 
             });

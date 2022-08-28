@@ -17,6 +17,10 @@ export abstract class AbstractMovementComponent extends AbstractComponent implem
         return this._previousPosition;
     }
 
+    public get movementVector(): Point {
+        return this._movementVector;
+    }
+
     public get rotationVector(): Point {
         const radAngle: number = (this._entity.angle-90) * (Math.PI/180);
         const vector = new Point(

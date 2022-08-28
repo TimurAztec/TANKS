@@ -21,6 +21,9 @@ class Water extends Entity {
                 case 'Tank':
                     this.drown(object);
                     break;
+                case 'DeadTank':
+                    this.drown(object);
+                    break;
                 case 'Tractor':
                     this.drown(object);
                     break;

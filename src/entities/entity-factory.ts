@@ -35,7 +35,7 @@ class EntityFactory {
             }
             case 102: {
                 const floor = new Floor();
-                floor.setSkin({assetName: 'grass'});
+                floor.setSkin({assetName: 'grass', numberOfFrames: 10, animationSpeed: 0.1});
                 return floor;
             }
             case 112:
