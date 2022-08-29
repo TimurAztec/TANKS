@@ -36,7 +36,7 @@ export class SceneManager {
                 view: document.getElementById("game-canvas") as HTMLCanvasElement,
                 resolution: window.devicePixelRatio || 1,
                 autoDensity: true,
-                backgroundColor: 0x112233,
+                backgroundColor: 0x000000,
                 width: width,
                 height: height
             });
@@ -81,8 +81,8 @@ export class SceneManager {
         let deltaTime = newTick - this._lastTick;
         this._lastTick = newTick;
         if (deltaTime < 0) deltaTime = 0;
-        if (deltaTime > 1000) deltaTime = 1000;
-        let deltaFrame = deltaTime * 60 / 1000; //1.0 is for single frame
+        if (deltaTime > 100) deltaTime = 100;
+        let deltaFrame = deltaTime * 60 / 1000;
 
         SceneManager.update(deltaFrame);
         requestAnimationFrame(this.tick.bind(this));

@@ -1,17 +1,15 @@
 import {Scene} from "../scene";
-import {Entity} from "../../entities/entity";
-import * as level1 from './levels/level1.json';
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
 import {PauseScene} from "../menu/pause-scene";
-import {EntityFactory} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {DisplayObject, Point} from "pixi.js";
-import { MenuScene } from "../menu/menu-scene";
-import { AbstractMovementComponent } from "../../entities/behaviors/movement/abstract-movement-component";
 import { getTitlePosition } from "../../utils/utils";
+import { Entity } from "./entities/entity";
+import { AbstractMovementComponent } from "./entities/behaviors/movement/abstract-movement-component";
+import { EntityFactory } from "./entities/entity-factory";
 
-export class GameScene extends Scene implements IEventListener {
+export abstract class GameScene extends Scene implements IEventListener {
 
     public dynamicChildren: Entity[] = [];
     public tileMap: (Entity | undefined)[][][] = [];
@@ -22,9 +20,6 @@ export class GameScene extends Scene implements IEventListener {
         super();
 
         EventManager.subscribe('keydown', this);
-        EventManager.subscribe('team_lost', this);
-
-        this.loadLevel(level1);
     }
 
     protected loadLevel(level: LevelData): void {
@@ -37,7 +32,7 @@ export class GameScene extends Scene implements IEventListener {
                 if (!this.tileMap[rowIndex]) this.tileMap[rowIndex] = [];
                 for (let [tileIndex, tileID] of row.entries()) {
                     if (!this.tileMap[rowIndex][tileIndex]) this.tileMap[rowIndex][tileIndex] = [];
-                    let tile: Entity = EntityFactory.getTile(tileID);
+                    let tile: Entity = EntityFactory.getEntity(tileID);
                     if (tile) {
                         tile.x = x;
                         tile.y = y;
@@ -55,20 +50,9 @@ export class GameScene extends Scene implements IEventListener {
 
     public onEvent(event: string, data: any): void {
         if (!this.paused) {
-            if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
+            if (event == 'keydown' && data == 'Escape') {
                 this._preUpdateAction = () => {
-                    console.log(this.tileMap);
                     SceneManager.changeScene(new PauseScene().setParentScene(this));
-                    this._preUpdateAction = () => {};
-                }
-            }
-            if (event == 'team_lost') {
-                this._preUpdateAction = () => {
-                    this.pause();
-                    this.dynamicChildren.length = 0;
-                    this.tileMap.length = 0;
-                    SceneManager.changeScene(new MenuScene());
-                    this.destroy();
                     this._preUpdateAction = () => {};
                 }
             }
@@ -80,7 +64,7 @@ export class GameScene extends Scene implements IEventListener {
     // Так и с кодом ниже
     public update(dt: number) {
         super.update(dt);
-        // console.log(dt);
+        console.log(dt);
 
         this.dynamicChildren = this.dynamicChildren.filter((entity) => {
             return !entity.destroyed
@@ -88,6 +72,7 @@ export class GameScene extends Scene implements IEventListener {
         let i: number = this.dynamicChildren.length;
         while (i--) {
             const dynamicEntity = this.dynamicChildren[i];
+            if (dynamicEntity.destroyed) continue;
             if (dynamicEntity.getComponent(AbstractMovementComponent) &&
                 !dynamicEntity.position.equals(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition)) {
                 const prevTilePos = getTitlePosition(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition, this.tileSize);
@@ -145,9 +130,11 @@ export class GameScene extends Scene implements IEventListener {
     }
 
     protected moveEntityFromTileToTile(entity: Entity, from: Point, to: Point): void {
-        if (!this.tileMap[from.y] || !this.tileMap[from.y][from.x]) return;
-        const index = this.tileMap[from.y][from.x].indexOf(entity);
+        let index = -1;
         if (!this.tileMap[to.y] || !this.tileMap[to.y][to.x]) return;
+        if (this.tileMap[from.y] && this.tileMap[from.y][from.x]) {
+            index = this.tileMap[from.y][from.x].indexOf(entity);
+        }
         if (index >= 0) {
             this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
         } else {
