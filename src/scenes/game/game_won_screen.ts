@@ -3,12 +3,13 @@ import {SceneManager} from "../../scene-manager";
 import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
 import { MenuScene } from "../menu/menu-scene";
 import { Howl } from "howler";
+import {SavesHandler} from "../../utils/saves-handler";
 
 export class GameWonScene extends Scene {
 
     protected background: Sprite;
     protected startButton: Sprite;
-    protected scoreButton: Sprite;
+    protected score: Text;
     protected logoText: Text;
     protected music: Howl;
 
@@ -22,7 +23,6 @@ export class GameWonScene extends Scene {
             fill: "#ffffff",
         }));
         this.startButton = new Sprite(Loader.shared.resources['button_exit'].texture);
-        // this.scoreButton = new Sprite(Loader.shared.resources[Assets.Buttons.BUTTON_SCORES].texture);
 
         this.background.anchor.set(0.5);
         this.background.x = SceneManager.width / 2;
@@ -41,16 +41,22 @@ export class GameWonScene extends Scene {
         this.startButton.interactive = true;
         this.startButton.buttonMode = true;
 
-        // this.scoreButton.anchor.set(0.5);
-        // this.scoreButton.x = SceneManager.width / 2;
-        // this.scoreButton.y = SceneManager.height / 2 + this.scoreButton.height*2;
-        // this.scoreButton.interactive = true;
-        // this.scoreButton.buttonMode = true;
-
         this.addChild(this.background);
         this.addChild(this.logoText);
+
+        if (SavesHandler.loadData('score')) {
+            this.score = new Text(`Score: ${SavesHandler.loadData('score')}`, new TextStyle({
+                fontSize: 84,
+                align: "center",
+                fill: "#ffffff",
+            }));
+            this.score.anchor.set(0.5);
+            this.score.x = SceneManager.width / 2;
+            this.score.y = SceneManager.height / 2;
+            this.addChild(this.score);
+        }
+
         this.addChild(this.startButton);
-        // this.addChild(this.scoreButton);
 
         this.initActions();
         SceneManager.moveCameraTo(new Point(0, 0));

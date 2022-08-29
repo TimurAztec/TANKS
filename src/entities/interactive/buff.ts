@@ -4,10 +4,10 @@ import { IBuffComponent } from "../behaviors/buffs/IBuffComponent";
 import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-component";
 import { LiveBuffComponent } from "../behaviors/buffs/live-buff-component";
 import { SlowBuffComponent } from "../behaviors/buffs/slow-buff-component";
-import { SpawnTractorBuffComponent } from "../behaviors/buffs/spawn-tractor-buff-component copy";
-import { SpeedBuffComponent } from "../behaviors/buffs/speed-buff-component copy";
+import { SpeedBuffComponent } from "../behaviors/buffs/speed-buff-component";
 import { ProjectileMovementComponent } from "../behaviors/movement/projectile-movement-component";
 import { Entity } from "../entity";
+import {SpawnSupportBuffComponent} from "../behaviors/buffs/spawn-tractor-buff-component";
 
 class Buff extends Entity{
     protected _type: string;
@@ -37,7 +37,7 @@ class Buff extends Entity{
             case Assets.Bonuses.BONUS_SLOW:
                 return new SlowBuffComponent().applyBuff(300);
             case Assets.Bonuses.BONUS_TRACTOR:
-                return new SpawnTractorBuffComponent().applyBuff(0);
+                return new SpawnSupportBuffComponent().applyBuff(0);
             default: 
                 break;
         }

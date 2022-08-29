@@ -65,7 +65,6 @@ class EntityFactory {
             }
             case 902: {
                 const tank = new Tank();
-                tank.takeDamage = function () {}
                 const enemy_skins = ['tank_enemy1', 'tank_enemy2', 'tank_enemy3'];
                 tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
@@ -75,7 +74,7 @@ class EntityFactory {
                 tank.setComponent(new BasicTeamComponent().setTeam('player2'));
                 tank.setComponent(new BasicDestroyComponent().onDestroy(() => {
                     EventManager.notify('entity_destroyed_player2', tank);
-                    SavesHandler.saveData('score', (SavesHandler.loadData('score') as number) + (10 - SceneManager.currentScene.sceneTime * 0.01));
+                    SavesHandler.saveData('score', ((SavesHandler.loadData('score') as number) + 10));
                 }));
                 return tank;
             }
@@ -93,10 +92,24 @@ class EntityFactory {
                 soldier.setComponent(new BasicTeamComponent().setTeam('player2'));
                 return soldier;
             }
+            case 905: {
+                const supportTank = new Tank();
+                const enemy_skins = ['tank_enemy1', 'tank_enemy2', 'tank_enemy3'];
+                supportTank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
+                supportTank.setComponent(new RandomControlComponent());
+                const weapon = new EnemyBulletWeaponComponent();
+                weapon.setReloadTime(50);
+                supportTank.setComponent(weapon);
+                supportTank.setComponent(new BasicTeamComponent().setTeam('player2'));
+                supportTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
+                    SavesHandler.saveData('score', ((SavesHandler.loadData('score') as number) + 10));
+                }));
+                return supportTank;
+            }
             case 912: {
                 const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getEntity(902))
                     .setTimeBetweenSpawns(250)
-                    .setCollisionGroup(['Tank', 'Tractor', 'DeadTank', 'HardWall', 'SmallWall', 'Water'])
+                    .setCollisionGroup(['Tank', 'Tractor', 'DeadTank', 'HardWall', 'SmallWall', 'Water', 'ATHedgehogs'])
                     .setTimesToSpawn(4)
                     .setMaxAmountPerTime(1);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})
@@ -117,7 +130,7 @@ class EntityFactory {
                 const buff = new Buff();
                 let spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(buff)
                     .setTimeBetweenSpawns(600)
-                    .setCollisionGroup(['Tank'])
+                    .setCollisionGroup(['Tank', 'Tractor', 'DeadTank', 'HardWall', 'SmallWall', 'Water', 'ATHedgehogs'])
                     .setTimesToSpawn(9999)
                     .setMaxAmountPerTime(1);
                     spawner.setSkin({assetName: 'empty', hitboxWidth: 32, hitboxHeight: 32})

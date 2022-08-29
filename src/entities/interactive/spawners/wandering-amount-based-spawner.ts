@@ -25,12 +25,6 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
                 case 'HardWall':
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
-                case 'SmallWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Water':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
             }
         }));
     }

@@ -113,6 +113,7 @@ abstract class Entity extends Container implements IEntity, IEventListener {
         let componentExist = false;
         for (const [i, c] of this._components.entries()) {
             if (c.typeID ==  component.typeID) {
+                this._components[i].remove();
                 this._components[i] = component;
                 componentExist = true;
                 return;

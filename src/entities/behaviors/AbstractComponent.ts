@@ -19,5 +19,7 @@ export abstract class AbstractComponent implements IComponent {
 
     public update(dt: number): void {}
 
+    public remove(): void {}
+
     public abstract clone(): IComponent;
 }

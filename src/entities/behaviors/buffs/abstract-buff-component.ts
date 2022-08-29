@@ -21,13 +21,9 @@ abstract class AbstractBuffComponent extends AbstractComponent implements IBuffC
     }
 
     public applyBuff(duration?: number): IBuffComponent {
-        
         this._buffDuration = duration;
-        // this._changeTo = changeTo;
-        // this._propToChange = propToChange;
         
         return this;
-
     }
 
     public update(dt: number): void {
@@ -51,6 +47,11 @@ abstract class AbstractBuffComponent extends AbstractComponent implements IBuffC
     protected endBuff(): void {
         (this._entity as IIndexable)[this._propToChange] = this._defaultValue
         this._entity.removeComponent(AbstractBuffComponent);
+    }
+
+    public remove(): void {
+        super.remove();
+        this.endBuff();
     }
 }
 

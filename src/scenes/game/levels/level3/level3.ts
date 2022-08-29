@@ -25,10 +25,11 @@ export class Level3Scene extends GameScene {
                 this.pause();
                 this.dynamicChildren.length = 0;
                 this.tileMap.length = 0;
-                new Howl({ src: Loader.shared.resources['lose_sound'].url}).play();
-                SceneManager.changeScene(new MenuScene());
-                this.destroy();
-                this._preUpdateAction = () => {};
+                new Howl({ src: Loader.shared.resources['lose_sound'].url, onend: () => {
+                        SceneManager.changeScene(new MenuScene());
+                        this.destroy();
+                        this._preUpdateAction = () => {};
+                    }}).play();
             }
         }
         if (event == 'team_won' && data == 'player1') {
@@ -36,10 +37,11 @@ export class Level3Scene extends GameScene {
                 this.pause();
                 this.dynamicChildren.length = 0;
                 this.tileMap.length = 0;
-                new Howl({ src: Loader.shared.resources['win_sound'].url}).play();
-                SceneManager.changeScene(new GameWonScene());
-                this.destroy();
-                this._preUpdateAction = () => {};
+                new Howl({ src: Loader.shared.resources['win_sound'].url, onend: () => {
+                        SceneManager.changeScene(new GameWonScene());
+                        this.destroy();
+                        this._preUpdateAction = () => {};
+                    }}).play();
             }
         }
     }
