@@ -42,11 +42,11 @@ const assets = [
     { name: Constants.AssetsSounds.BONUS, url: "./assets/sounds/bonus.wav" },
     { name: Constants.AssetsSounds.WIN, url: "./assets/sounds/win.wav" },
     { name: Constants.AssetsSounds.LOSE, url: "./assets/sounds/lose.wav" },
-    { name: Constants.AssetsSounds.EXPLODE_SMALL, url: "./assets/sounds/explode.wav" },
-    { name: Constants.AssetsSounds.EXPLODE_BIG, url: "./assets/sounds/hit.wav" },
+    { name: Constants.AssetsSounds.EXPLODE_BIG, url: "./assets/sounds/explode.wav" },
+    { name: Constants.AssetsSounds.EXPLODE_SMALL, url: "./assets/sounds/hit.wav" },
     { name: Constants.AssetsSounds.WIN_GAME_MUSIC, url: "./assets/sounds/endgame_music.mp3" },
-    { name: Constants.AssetsSounds.HEAVY_TRANSPORT_MOVE, url: "./assets/sounds/heavy_transport_move.mp3" },
-    { name: Constants.AssetsSounds.WATER_SPLASH, url: "./assets/sounds/water_splash.mp3" },
+    { name: Constants.AssetsSounds.HEAVY_TRANSPORT_MOVE, url: "./assets/sounds/heavy_transport_move.wav" },
+    { name: Constants.AssetsSounds.WATER_SPLASH, url: "./assets/sounds/water_splash.wav" },
 ]
 
 export { loaderAssets, assets }

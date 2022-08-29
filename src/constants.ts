@@ -16,7 +16,7 @@ export namespace Constants {
         public static readonly BULLET_1: string = 'bullet_1';
         public static readonly BULLET_2: string = 'bullet_2';
         public static readonly EXPLODE_BIG_FX: string = 'explode_big_fx';
-        public static readonly EXPLODE_SMALL_FX: string = '';
+        public static readonly EXPLODE_SMALL_FX: string = 'explode_small_fx';
         public static readonly TANK_1: string = 'tank_player';
         public static readonly TANK_2: string = 'tank_enemy_1';
         public static readonly TANK_3: string = 'tank_enemy_2';
@@ -46,5 +46,9 @@ export namespace Constants {
         public static readonly WIN_GAME_MUSIC: string = 'win_end_game_music';
         public static readonly HEAVY_TRANSPORT_MOVE: string = 'heavy_transport_move';
         public static readonly WATER_SPLASH: string = 'water_splash';
+    }
+
+    export class GlobalNames {
+        public static readonly SCORE: string = 'score';
     }
 }

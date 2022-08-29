@@ -4,6 +4,7 @@ import {IComponent} from "./behaviors/IComponent";
 import {AbstractDestroyComponent} from "./behaviors/destroy/abstract-destroy-component";
 import {IEventListener} from "../../../utils/events/IEventListener";
 import {AABBData, constr} from "../../../utils/utils";
+import { Constants } from "../../../constants";
 
 abstract class Entity extends Container implements IEntity, IEventListener {
 
@@ -77,6 +78,9 @@ abstract class Entity extends Container implements IEntity, IEventListener {
 
     public setSkin(options?: SkinOptions): void {
         this._skinOptions = options;
+        if (!this._skin && !options?.assetName) {
+            options.assetName = Constants.AssetsTextures.EMPTY_SPACE;
+        }
         if (options?.assetName) {
             const numberOfFrames = options?.numberOfFrames || 1;
             const sheet = Loader.shared.resources[options.assetName].texture;

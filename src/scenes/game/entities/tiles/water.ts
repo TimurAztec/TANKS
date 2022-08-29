@@ -1,3 +1,5 @@
+import { Howl } from "howler";
+import { Loader } from "pixi.js";
 import { Constants } from "../../../../constants";
 import { SceneManager } from "../../../../scene-manager";
 import { getTitlePosition, validatePointIsPositive } from "../../../../utils/utils";
@@ -56,6 +58,7 @@ class Water extends Entity {
                 fx.x = this.x;
                 fx.y = this.y;
                 SceneManager.currentScene.addChild(fx);
+                new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.WATER_SPLASH].url}).play();
             }
         }
     }

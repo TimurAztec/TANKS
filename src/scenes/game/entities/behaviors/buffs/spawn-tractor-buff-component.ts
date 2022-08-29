@@ -15,10 +15,10 @@ class SpawnSupportBuffComponent extends AbstractBuffComponent implements IBuffCo
         if (this._entity.getComponent(AbstractTeamComponent)) {
             let support: Entity;
             if (this._entity.getComponent(AbstractTeamComponent).getTeam() == GameConstants.Teams.PLAYER_1) {
-                support = EntityFactory.getEntity(903);
+                support = EntityFactory.getEntity(GameConstants.EntityIDs.PLAYER_TRACTOR);
             }
             if (this._entity.getComponent(AbstractTeamComponent).getTeam() == GameConstants.Teams.PLAYER_2) {
-                support = EntityFactory.getEntity(905);
+                support = EntityFactory.getEntity(GameConstants.EntityIDs.ENEMY_SUPPORT_TANK);
             }
             if (this._entity.getComponent(AbstractMovementComponent)) {
                 const vec = this._entity.getComponent(AbstractMovementComponent).rotationVector;

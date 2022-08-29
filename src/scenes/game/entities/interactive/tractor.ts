@@ -24,6 +24,7 @@ class Tractor extends Entity {
     public speed: number;
     public health: number;
     public immortal: boolean;
+    protected _moveSound: Howl = new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.HEAVY_TRANSPORT_MOVE].url, volume: 0.25});
 
     constructor(source?: Tractor) {
         super(source);
@@ -77,9 +78,13 @@ class Tractor extends Entity {
         if (this.getComponent(AbstractMovementComponent) && this.getComponent(AbstractCollisionComponent) && this._initOnUpdate) {
             this.getComponent(AbstractMovementComponent).onEntityMoved((vector: Point) => {
 
-                (this._skin as AnimatedSprite).loop = false;
-                if (!(this._skin as AnimatedSprite).playing) {
-                    (this._skin as AnimatedSprite).gotoAndPlay(0);
+                this._skin.loop = false;
+                this._skin.onComplete = () => {
+                    this._moveSound.pause();
+                }
+                if (!this._skin.playing) {
+                    this._skin.gotoAndPlay(0); 
+                    this._moveSound.play();
                 }
 
             });
