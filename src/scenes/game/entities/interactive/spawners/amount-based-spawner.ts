@@ -4,6 +4,7 @@ import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-
 import {AbstractCollisionComponent} from "../../behaviors/collision/abstract-collision-component";
 import { ProjectileMovementComponent } from "../../behaviors/movement/projectile-movement-component";
 import {getTitlePosition, validatePointIsPositive} from "../../../../../utils/utils";
+import { StaticMovementComponent } from "../../behaviors/movement/static-movement-component";
 
 class AmountBasedSpawner extends Spawner {
     protected _timesToSpawn: number;
@@ -21,7 +22,7 @@ class AmountBasedSpawner extends Spawner {
                 this._collides = true;
             }
         }));
-        this.setComponent(new ProjectileMovementComponent());
+        this.setComponent(new StaticMovementComponent());
     }
 
     public clone(): AmountBasedSpawner {

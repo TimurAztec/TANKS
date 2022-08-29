@@ -1,19 +1,15 @@
-import {Entity} from "../entity";
-import {randNum} from "../../utils/utils";
-import { Assets } from "../../assets-vars";
+import { Constants } from "../../../../constants";
+import { Entity } from "../entity";
 
 class Leaves extends Entity {
 
-    constructor() {
-        super();
-        this.setSkin({ assetName: Assets.Tiles.LAEVES });
+    constructor(source?: Leaves) {
+        super(source);
+        this.setSkin({ assetName: Constants.AssetsTextures.LEAVES });
     }
 
-    update(dt: number) {
-        super.update(dt);
-        if (dt > 1) {
-            this._skin.skew.x = randNum(0.025);
-        }
+    public clone(): Leaves {
+        return new Leaves(this);
     }
 
 }

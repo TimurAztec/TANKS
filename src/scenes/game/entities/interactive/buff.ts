@@ -3,10 +3,19 @@ import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-componen
 import { LiveBuffComponent } from "../behaviors/buffs/live-buff-component";
 import { SlowBuffComponent } from "../behaviors/buffs/slow-buff-component";
 import { SpeedBuffComponent } from "../behaviors/buffs/speed-buff-component";
-import { ProjectileMovementComponent } from "../behaviors/movement/projectile-movement-component";
 import { Entity } from "../entity";
 import {SpawnSupportBuffComponent} from "../behaviors/buffs/spawn-tractor-buff-component";
 import {randNum} from "../../../../utils/utils";
+import { Constants } from "../../../../constants";
+import { StaticMovementComponent } from "../behaviors/movement/static-movement-component";
+
+const BUFF_TYPES: string[] = [
+    Constants.AssetsTextures.BONUS_SPEED,
+    Constants.AssetsTextures.BONUS_IMMORTAL,
+    Constants.AssetsTextures.BONUS_LIVE,
+    Constants.AssetsTextures.BONUS_SLOW,
+    Constants.AssetsTextures.BONUS_TRACTOR
+]
 
 class Buff extends Entity{
     protected _type: string;
@@ -14,7 +23,7 @@ class Buff extends Entity{
     constructor(source?:Buff){
         super(source);
         this.type = source?._type || '';
-        this.setComponent(new ProjectileMovementComponent());
+        this.setComponent(new StaticMovementComponent());
     }
 
     public set type(value: string){
@@ -27,15 +36,15 @@ class Buff extends Entity{
     public getBuff(): IBuffComponent{
         switch(this._type)
         {
-            case Assets.Bonuses.BONUS_SPEED:
+            case Constants.AssetsTextures.BONUS_SPEED:
                 return new SpeedBuffComponent().applyBuff(240);
-            case Assets.Bonuses.BONUS_IMMORTAL:
+            case Constants.AssetsTextures.BONUS_IMMORTAL:
                 return new ImmortalBuffComponent().applyBuff(300);
-            case Assets.Bonuses.BONUS_LIVE:
+            case Constants.AssetsTextures.BONUS_LIVE:
                 return new LiveBuffComponent().applyBuff(0);
-            case Assets.Bonuses.BONUS_SLOW:
+            case Constants.AssetsTextures.BONUS_SLOW:
                 return new SlowBuffComponent().applyBuff(300);
-            case Assets.Bonuses.BONUS_TRACTOR:
+            case Constants.AssetsTextures.BONUS_TRACTOR:
                 return new SpawnSupportBuffComponent().applyBuff(0);
             default: 
                 break;
@@ -44,7 +53,7 @@ class Buff extends Entity{
 
     public update(dt: number): void {
         if (this._initOnUpdate) {
-            this.type = Assets.Bonuses.BUFF_TYPES[Math.floor(randNum(Assets.Bonuses.BUFF_TYPES.length))];
+            this.type = BUFF_TYPES[Math.floor(randNum(BUFF_TYPES.length))];
             this.setSkin({assetName: this.type});
         }
         super.update(dt);

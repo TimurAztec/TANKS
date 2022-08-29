@@ -4,6 +4,7 @@ import { EventManager } from '../../../../event-manager';
 import { SceneManager } from '../../../../scene-manager';
 import { SavesHandler } from '../../../../utils/saves-handler';
 import { MenuScene } from '../../../menu/menu-scene';
+import { GameConstants } from '../../game-constants';
 import { GameScene } from '../../game-scene';
 import { Level2Scene } from '../level2/level2';
 import * as levelData from './level1.json';
@@ -34,7 +35,7 @@ export class Level1Scene extends GameScene {
                     }}).play();
             }
         }
-        if (event == 'team_won' && data == 'player1') {
+        if (event == 'team_won' && data == GameConstants.Teams.PLAYER_1) {
             this._preUpdateAction = () => {
                 this.pause();
                 this.dynamicChildren.length = 0;

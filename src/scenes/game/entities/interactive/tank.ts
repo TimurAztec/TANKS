@@ -20,6 +20,7 @@ import { Howl } from "howler";
 import {getTitlePosition, randNum, validatePointIsPositive} from "../../../../utils/utils";
 import { SceneManager } from "../../../../scene-manager";
 import {Constants} from "../../../../constants";
+import { GameConstants } from "../../game-constants";
 
 class Tank extends Entity {
     public speed: number;
@@ -33,30 +34,21 @@ class Tank extends Entity {
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
+            const stopObject: string[] = [
+                GameConstants.EntityTypes.HARD_WALL,
+                GameConstants.EntityTypes.SMALL_WALL,
+                GameConstants.EntityTypes.AT_HEDGEHOGS,
+                GameConstants.EntityTypes.TANK,
+                GameConstants.EntityTypes.DEAD_TANK,
+                GameConstants.EntityTypes.TRACTOR
+            ];
+            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
             switch (object.entityType) {
-                case 'HardWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'ATHedgehogs':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'SmallWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Tank':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'DeadTank':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Tractor':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Soldier':
+                case GameConstants.EntityTypes.SOLDIER:
                     (object as Soldier).takeDamage(9999);
                     break;
-                case 'Buff':
-                    new Howl({ src: Loader.shared.resources['bonus_sound'].url}).play();
+                case GameConstants.EntityTypes.BUFF:
+                    new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
                     this.setComponent((object as Buff).getBuff());
                     (object as Buff).destroy();
             }
@@ -153,7 +145,7 @@ class Tank extends Entity {
             let i: number = Math.floor(randNum(3));
             while(i--) {
                 const soldier = new Soldier();
-                soldier.setSkin({assetName: 'soldier', numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
+                soldier.setSkin({assetName: Constants.AssetsTextures.SOLIDER, numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
                 soldier.setComponent(new RandomControlComponent());
                 soldier.setComponent(new BasicTeamComponent().setTeam(this.getComponent(AbstractTeamComponent).getTeam()));
                 soldier.x = this.x;

@@ -1,4 +1,4 @@
-import { IIndexable } from "../../../utils/utils";
+import { IIndexable } from "../../../../../utils/utils";
 import { AbstractComponent } from "../AbstractComponent";
 import { IBuffComponent } from "./IBuffComponent";
 

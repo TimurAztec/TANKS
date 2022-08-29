@@ -1,5 +1,5 @@
+import { IIndexable, randNum } from "../../../../../utils/utils";
 import {AbstractControlComponent} from "./abstract-control-component";
-import {IIndexable, randNum} from "../../../utils/utils";
 
 class RandomControlComponent extends AbstractControlComponent {
 

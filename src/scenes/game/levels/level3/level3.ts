@@ -3,6 +3,7 @@ import { Loader } from 'pixi.js';
 import { EventManager } from '../../../../event-manager';
 import { SceneManager } from '../../../../scene-manager';
 import { MenuScene } from '../../../menu/menu-scene';
+import { GameConstants } from '../../game-constants';
 import { GameScene } from '../../game-scene';
 import { GameWonScene } from '../../game_won_screen';
 import * as levelData from './level3.json';
@@ -32,7 +33,7 @@ export class Level3Scene extends GameScene {
                     }}).play();
             }
         }
-        if (event == 'team_won' && data == 'player1') {
+        if (event == 'team_won' && data == GameConstants.Teams.PLAYER_1) {
             this._preUpdateAction = () => {
                 this.pause();
                 this.dynamicChildren.length = 0;

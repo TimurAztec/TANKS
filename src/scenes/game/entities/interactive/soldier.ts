@@ -11,6 +11,7 @@ import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-componen
 import { DeadSoldier } from "../tiles/dead-soldier";
 import {getTitlePosition, validatePointIsPositive} from "../../../../utils/utils";
 import { SceneManager } from "../../../../scene-manager";
+import { GameConstants } from "../../game-constants";
 
 class Soldier extends Entity {
     public speed: number;
@@ -24,20 +25,13 @@ class Soldier extends Entity {
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
-            switch (object.entityType) {
-                case 'HardWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'SmallWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Tank':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Tractor':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-            }
+            const stopObject: string[] = [
+                GameConstants.EntityTypes.HARD_WALL,
+                GameConstants.EntityTypes.SMALL_WALL,
+                GameConstants.EntityTypes.TANK,
+                GameConstants.EntityTypes.TRACTOR
+            ];
+            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
         }));
     }
 

@@ -1,7 +1,6 @@
 import {Entity} from "../entity";
 import {Loader, Point} from "pixi.js";
 import {ProjectileMovementComponent} from "../behaviors/movement/projectile-movement-component";
-import {SceneManager} from "../../scene-manager";
 import {AbstractMovementComponent} from "../behaviors/movement/abstract-movement-component";
 import {SmallExplosionFX} from "../fx/small-explosion";
 import {BigExplosionFX} from "../fx/big-explosion";
@@ -14,6 +13,9 @@ import { Soldier } from "./soldier";
 import { DeadTank } from "../tiles/dead-tank";
 import { Howl } from "howler";
 import {getTitlePosition, validatePointIsPositive} from "../../../../utils/utils";
+import { SceneManager } from "../../../../scene-manager";
+import { Constants } from "../../../../constants";
+import { GameConstants } from "../../game-constants";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -26,38 +28,38 @@ class Bullet extends Entity {
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
             switch (object.entityType) {
-                case Vars.GameObjects.HARD_WALL:
+                case GameConstants.EntityTypes.HARD_WALL:
                     this.explode(new SmallExplosionFX());
                     break;
-                case Vars.GameObjects.SMALL_WALL:
+                case GameConstants.EntityTypes.SMALL_WALL:
                     this.explode(new SmallExplosionFX());
                     object.destroy();
                     break;
-                case Vars.GameObjects.TANK:
+                case GameConstants.EntityTypes.TANK:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.destroy();
                     (object as Tank).takeDamage(1);
                     break;
-                case 'DeadTank':
+                case GameConstants.EntityTypes.DEAD_TANK:
                     this.destroy();
                     (object as DeadTank).takeDamage(1);
                     break;
-                case 'Tractor':
+                case GameConstants.EntityTypes.TRACTOR:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.destroy();
                     (object as Tank).takeDamage(1);
                     break;
-                case 'Soldier':
+                case GameConstants.EntityTypes.SOLDIER:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.explode(new SmallExplosionFX());
                     (object as Soldier).takeDamage(9999);
                     break;
-                case 'Bullet':
+                case GameConstants.EntityTypes.BULLET:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     this.explode(new SmallExplosionFX());
                     object.destroy();
                     break;
-                case 'Base':
+                case GameConstants.EntityTypes.BASE:
                     this.explode(new BigExplosionFX());
                     object.destroy();
                     break;
@@ -71,7 +73,7 @@ class Bullet extends Entity {
     }
 
     public launch(angle: number): void {
-        new Howl({ src: Loader.shared.resources['shot_sound'].url}).play();
+        new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.SHOT].url}).play();
         const radAngle: number = (angle-90) * (Math.PI/180);
         this.getComponent(AbstractMovementComponent).setMovementVector(
             new Point(Math.cos(radAngle) * this._speed,

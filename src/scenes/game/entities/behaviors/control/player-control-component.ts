@@ -1,6 +1,6 @@
+import { EventManager } from "../../../../../event-manager";
+import { IEventListener } from "../../../../../utils/events/IEventListener";
 import {AbstractControlComponent} from "./abstract-control-component";
-import {EventManager} from "../../../event-manager";
-import { IEventListener } from "../../../utils/events/IEventListener";
 
 class PlayerControlComponent extends AbstractControlComponent implements IEventListener {
 

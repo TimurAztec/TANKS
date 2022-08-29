@@ -1,9 +1,10 @@
 import {Entity} from "../entity";
-import {SceneManager} from "../../scene-manager";
 import {BigExplosionFX} from "../fx/big-explosion";
 import { ImmortalBuffComponent } from "../behaviors/buffs/immortal-buff-component";
-import { ProjectileMovementComponent } from "../behaviors/movement/projectile-movement-component";
 import { SkinOptions } from "../interfaces";
+import { SceneManager } from "../../../../scene-manager";
+import { Constants } from "../../../../constants";
+import { StaticMovementComponent } from "../behaviors/movement/static-movement-component";
 
 class DeadTank extends Entity {
     public health: number;
@@ -12,8 +13,8 @@ class DeadTank extends Entity {
     constructor(source?: DeadTank) {
         super(source);
         this.health = source?.health || 1;
-        this.setSkin({assetName: 'dead_tank', numberOfFrames: 4, animationSpeed: 0.1})
-        this.setComponent(new ProjectileMovementComponent());
+        this.setSkin({assetName: Constants.AssetsTextures.TANK_DEAD, numberOfFrames: 4, animationSpeed: 0.1})
+        this.setComponent(new StaticMovementComponent());
     }
 
     public setSkin(options?: SkinOptions): void {

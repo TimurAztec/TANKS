@@ -1,12 +1,11 @@
-import { SceneManager } from "../../../scene-manager";
 import { Entity } from "../../entity";
-import { Tractor } from "../../interactive/tractor";
-import { RandomControlComponent } from "../control/random-control-component";
 import { AbstractMovementComponent } from "../movement/abstract-movement-component";
 import { AbstractTeamComponent } from "../team/abstract-team-component";
 import { AbstractBuffComponent } from "./abstract-buff-component";
 import { IBuffComponent } from "./IBuffComponent";
 import {EntityFactory} from "../../entity-factory";
+import { SceneManager } from "../../../../../scene-manager";
+import { GameConstants } from "../../../game-constants";
 
 class SpawnSupportBuffComponent extends AbstractBuffComponent implements IBuffComponent{
 
@@ -15,10 +14,10 @@ class SpawnSupportBuffComponent extends AbstractBuffComponent implements IBuffCo
     protected firstUpdate(): void {
         if (this._entity.getComponent(AbstractTeamComponent)) {
             let support: Entity;
-            if (this._entity.getComponent(AbstractTeamComponent).getTeam() == 'player1') {
+            if (this._entity.getComponent(AbstractTeamComponent).getTeam() == GameConstants.Teams.PLAYER_1) {
                 support = EntityFactory.getEntity(903);
             }
-            if (this._entity.getComponent(AbstractTeamComponent).getTeam() == 'player2') {
+            if (this._entity.getComponent(AbstractTeamComponent).getTeam() == GameConstants.Teams.PLAYER_2) {
                 support = EntityFactory.getEntity(905);
             }
             if (this._entity.getComponent(AbstractMovementComponent)) {

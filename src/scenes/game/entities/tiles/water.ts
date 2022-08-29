@@ -1,10 +1,11 @@
-import { Assets } from "../../assets-vars";
-import { SceneManager } from "../../scene-manager";
-import { getTitlePosition, validatePointIsPositive } from "../../utils/utils";
+import { Constants } from "../../../../constants";
+import { SceneManager } from "../../../../scene-manager";
+import { getTitlePosition, validatePointIsPositive } from "../../../../utils/utils";
+import { GameConstants } from "../../game-constants";
 import { AbstractCollisionComponent } from "../behaviors/collision/abstract-collision-component";
 import { BasicAabbCollisionComponent } from "../behaviors/collision/basic-aabb-collision-component";
 import { AbstractControlComponent } from "../behaviors/control/abstract-control-component";
-import { ProjectileMovementComponent } from "../behaviors/movement/projectile-movement-component";
+import { StaticMovementComponent } from "../behaviors/movement/static-movement-component";
 import {Entity} from "../entity";
 import { Splash } from "../fx/splash";
 
@@ -13,24 +14,17 @@ class Water extends Entity {
 
     constructor(source?: Water) {
         super(source);
-        this.setSkin({ assetName: Assets.Tiles.WATER });
-        this.setComponent(new ProjectileMovementComponent());
+        this.setSkin({ assetName: Constants.AssetsTextures.WATER });
+        this.setComponent(new StaticMovementComponent());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
-            switch (object.entityType) {
-                case 'Tank':
-                    this.drown(object);
-                    break;
-                case 'DeadTank':
-                    this.drown(object);
-                    break;
-                case 'Tractor':
-                    this.drown(object);
-                    break;
-                case 'Soldier':
-                    this.drown(object);
-                    break;
-            }
+            const drownObject: string[] = [
+                GameConstants.EntityTypes.TANK,
+                GameConstants.EntityTypes.DEAD_TANK,
+                GameConstants.EntityTypes.TRACTOR,
+                GameConstants.EntityTypes.SOLDIER
+            ];
+            if (drownObject.includes(object.entityType)) { this.drown(object); }
         }));
     }
 

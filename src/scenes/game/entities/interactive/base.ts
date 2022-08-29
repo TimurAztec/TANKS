@@ -4,6 +4,7 @@ import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component
 import {IEventListener} from "../../../../utils/events/IEventListener";
 import { SceneManager } from "../../../../scene-manager";
 import { EventManager } from "../../../../event-manager";
+import { AppearFX } from "../fx/appear";
 
 class Base extends Entity implements IEventListener {
 

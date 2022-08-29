@@ -9,6 +9,7 @@ import {BasicAabbCollisionComponent} from "../../behaviors/collision/basic-aabb-
 import {Entity} from "../../entity";
 import { AbstractCollisionComponent } from "../../behaviors/collision/abstract-collision-component";
 import {getTitlePosition, validatePointIsPositive} from "../../../../../utils/utils";
+import { GameConstants } from "../../../game-constants";
 
 class WanderingAmountBasedSpawner extends AmountBasedSpawner {
 
@@ -22,7 +23,7 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
                 this._collides = true;
             }
             switch (object.entityType) {
-                case 'HardWall':
+                case GameConstants.EntityTypes.HARD_WALL:
                     this.getComponent(AbstractMovementComponent).collides();
                     break;
             }

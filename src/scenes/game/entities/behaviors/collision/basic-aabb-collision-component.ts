@@ -1,6 +1,6 @@
 import {AbstractCollisionComponent} from "./abstract-collision-component";
 import { Entity } from "../../entity";
-import {AABB} from "../../../utils/utils";
+import { AABB } from "../../../../../utils/utils";
 
 class BasicAabbCollisionComponent extends AbstractCollisionComponent {
     public getCollisionGroup(): Entity[] {
@@ -19,7 +19,6 @@ class BasicAabbCollisionComponent extends AbstractCollisionComponent {
                 if (this._collisionGroup[i] && this._collisionGroup[i] !== this._entity &&
                     AABB(this._entity.simpleBounds, this._collisionGroup[i].simpleBounds)) {
                     this.collidedWith(this._collisionGroup[i]);
-                    // i = 0;
                 }
             }
         }

@@ -1,7 +1,7 @@
 import { Entity } from "../entity";
-import {ProjectileMovementComponent} from "../behaviors/movement/projectile-movement-component";
 import { EventManager } from "../../../../event-manager";
 import {IEventListener} from "../../../../utils/events/IEventListener";
+import { StaticMovementComponent } from "../behaviors/movement/static-movement-component";
 
 class InWorldEventCounter extends Entity implements IEventListener {
     protected _count: number = 0;
@@ -11,7 +11,7 @@ class InWorldEventCounter extends Entity implements IEventListener {
 
     constructor(source?: InWorldEventCounter){
         super(source);
-        this.setComponent(new ProjectileMovementComponent());
+        this.setComponent(new StaticMovementComponent());
     }
 
     public get count(){

@@ -1,5 +1,5 @@
+import { SceneManager } from "../../../../../scene-manager";
 import {Entity} from "../../entity";
-import {SceneManager} from "../../../scene-manager";
 
 abstract class Spawner extends Entity {
     protected _prototypeEntity: Entity;

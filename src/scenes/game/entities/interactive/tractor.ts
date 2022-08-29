@@ -1,7 +1,6 @@
 import {Entity} from "../entity";
 import {AnimatedSprite, Loader, Point} from "pixi.js";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
-import {SceneManager} from "../../scene-manager";
 import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-component";
 import {IComponent} from "../behaviors/IComponent";
 import {AbstractControlComponent} from "../behaviors/control/abstract-control-component";
@@ -9,7 +8,6 @@ import { AbstractMovementComponent } from "../behaviors/movement/abstract-moveme
 import {AppearFX} from "../fx/appear";
 import {BasicAabbCollisionComponent} from "../behaviors/collision/basic-aabb-collision-component";
 import {AbstractCollisionComponent} from "../behaviors/collision/abstract-collision-component";
-import {getTitlePosition, validatePointIsPositive} from "../../utils/utils";
 import {BigExplosionFX} from "../fx/big-explosion";
 import { Buff } from "./buff";
 import { Tank } from "./tank";
@@ -17,6 +15,10 @@ import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component
 import {ImmortalBuffComponent} from "../behaviors/buffs/immortal-buff-component";
 import { Soldier } from "./soldier";
 import { Howl } from "howler";
+import { Constants } from "../../../../constants";
+import { getTitlePosition, validatePointIsPositive } from "../../../../utils/utils";
+import { SceneManager } from "../../../../scene-manager";
+import { GameConstants } from "../../game-constants";
 
 class Tractor extends Entity {
     public speed: number;
@@ -30,34 +32,29 @@ class Tractor extends Entity {
         this.setComponent(new DirectionalWalkMovementBehavior());
         this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
             if (object == this) return;
+            const stopObject: string[] = [
+                GameConstants.EntityTypes.HARD_WALL,
+                GameConstants.EntityTypes.SMALL_WALL,
+                GameConstants.EntityTypes.AT_HEDGEHOGS,
+                GameConstants.EntityTypes.TANK,
+                GameConstants.EntityTypes.DEAD_TANK,
+                GameConstants.EntityTypes.TRACTOR
+            ];
+            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
             switch (object.entityType) {
-                case 'HardWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'ATHedgehogs':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'SmallWall':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Tank':
-                    this.getComponent(AbstractMovementComponent).collides();
+                case GameConstants.EntityTypes.TANK:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     (object as Tank).takeDamage(1);
                     break;
-                case 'DeadTank':
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-                case 'Tractor':
-                    this.getComponent(AbstractMovementComponent).collides();
+                case GameConstants.EntityTypes.TRACTOR:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     (object as Tank).takeDamage(1);
                     break;
-                case 'Soldier':
+                case GameConstants.EntityTypes.SOLDIER:
                     (object as Soldier).takeDamage(9999);
                     break;
-                case 'Buff':
-                    new Howl({ src: Loader.shared.resources['bonus_sound'].url}).play();
+                case GameConstants.EntityTypes.BUFF:
+                    new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
                     this.setComponent((object as Buff).getBuff());
                     (object as Buff).destroy();
             }

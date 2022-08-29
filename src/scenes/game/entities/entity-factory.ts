@@ -22,6 +22,7 @@ import { ATHedgehogs } from "./tiles/at-hedgehogs";
 import { EventManager } from "../../../event-manager";
 import { SavesHandler } from "../../../utils/saves-handler";
 import {randNum} from "../../../utils/utils";
+import { GameConstants } from "../game-constants";
 
 class EntityFactory {
     private constructor() {}
@@ -55,7 +56,7 @@ class EntityFactory {
                 const weapon = new BulletWeaponComponent();
                 weapon.setReloadTime(50);
                 playerTank.setComponent(weapon);
-                playerTank.setComponent(new BasicTeamComponent().setTeam('player1'));
+                playerTank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_1));
                 playerTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
                     EventManager.notify('team_lost', playerTank.getComponent(AbstractTeamComponent).getTeam);
                 }));
@@ -80,7 +81,7 @@ class EntityFactory {
                 const playerTractor = new Tractor();
                 playerTractor.setSkin({assetName: 'tractor', scaleX: 1.2, numberOfFrames: 4});
                 playerTractor.setComponent(new RandomControlComponent());
-                playerTractor.setComponent(new BasicTeamComponent().setTeam('player1'));
+                playerTractor.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_1));
                 return playerTractor;
             }
             case 904: {
@@ -120,7 +121,7 @@ class EntityFactory {
                     .timesToCount(12)
                     .setEventToCount('entity_destroyed_player2')
                     .onCountEnded(() => {
-                        EventManager.notify('team_won', 'player1');
+                        EventManager.notify('team_won', GameConstants.Teams.PLAYER_1);
                     });
                 return counter
             }
@@ -136,7 +137,7 @@ class EntityFactory {
             }
             case 777:{
                 const base = new Base();
-                base.setComponent(new BasicTeamComponent().setTeam('player1'));
+                base.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_1));
                 base.setSkin({assetName: 'eagle'});
                 return base;
             }
