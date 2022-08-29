@@ -5,6 +5,7 @@ import {EventManager} from "../../event-manager";
 import {MenuScene} from "./menu-scene";
 import {SavesHandler} from "../../utils/saves-handler";
 import {IEventListener} from "../../utils/events/IEventListener";
+import {Constants} from "../../constants";
 
 class PauseScene extends Scene implements IEventListener {
 
@@ -25,7 +26,7 @@ class PauseScene extends Scene implements IEventListener {
     }
 
     protected initVisuals(): void {
-        this._background = new Sprite(Loader.shared.resources['menu_background'].texture);
+        this._background = new Sprite(Loader.shared.resources[Constants.AssetsTextures.MENU_BG].texture);
         this._background.anchor.set(0.5);
         this._background.x = SceneManager.width / 2;
         this._background.y = SceneManager.height / 2;
@@ -36,7 +37,7 @@ class PauseScene extends Scene implements IEventListener {
             align: "center",
             fill: "#FFFFFF",
         }));
-        this._menuStartButton = new Sprite(Loader.shared.resources['button_play'].texture);
+        this._menuStartButton = new Sprite(Loader.shared.resources[Constants.AssetsTextures.BUTTON_PLAY].texture);
         this._menuText.anchor.set(0.5);
         this._menuText.x = SceneManager.width / 2;
         this._menuText.y = SceneManager.height / 3;
@@ -47,7 +48,7 @@ class PauseScene extends Scene implements IEventListener {
         this._menuStartButton.interactive = true;
         this._menuStartButton.buttonMode = true;
 
-        this._menuExitButton = new Sprite(Loader.shared.resources['button_exit'].texture);
+        this._menuExitButton = new Sprite(Loader.shared.resources[Constants.AssetsTextures.BUTTON_EXIT].texture);
         this._menuExitButton.anchor.set(0.5);
         this._menuExitButton.x = SceneManager.width / 2;
         this._menuExitButton.y = SceneManager.height / 1.5;
@@ -76,7 +77,7 @@ class PauseScene extends Scene implements IEventListener {
 
     public onEvent(event: string, data: any): void {
         if (!this.paused) {
-            if (event == 'keydown' && typeof data == 'string' && data == 'Escape') {
+            if (event == 'keydown' && data == 'Escape') {
                 this.resumeParentScene();
             }
         }

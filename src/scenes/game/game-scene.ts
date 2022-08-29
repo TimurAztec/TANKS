@@ -1,14 +1,13 @@
 import {Scene} from "../scene";
-import {Entity} from "../../entities/entity";
 import {EventManager} from "../../event-manager";
 import {SceneManager} from "../../scene-manager";
 import {PauseScene} from "../menu/pause-scene";
-import {EntityFactory} from "../../entities/entity-factory";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {DisplayObject, Point} from "pixi.js";
-import { MenuScene } from "../menu/menu-scene";
-import { AbstractMovementComponent } from "../../entities/behaviors/movement/abstract-movement-component";
 import { getTitlePosition } from "../../utils/utils";
+import { Entity } from "./entities/entity";
+import { AbstractMovementComponent } from "./entities/behaviors/movement/abstract-movement-component";
+import { EntityFactory } from "./entities/entity-factory";
 
 export abstract class GameScene extends Scene implements IEventListener {
 

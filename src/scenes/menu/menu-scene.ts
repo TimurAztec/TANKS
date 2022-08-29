@@ -3,6 +3,7 @@ import {SceneManager} from "../../scene-manager";
 import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
 import { Level1Scene } from "../game/levels/level1/level1";
 import {SavesHandler} from "../../utils/saves-handler";
+import {Constants} from "../../constants";
 
 export class MenuScene extends Scene {
 
@@ -14,13 +15,13 @@ export class MenuScene extends Scene {
     constructor() {
         super();
 
-        this.background = new Sprite(Loader.shared.resources['menu_background'].texture);
+        this.background = new Sprite(Loader.shared.resources[Constants.AssetsTextures.MENU_BG].texture);
         this.logoText = new Text('Orcs Thunder', new TextStyle({
             fontSize: 84,
             align: "center",
             fill: "#ffffff",
         }));
-        this.startButton = new Sprite(Loader.shared.resources['button_play'].texture);
+        this.startButton = new Sprite(Loader.shared.resources[Constants.AssetsTextures.BUTTON_PLAY].texture);
 
         this.background.anchor.set(0.5);
         this.background.x = SceneManager.width / 2;

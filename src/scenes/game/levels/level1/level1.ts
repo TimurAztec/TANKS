@@ -5,7 +5,6 @@ import { SceneManager } from '../../../../scene-manager';
 import { SavesHandler } from '../../../../utils/saves-handler';
 import { MenuScene } from '../../../menu/menu-scene';
 import { GameScene } from '../../game-scene';
-import { GameWonScene } from '../../game_won_screen';
 import { Level2Scene } from '../level2/level2';
 import * as levelData from './level1.json';
 

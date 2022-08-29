@@ -4,6 +4,7 @@ import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
 import { MenuScene } from "../menu/menu-scene";
 import { Howl } from "howler";
 import {SavesHandler} from "../../utils/saves-handler";
+import {Constants} from "../../constants";
 
 export class GameWonScene extends Scene {
 
@@ -16,13 +17,13 @@ export class GameWonScene extends Scene {
     constructor() {
         super();
 
-        this.background = new Sprite(Loader.shared.resources['win_background'].texture);
+        this.background = new Sprite(Loader.shared.resources[Constants.AssetsTextures.WIN_MENU_BG].texture);
         this.logoText = new Text('You`ve completed the game!', new TextStyle({
             fontSize: 64,
             align: "center",
             fill: "#ffffff",
         }));
-        this.startButton = new Sprite(Loader.shared.resources['button_exit'].texture);
+        this.startButton = new Sprite(Loader.shared.resources[Constants.AssetsTextures.BUTTON_EXIT].texture);
 
         this.background.anchor.set(0.5);
         this.background.x = SceneManager.width / 2;
@@ -63,7 +64,7 @@ export class GameWonScene extends Scene {
     }
 
     protected initActions() {
-        this.music = new Howl({ src: Loader.shared.resources['endgame_music'].url});
+        this.music = new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.WIN_GAME_MUSIC].url});
         this.music.play();
 
         this.startButton.on('click', () => {

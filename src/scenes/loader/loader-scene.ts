@@ -4,7 +4,7 @@ import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {MenuScene} from "../menu/menu-scene";
 import {assets, loaderAssets} from "../../assets-list";
-import { Assets, LoaderAssets } from "../../assets-vars";
+import {Constants} from "../../constants";
 
 export class LoaderScene extends Scene {
 
@@ -27,9 +27,9 @@ export class LoaderScene extends Scene {
     }
 
     public initLoader(): void {
-        this.loaderBarBg = new Sprite(Loader.shared.resources[LoaderAssets.Loaders.LOADER_BACKGROUND].texture);
-        this.loaderBarMask = new Sprite(Loader.shared.resources[LoaderAssets.Loaders.LOADER_BACKGROUND].texture);
-        this.loaderBar = new Sprite(Loader.shared.resources[LoaderAssets.Loaders.LOADER_BAR].texture);
+        this.loaderBarBg = new Sprite(Loader.shared.resources[Constants.AssetsTextures.LOADER_BAR_BG].texture);
+        this.loaderBarMask = new Sprite(Loader.shared.resources[Constants.AssetsTextures.LOADER_BAR_BG].texture);
+        this.loaderBar = new Sprite(Loader.shared.resources[Constants.AssetsTextures.LOADER_BAR].texture);
 
         this.loaderBarBg.anchor.set(0.5);
         this.loaderBarBg.x = SceneManager.width / 2;
