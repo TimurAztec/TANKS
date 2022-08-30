@@ -5,6 +5,7 @@ import {IEventListener} from "../../../../utils/events/IEventListener";
 import { SceneManager } from "../../../../scene-manager";
 import { EventManager } from "../../../../event-manager";
 import { AppearFX } from "../fx/appear";
+import { GameConstants } from "../../game-constants";
 
 class Base extends Entity implements IEventListener {
 
@@ -21,7 +22,7 @@ class Base extends Entity implements IEventListener {
     public destroy(options?: IDestroyOptions | boolean): void {
         super.destroy(options);
         if (this.getComponent(AbstractTeamComponent)) {
-            EventManager.notify('team_lost', this.getComponent(AbstractTeamComponent).getTeam);
+            EventManager.notify(GameConstants.Events.TEAM_LOST, this.getComponent(AbstractTeamComponent).getTeam);
         }
     }
     
