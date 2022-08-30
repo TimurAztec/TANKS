@@ -1,21 +1,20 @@
 import { Application } from "@pixi/app";
+import { Point } from "pixi.js";
 import {Scene} from "./scenes/scene";
 
 export class SceneManager {
-    private constructor() { /*this class is purely static. No constructor to see here*/ }
+    private constructor() {}
 
-    // Safely store variables for our game
     private static _app: Application;
     private static _currentScene: Scene;
+    private static _cameraPos: Point = new Point(0, 0);
 
-    // Width and Height are read-only after creation (for now)
     private static _width: number;
     private static _height: number;
 
     private static _lastTick: number = 0;
 
 
-    // With getters but not setters, these variables become read-only
     public static get width(): number {
         return SceneManager._width;
     }
@@ -26,10 +25,9 @@ export class SceneManager {
         return SceneManager._currentScene;
     }
 
-    // Use this function ONCE to start the entire machinery
+    // Use this function ONCE to start the entire game
     public static initialize(width: number, height: number): void {
         if (!this._app) {
-            // store our width and height
             SceneManager._width = width;
             SceneManager._height = height;
 
@@ -38,7 +36,7 @@ export class SceneManager {
                 view: document.getElementById("game-canvas") as HTMLCanvasElement,
                 resolution: window.devicePixelRatio || 1,
                 autoDensity: true,
-                backgroundColor: 0x112233,
+                backgroundColor: 0x000000,
                 width: width,
                 height: height
             });
@@ -47,9 +45,15 @@ export class SceneManager {
         }
     }
 
+    public static resize(width: number, height: number): void {
+        if (SceneManager._currentScene) {
+            SceneManager._app.renderer.resize((height + height/3), height);
+            SceneManager._currentScene.scale.set((height + height/3)/SceneManager.width, height/SceneManager.height);
+        }
+    }
+
     // Call this function when you want to go to a new scene
     public static changeScene(scene: Scene): void {
-        // Remove and destroy old scene... if we had one..
         if (SceneManager._currentScene) {
             SceneManager._currentScene.visible = false;
             // SceneManager._currentScene.destroy();
@@ -58,10 +62,18 @@ export class SceneManager {
 
         // Add the new one
         SceneManager._currentScene = scene;
+
+        SceneManager._currentScene.scale.set((SceneManager._app.renderer.height + SceneManager._app.renderer.height/3)/SceneManager.width,
+            SceneManager._app.renderer.height/SceneManager.height);
+
         if (!SceneManager._app.stage.children.includes(SceneManager._currentScene)) {
             SceneManager._app.stage.addChild(SceneManager._currentScene);
         }
         SceneManager._currentScene.visible = true;
+    }
+
+    public static moveCameraTo(position: Point): void {
+        SceneManager._cameraPos = new Point().copyFrom(position);
     }
 
     private static tick(): void {
@@ -69,21 +81,18 @@ export class SceneManager {
         let deltaTime = newTick - this._lastTick;
         this._lastTick = newTick;
         if (deltaTime < 0) deltaTime = 0;
-        if (deltaTime > 1000) deltaTime = 1000;
-        let deltaFrame = deltaTime * 60 / 1000; //1.0 is for single frame
+        if (deltaTime > 100) deltaTime = 100;
+        let deltaFrame = deltaTime * 60 / 1000;
 
         SceneManager.update(deltaFrame);
         requestAnimationFrame(this.tick.bind(this));
     }
 
-    // This update will be called by a pixi ticker and tell the scene that a tick happened
     private static update(dt: number): void {
-        // Let the current scene know that we updated it...
-        // Just for funzies, sanity check that it exists first.
         if (SceneManager._currentScene) {
+            SceneManager._currentScene.position.x = -SceneManager._cameraPos.x;
+            SceneManager._currentScene.position.y = -SceneManager._cameraPos.y;
             SceneManager._currentScene.update(dt);
         }
-
-        // as I said before, I HATE the "frame passed" approach. I would rather use `Manager.app.ticker.deltaMS`
     }
 }

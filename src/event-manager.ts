@@ -1,4 +1,4 @@
-import {IEventListener} from "./ustils/events/IEventListener";
+import { IEventListener } from "./utils/events/IEventListener";
 
 class EventManager {
     private constructor() {}
