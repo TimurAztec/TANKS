@@ -2,12 +2,15 @@
   "name": "tanks",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "rd /s /q dist & mkdir dist & robocopy assets dist/assets & parcel index.html",
+    "build": "rd /s /q dist & mkdir dist & robocopy assets dist/assets & parcel build index.html"
   },
-  "keywords": [],
-  "author": "",
+  "keywords": [
+    "BattleCity",
+    "Game"
+  ],
+  "author": "TimurAztec",
   "license": "ISC",
   "dependencies": {
     "@pixi/interaction": "^6.5.1",
