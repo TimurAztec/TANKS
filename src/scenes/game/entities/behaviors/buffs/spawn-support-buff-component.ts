@@ -6,6 +6,7 @@ import { IBuffComponent } from "./IBuffComponent";
 import {EntityFactory} from "../../entity-factory";
 import { SceneManager } from "../../../../../scene-manager";
 import { GameConstants } from "../../../game-constants";
+import { WanderingAmountBasedSpawner } from "../../interactive/spawners/wandering-amount-based-spawner";
 
 class SpawnSupportBuffComponent extends AbstractBuffComponent implements IBuffComponent{
 
@@ -20,15 +21,31 @@ class SpawnSupportBuffComponent extends AbstractBuffComponent implements IBuffCo
             if (this._entity.getComponent(AbstractTeamComponent).getTeam() == GameConstants.Teams.PLAYER_2) {
                 support = EntityFactory.getEntity(GameConstants.EntityIDs.ENEMY_SUPPORT_TANK);
             }
+            const spawner = new WanderingAmountBasedSpawner().setPrototypeEntity(support)
+                    .setTimeBetweenSpawns(0)
+                    .setCollisionGroup([
+                        GameConstants.EntityTypes.TANK,
+                        GameConstants.EntityTypes.TRACTOR,
+                        GameConstants.EntityTypes.DEAD_TANK,
+                        GameConstants.EntityTypes.HARD_WALL,
+                        GameConstants.EntityTypes.SMALL_WALL,
+                        GameConstants.EntityTypes.WATER,
+                        GameConstants.EntityTypes.AT_HEDGEHOGS,
+                        GameConstants.EntityTypes.BASE
+                    ])
+                    .setTimesToSpawn(1)
+                    .setMaxAmountPerTime(1);
+            spawner.setSkin({hitboxWidth: 32, hitboxHeight: 32})
             if (this._entity.getComponent(AbstractMovementComponent)) {
                 const vec = this._entity.getComponent(AbstractMovementComponent).rotationVector;
-                support.x = this._entity.x * (this._entity.x / vec.x);
-                support.y = this._entity.y * (this._entity.y / vec.y);
+                spawner.x = this._entity.x * (this._entity.x / (vec.x));
+                spawner.y = this._entity.y * (this._entity.y / (vec.y));
             } else {
-                support.x = this._entity.x;
-                support.y = this._entity.y;
+                spawner.x = this._entity.x;
+                spawner.y = this._entity.y;
             }
-            SceneManager.currentScene.addChild(support);
+            SceneManager.currentScene.addChild(spawner);
+            
         }
         super.firstUpdate();
     }
