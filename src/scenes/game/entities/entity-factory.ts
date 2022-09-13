@@ -52,7 +52,7 @@ class EntityFactory {
                 return new Water();
             case GameConstants.EntityIDs.PLAYER_TANK: {
                 const playerTank = new Tank();
-                playerTank.setSkin({assetName: Constants.AssetsTextures.TANK_1, scaleX: 1.2, numberOfFrames: 4});
+                playerTank.setSkin({assetName: Constants.AssetsTextures.TANK_1, numberOfFrames: 4});
                 playerTank.setComponent(new PlayerControlComponent());
                 const weapon = new BulletWeaponComponent();
                 weapon.setReloadTime(50);
@@ -66,7 +66,7 @@ class EntityFactory {
             case GameConstants.EntityIDs.ENEMY_TANK: {
                 const tank = new Tank();
                 const enemy_skins = [Constants.AssetsTextures.TANK_2, Constants.AssetsTextures.TANK_3, Constants.AssetsTextures.TANK_4];
-                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], scaleX: 1.2, numberOfFrames: 4});
+                tank.setSkin({assetName: enemy_skins[Math.floor(randNum(3))], numberOfFrames: 4});
                 tank.setComponent(new RandomControlComponent());
                 const weapon = new EnemyBulletWeaponComponent();
                 weapon.setReloadTime(50);
@@ -116,7 +116,8 @@ class EntityFactory {
                         GameConstants.EntityTypes.HARD_WALL,
                         GameConstants.EntityTypes.SMALL_WALL,
                         GameConstants.EntityTypes.WATER,
-                        GameConstants.EntityTypes.AT_HEDGEHOGS
+                        GameConstants.EntityTypes.AT_HEDGEHOGS,
+                        GameConstants.EntityTypes.BASE
                     ])
                     .setTimesToSpawn(4)
                     .setMaxAmountPerTime(1);
@@ -145,7 +146,8 @@ class EntityFactory {
                         GameConstants.EntityTypes.HARD_WALL,
                         GameConstants.EntityTypes.SMALL_WALL,
                         GameConstants.EntityTypes.WATER,
-                        GameConstants.EntityTypes.AT_HEDGEHOGS
+                        GameConstants.EntityTypes.AT_HEDGEHOGS,
+                        GameConstants.EntityTypes.BASE
                     ])
                     .setTimesToSpawn(9999)
                     .setMaxAmountPerTime(1);

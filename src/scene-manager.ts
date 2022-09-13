@@ -1,5 +1,4 @@
-import { Application } from "@pixi/app";
-import { Point } from "pixi.js";
+import { Application, Point } from "pixi.js";
 import {Scene} from "./scenes/scene";
 
 export class SceneManager {

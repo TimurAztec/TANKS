@@ -4,7 +4,7 @@ import { LiveBuffComponent } from "../behaviors/buffs/live-buff-component";
 import { SlowBuffComponent } from "../behaviors/buffs/slow-buff-component";
 import { SpeedBuffComponent } from "../behaviors/buffs/speed-buff-component";
 import { Entity } from "../entity";
-import {SpawnSupportBuffComponent} from "../behaviors/buffs/spawn-tractor-buff-component";
+import {SpawnSupportBuffComponent} from "../behaviors/buffs/spawn-support-buff-component";
 import {randNum} from "../../../../utils/utils";
 import { Constants } from "../../../../constants";
 import { StaticMovementComponent } from "../behaviors/movement/static-movement-component";
