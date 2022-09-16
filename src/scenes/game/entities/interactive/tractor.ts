@@ -42,11 +42,13 @@ class Tractor extends Entity {
                 GameConstants.EntityTypes.TRACTOR
             ];
             if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
+            /////////// // /// // //// // //
             switch (object.entityType) {
                 case GameConstants.EntityTypes.TANK:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     (object as Tank).takeDamage(1);
                     break;
+
                 case GameConstants.EntityTypes.TRACTOR:
                     if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
                     (object as Tank).takeDamage(1);
@@ -83,7 +85,7 @@ class Tractor extends Entity {
                     this._moveSound.pause();
                 }
                 if (!this._skin.playing) {
-                    this._skin.gotoAndPlay(0); 
+                    this._skin.gotoAndPlay(0);
                     this._moveSound.play();
                 }
 

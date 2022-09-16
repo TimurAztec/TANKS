@@ -13,7 +13,7 @@ export abstract class GameScene extends Scene implements IEventListener {
 
     public dynamicChildren: Entity[] = [];
     public tileMap: (Entity | undefined)[][][] = [];
-    
+
     public readonly tileSize: number = 36;
 
     constructor() {
@@ -72,7 +72,11 @@ export abstract class GameScene extends Scene implements IEventListener {
         let i: number = this.dynamicChildren.length;
         while (i--) {
             const dynamicEntity = this.dynamicChildren[i];
+
+            // you filtered these values, no one has destroyed true
             if (dynamicEntity.destroyed) continue;
+
+            // you are calling getComponent function triple time, but can do it only once
             if (dynamicEntity.getComponent(AbstractMovementComponent) &&
                 !dynamicEntity.position.equals(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition)) {
                 const prevTilePos = getTitlePosition(dynamicEntity.getComponent(AbstractMovementComponent).previousPosition, this.tileSize);
@@ -85,9 +89,13 @@ export abstract class GameScene extends Scene implements IEventListener {
     }
 
     public addChild<U extends DisplayObject[]>(...children: U): U[0] {
+
+        // don't use any and construction like this [...arr, ...[...arr]]
         this.dynamicChildren = [...this.dynamicChildren,
             ...[...children].filter((child: any) => child.getComponent(AbstractMovementComponent)) as Entity[]];
         let canBeAdded = true;
+
+        // learn some refactoring methods
         for (const child of [...children] as Entity[]) {
             const pos = getTitlePosition(child.position, this.tileSize);
             if (this.tileMap[pos.y] && this.tileMap[pos.y][pos.x]) {
@@ -138,6 +146,7 @@ export abstract class GameScene extends Scene implements IEventListener {
         if (index >= 0) {
             this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
         } else {
+            // why not for or foreach ?
             let i: number = this.tileMap.length;
             while(i--) {
                 let j: number = this.tileMap[i].length;

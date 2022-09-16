@@ -60,6 +60,7 @@ class PauseScene extends Scene implements IEventListener {
         this.addChild(this._menuText);
     }
 
+    // you have same named function in at least 3 classes, better to move to abstract
     protected initActions(): void {
         this._menuStartButton.on('click', () => {
             this.resumeParentScene();

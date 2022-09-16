@@ -1,4 +1,4 @@
-
+// same with singleton
 class SavesHandler {
 
     protected constructor() {}

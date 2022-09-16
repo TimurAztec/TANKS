@@ -23,6 +23,9 @@ export class MenuScene extends Scene {
         }));
         this.startButton = new Sprite(Loader.shared.resources[Constants.AssetsTextures.BUTTON_PLAY].texture);
 
+
+        // bad practice doing a lot of things in constructor
+        // better to split to separate function
         this.background.anchor.set(0.5);
         this.background.x = SceneManager.width / 2;
         this.background.y = SceneManager.height / 2;

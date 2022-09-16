@@ -12,6 +12,7 @@ export abstract class AbstractComponent implements IComponent {
         return this._typeID
     }
 
+    // you are not using return value
     public setEntity<T extends Entity>(entity: T): AbstractComponent {
         this._entity = entity;
         return this;

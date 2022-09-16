@@ -1,5 +1,6 @@
 import { IEventListener } from "./utils/events/IEventListener";
 
+// this class better to have as singleton
 class EventManager {
     private constructor() {}
 
@@ -10,6 +11,7 @@ class EventManager {
         EventManager._listeners.set(event, listeners ? [...listeners, listener] : [listener]);
     }
 
+    // don't use `any`, typescript is created for types
     public static unsubscribe(event: string, listener: any): void {
         const listeners: IEventListener[] = EventManager._listeners.get(event);
         if (listeners && listeners.indexOf(listener)) {

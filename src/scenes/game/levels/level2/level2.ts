@@ -10,7 +10,7 @@ import { Level3Scene } from '../level3/level3';
 import * as levelData from './level2.json';
 
 export class Level2Scene extends GameScene {
-    
+
     constructor() {
         super();
 
@@ -19,6 +19,8 @@ export class Level2Scene extends GameScene {
         EventManager.subscribe(GameConstants.Events.TEAM_WON, this);
     }
 
+
+    // alnmost the same as level3 and level1
     public onEvent(event: string, data: any): void {
         if (this.paused) return;
         super.onEvent(event, data);

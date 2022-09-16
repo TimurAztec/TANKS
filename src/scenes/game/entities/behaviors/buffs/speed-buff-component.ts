@@ -11,6 +11,7 @@ class SpeedBuffComponent extends AbstractBuffComponent implements IBuffComponent
         super.firstUpdate();
     }
 
+    // https://stackoverflow.com/questions/56325751/writing-a-generic-clone-method-in-typescript
     public clone(): SpeedBuffComponent { return new SpeedBuffComponent(this) }
 
 }

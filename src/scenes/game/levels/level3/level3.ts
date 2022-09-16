@@ -10,7 +10,7 @@ import { GameWonScene } from '../../game_won_screen';
 import * as levelData from './level3.json';
 
 export class Level3Scene extends GameScene {
-    
+
     constructor() {
         super();
 
@@ -28,6 +28,7 @@ export class Level3Scene extends GameScene {
                 this.dynamicChildren.length = 0;
                 this.tileMap.length = 0;
                 new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.LOSE].url, onend: () => {
+                        // you are creating menu scene each time when you want to go there, this is not good
                         SceneManager.changeScene(new MenuScene());
                         this.destroy();
                         this._preUpdateAction = () => {};
@@ -37,6 +38,8 @@ export class Level3Scene extends GameScene {
         if (event == GameConstants.Events.TEAM_WON && data == GameConstants.Teams.PLAYER_1) {
             this._preUpdateAction = () => {
                 this.pause();
+
+                // you have memory leak, possibly because of this code https://prnt.sc/ZkqShlhkT_Er
                 this.dynamicChildren.length = 0;
                 this.tileMap.length = 0;
                 new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.WIN].url, onend: () => {

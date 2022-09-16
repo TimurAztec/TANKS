@@ -84,6 +84,9 @@ export class SceneManager {
         let deltaFrame = deltaTime * 60 / 1000;
 
         SceneManager.update(deltaFrame);
+
+        // you can use PIXI.Ticker for this
+        // where you have elapsedTime, deltaTime and others
         requestAnimationFrame(this.tick.bind(this));
     }
 

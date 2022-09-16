@@ -61,7 +61,22 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
         if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
         }
+
+        // let pos = [
+        //     {x: 0, y:-1},
+        //     {x: 0, y:1},
+        //     {x: 1, y:0},
+        //     {x: -1, y:0},
+        //     {x: -1, y:-1}
+        // ]
+        // pos.forEach((el) => {
+        //     if(vectorTilePos.x + el.x > 300 && vectorTilePos.x + el.x >= 0 && vectorTilePos.x + el.x > 300 && vectorTilePos.x + el.x >= 0) {
+        //         collisionGroup.concat(tileMap[vectorTilePos.y][vectorTilePos.x - 1])
+        //     }
+        // })
+
         if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
+            // array1.concat(array2);
             collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
         }
         if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
