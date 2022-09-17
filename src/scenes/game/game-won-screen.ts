@@ -1,12 +1,11 @@
-import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
-import { MenuScene } from "../menu/menu-scene";
 import { Howl } from "howler";
 import {SavesHandler} from "../../utils/saves-handler";
 import {Constants} from "../../constants";
+import { PainScreenScene } from "../menu/plain-screen-scene";
 
-export class GameWonScene extends Scene {
+export class GameWonScene extends PainScreenScene {
 
     protected background: Sprite;
     protected startButton: Sprite;
@@ -14,9 +13,7 @@ export class GameWonScene extends Scene {
     protected logoText: Text;
     protected music: Howl;
 
-    constructor() {
-        super();
-
+    protected initVisuals(): void {
         this.background = new Sprite(Loader.shared.resources[Constants.AssetsTextures.WIN_MENU_BG].texture);
         this.logoText = new Text('You`ve completed the game!', new TextStyle({
             fontSize: 64,

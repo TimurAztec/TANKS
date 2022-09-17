@@ -131,8 +131,7 @@ class Tank extends Entity {
             dead.y = this.y;
             dead.angle = this.angle;
             SceneManager.currentScene.addChild(dead);
-            let i: number = Math.floor(randNum(3));
-            while(i--) {
+            for (let i = 0 ; i < Math.floor(randNum(3)) ; i++) {
                 const soldier = new Soldier();
                 soldier.setSkin({assetName: Constants.AssetsTextures.SOLIDER, numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
                 soldier.setComponent(new RandomControlComponent());

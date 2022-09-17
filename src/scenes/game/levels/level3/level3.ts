@@ -1,6 +1,6 @@
 import { SceneManager } from '../../../../scene-manager';
 import { GameScene } from '../../game-scene';
-import { GameWonScene } from '../../game_won_screen';
+import { GameWonScene } from '../../game-won-screen';
 import * as levelData from './level3.json';
 
 export class Level3Scene extends GameScene {

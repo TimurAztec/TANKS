@@ -2,28 +2,18 @@ import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
 import {EventManager} from "../../event-manager";
-import {MenuScene} from "./menu-scene";
 import {SavesHandler} from "../../utils/saves-handler";
 import {IEventListener} from "../../utils/events/IEventListener";
 import {Constants} from "../../constants";
+import { PainScreenScene } from "./plain-screen-scene";
 
-class PauseScene extends Scene implements IEventListener {
+class PauseScene extends PainScreenScene implements IEventListener {
 
     protected _background: Sprite;
     protected _menuStartButton: Sprite;
     protected _menuExitButton: Sprite;
     protected _menuText: Text;
     protected _parentScene: Scene;
-
-    constructor() {
-        super();
-
-        EventManager.instance().subscribe('keydown', this);
-
-        this.initVisuals();
-        this.initActions();
-        SceneManager.moveCameraTo(new Point(0, 0));
-    }
 
     protected initVisuals(): void {
         this._background = new Sprite(Loader.shared.resources[Constants.AssetsTextures.MENU_BG].texture);
@@ -58,10 +48,12 @@ class PauseScene extends Scene implements IEventListener {
         this.addChild(this._menuStartButton);
         this.addChild(this._menuExitButton);
         this.addChild(this._menuText);
+        SceneManager.moveCameraTo(new Point(0, 0));
     }
 
     // you have same named function in at least 3 classes, better to move to abstract
     protected initActions(): void {
+        EventManager.instance().subscribe('keydown', this);
         this._menuStartButton.on('click', () => {
             this.resumeParentScene();
         });

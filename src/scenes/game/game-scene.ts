@@ -68,13 +68,10 @@ export abstract class GameScene extends Scene implements IEventListener {
         this.dynamicChildren = this.dynamicChildren.filter((entity) => {
             return !entity.destroyed
         });
-        let i: number = this.dynamicChildren.length;
-        while (i--) {
-            const dynamicEntity = this.dynamicChildren[i];
-
+        for (const dynamicEntity of this.dynamicChildren) {
+            // This check needed since entities may be destroyed during loop
             if (dynamicEntity.destroyed) continue;
 
-            // you are calling getComponent function triple time, but can do it only once
             const movementComponent = dynamicEntity.getComponent(AbstractMovementComponent);
             if (movementComponent &&
                 !dynamicEntity.position.equals(movementComponent.previousPosition)) {
