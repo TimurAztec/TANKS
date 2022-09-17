@@ -11,6 +11,7 @@ export namespace GameConstants {
         public static readonly BULLET: string = 'Bullet';
         public static readonly BASE: string = 'Base';
         public static readonly SOLDIER: string = 'Soldier';
+        public static readonly DEAD_SOLDIER: string = 'DeadSoldier';
     }
 
     export class Teams {

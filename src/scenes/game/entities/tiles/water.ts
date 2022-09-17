@@ -24,7 +24,8 @@ class Water extends Entity {
                 GameConstants.EntityTypes.TANK,
                 GameConstants.EntityTypes.DEAD_TANK,
                 GameConstants.EntityTypes.TRACTOR,
-                GameConstants.EntityTypes.SOLDIER
+                GameConstants.EntityTypes.SOLDIER,
+                GameConstants.EntityTypes.DEAD_SOLDIER
             ];
             if (drownObject.includes(object.entityType)) { this.drown(object); }
         }));

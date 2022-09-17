@@ -32,6 +32,15 @@ class Soldier extends Entity {
                 GameConstants.EntityTypes.TRACTOR
             ];
             if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
+            switch (object.entityType) {
+                case GameConstants.EntityTypes.TANK:
+                    this.takeDamage(9999);
+                    break;
+                case GameConstants.EntityTypes.BULLET:
+                    this.takeDamage(9999);
+                    object.destroy();
+                    break;
+            }
         }));
     }
 

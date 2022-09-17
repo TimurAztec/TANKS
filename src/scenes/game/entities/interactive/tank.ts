@@ -48,6 +48,11 @@ class Tank extends Entity {
                 case GameConstants.EntityTypes.SOLDIER:
                     (object as Soldier).takeDamage(9999);
                     break;
+                case GameConstants.EntityTypes.BULLET:
+                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    this.takeDamage(1);
+                    object.destroy();
+                    break;
                 case GameConstants.EntityTypes.BUFF:
                     new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
                     this.setComponent((object as Buff).getBuff());
@@ -131,7 +136,7 @@ class Tank extends Entity {
             dead.y = this.y;
             dead.angle = this.angle;
             SceneManager.currentScene.addChild(dead);
-            for (let i = 0 ; i < Math.floor(randNum(3)) ; i++) {
+            for (let i = 0 ; i <= Math.floor(randNum(3)) ; i++) {
                 const soldier = new Soldier();
                 soldier.setSkin({assetName: Constants.AssetsTextures.SOLIDER, numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
                 soldier.setComponent(new RandomControlComponent());
