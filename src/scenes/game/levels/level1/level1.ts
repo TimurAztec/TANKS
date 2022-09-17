@@ -1,8 +1,8 @@
 import { Constants } from '../../../../constants';
 import { SceneManager } from '../../../../scene-manager';
 import { SavesHandler } from '../../../../utils/saves-handler';
-import { GameWonScene } from '../../game-won-screen';
 import { LevelScene } from '../level-scene';
+import { Level2Scene } from '../level2/level2';
 import * as levelData from './level1.json';
 
 export class Level1Scene extends LevelScene {
@@ -15,8 +15,7 @@ export class Level1Scene extends LevelScene {
     }
 
     protected onTeamWon(): void {
-        // SceneManager.changeScene(new Level2Scene());
-        SceneManager.changeScene(new GameWonScene());
+        SceneManager.changeScene(new Level2Scene());
         this.destroy();
     }
 
