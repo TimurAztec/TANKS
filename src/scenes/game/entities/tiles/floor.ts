@@ -12,9 +12,6 @@ class Floor extends Entity {
         this._skin.gotoAndPlay(0);
     }
 
-    public clone(): Floor {
-        return new Floor(this);
-    }
 }
 
 export { Floor }

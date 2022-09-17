@@ -7,7 +7,4 @@ export class BasicDestroyComponent extends AbstractDestroyComponent implements I
         return super.onDestroy(callback) as BasicDestroyComponent;
     }
 
-    public clone(): BasicDestroyComponent {
-        return new BasicDestroyComponent(this);
-    }
 }

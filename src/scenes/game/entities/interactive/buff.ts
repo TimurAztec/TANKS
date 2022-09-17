@@ -58,9 +58,5 @@ class Buff extends Entity{
         }
         super.update(dt);
     }
-
-    public clone(): Buff {
-        return new Buff(this);
-    }
 }
 export {Buff}

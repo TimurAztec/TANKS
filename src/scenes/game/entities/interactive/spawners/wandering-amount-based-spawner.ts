@@ -30,10 +30,6 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
         }));
     }
 
-    public clone(): WanderingAmountBasedSpawner {
-        return new WanderingAmountBasedSpawner(this);
-    }
-
     public setComponent(component: IComponent): void {
         super.setComponent(component);
 

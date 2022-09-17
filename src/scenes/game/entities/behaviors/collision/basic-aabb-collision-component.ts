@@ -23,8 +23,6 @@ class BasicAabbCollisionComponent extends AbstractCollisionComponent {
             }
         }
     }
-
-    public clone(): BasicAabbCollisionComponent { return new BasicAabbCollisionComponent(this) }
 }
 
 export { BasicAabbCollisionComponent }

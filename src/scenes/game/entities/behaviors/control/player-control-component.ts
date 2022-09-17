@@ -54,7 +54,6 @@ class PlayerControlComponent extends AbstractControlComponent implements IEventL
         this.action();
     }
 
-    public clone(): PlayerControlComponent { return new PlayerControlComponent(this) }
 }
 
 export { PlayerControlComponent }

@@ -8,10 +8,6 @@ class Leaves extends Entity {
         this.setSkin({ assetName: Constants.AssetsTextures.LEAVES });
     }
 
-    public clone(): Leaves {
-        return new Leaves(this);
-    }
-
 }
 
 export { Leaves }

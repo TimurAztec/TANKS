@@ -43,8 +43,6 @@ class RandomControlComponent extends AbstractControlComponent {
             (this as IIndexable)[`triggerAction${this._nextAction}`]()
         }
     }
-
-    public clone(): RandomControlComponent { return new RandomControlComponent(this) }
 }
 
 export { RandomControlComponent }

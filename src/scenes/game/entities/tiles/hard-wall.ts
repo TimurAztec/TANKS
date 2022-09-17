@@ -7,10 +7,6 @@ class HardWall extends Entity {
         super(source);
         this.setSkin({ assetName: Constants.AssetsTextures.HARD_WALL });
     }
-
-    public clone(): HardWall {
-        return new HardWall(this);
-    }
 }
 
 export { HardWall }

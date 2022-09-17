@@ -68,10 +68,6 @@ class Bullet extends Entity {
         this.setComponent(new ProjectileMovementComponent());
     }
 
-    public clone(): Bullet {
-        return new Bullet(this);
-    }
-
     public launch(angle: number): void {
         new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.SHOT].url}).play();
         const radAngle: number = (angle-90) * (Math.PI/180);

@@ -7,6 +7,4 @@ export class BasicTeamComponent extends AbstractTeamComponent {
         if (source?._team) this._team = source._team;
     }
 
-    public clone(): BasicTeamComponent { return new BasicTeamComponent(this) }
-
 }

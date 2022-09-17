@@ -13,16 +13,12 @@ class Base extends Entity implements IEventListener {
         super(source);
     }
 
-    public clone(): Base {
-        return new Base(this);
-    }
-
     public onEvent(event: string, data: any): void {}
 
     public destroy(options?: IDestroyOptions | boolean): void {
         super.destroy(options);
         if (this.getComponent(AbstractTeamComponent)) {
-            EventManager.instance().notify(GameConstants.Events.TEAM_LOST, this.getComponent(AbstractTeamComponent).getTeam);
+            EventManager.instance().notify(GameConstants.Events.GAME_OVER, this.getComponent(AbstractTeamComponent).getTeam);
         }
     }
     

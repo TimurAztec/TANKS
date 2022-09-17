@@ -35,10 +35,6 @@ class Soldier extends Entity {
         }));
     }
 
-    public clone(): Soldier {
-        return new Soldier(this);
-    }
-
     public takeDamage(damage: number): void {
         if (this.immortal) return;
         this.health -= damage;

@@ -89,47 +89,48 @@ export abstract class GameScene extends Scene implements IEventListener {
     }
 
     public addChild<U extends DisplayObject[]>(...children: U): U[0] {
-
-        // don't use any and construction like this [...arr, ...[...arr]]
+        const childrenCopy: Entity[] = [...children] as Entity[];
         this.dynamicChildren.push(
-            ...[...children].filter((child: DisplayObject) => (child as Entity).getComponent(AbstractMovementComponent)) as Entity[]
+            ...childrenCopy.filter((child: DisplayObject) => (child as Entity).getComponent(AbstractMovementComponent)) as Entity[]
             );
         let canBeAdded = true;
 
-        // learn some refactoring methods
-        for (const child of [...children] as Entity[]) {
+        for (const child of childrenCopy) {
             const pos = getTitlePosition(child.position, this.tileSize);
-            if (this.tileMap[pos.y] && this.tileMap[pos.y][pos.x]) {
-                this.tileMap[pos.y][pos.x].push(child);
+            const row = this.tileMap[pos.y];
+            const tile = this.tileMap[pos.y][pos.x];
+            if (row && tile) {
+                tile.push(child);
             } else {
                 canBeAdded = false;
             }
         }
         if (canBeAdded) {
-            return super.addChild(...children);
+            return super.addChild(...childrenCopy);
         } else {
-            for (const child of [...children] as Entity[]) {
+            for (const child of childrenCopy as Entity[]) {
                 child.destroy();
             }
-            return [...children][0];
+            return childrenCopy[0];
         }
     }
 
     public removeChild<U extends DisplayObject[]>(...children: U): U[0] {
-        for (const child of [...children] as Entity[]) {
+        const childrenCopy: Entity[] = [...children] as Entity[];
+        for (const child of childrenCopy) {
             const pos = getTitlePosition(child.position, this.tileSize);
-            if (this.tileMap[pos.y] && this.tileMap[pos.y][pos.x]) {
-                const index = this.tileMap[pos.y][pos.x].indexOf(child);
-                this.tileMap[pos.y][pos.x].splice(index, 1);
+            const row = this.tileMap[pos.y];
+            const tile = this.tileMap[pos.y][pos.x];
+            if (row && tile) {
+                const index = tile.indexOf(child);
+                tile.splice(index, 1);
             } else {
-                let i: number = this.tileMap.length;
-                while(i--) {
-                    let j: number = this.tileMap[i].length;
-                    while(j--) {
-                        const index = this.tileMap[i][j].indexOf(child);
-                        if (index >= 0) {
-                            this.tileMap[i][j].splice(index, 1);
-                            i = j = 0;
+                rmark: for (const [i, row] of this.tileMap.entries()) {
+                    for (const [j, tile] of row.entries()) {
+                        const findex = tile.indexOf(child);
+                        if (findex >= 0) {
+                            this.tileMap[i][j].splice(findex, 1);
+                            break rmark;
                         }
                     }
                 }
@@ -140,18 +141,20 @@ export abstract class GameScene extends Scene implements IEventListener {
 
     protected moveEntityFromTileToTile(entity: Entity, from: Point, to: Point): void {
         let index = -1;
-        if (!this.tileMap[to.y] || !this.tileMap[to.y][to.x]) return;
-        if (this.tileMap[from.y] && this.tileMap[from.y][from.x]) {
-            index = this.tileMap[from.y][from.x].indexOf(entity);
+        const fromTile = this.tileMap[from.y] ? this.tileMap[from.y][from.x] : undefined;
+        const toTile = this.tileMap[to.y] ? this.tileMap[to.y][to.x] : undefined;
+        if (!toTile) return;
+        if (fromTile) {
+            index = fromTile.indexOf(entity);
         }
         if (index >= 0) {
-            this.tileMap[to.y][to.x].push(this.tileMap[from.y][from.x].splice(index, 1)[0]);
+            toTile.push(fromTile.splice(index, 1)[0]);
         } else {
             rmark: for (const row of this.tileMap) {
                 for (const tile of row) {
                     const findex = tile.indexOf(entity);
                     if (findex >= 0) {
-                        this.tileMap[to.y][to.x].push(tile.splice(findex, 1)[0]);
+                        toTile.push(tile.splice(findex, 1)[0]);
                         break rmark;
                     }
                 }

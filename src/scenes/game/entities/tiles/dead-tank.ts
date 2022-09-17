@@ -23,10 +23,6 @@ class DeadTank extends Entity {
         this._skin.gotoAndPlay(0);
     }
 
-    public clone(): DeadTank {
-        return new DeadTank(this);
-    }
-
     public takeDamage(damage: number): void {
         if (this.immortal) return;
         this.health -= damage;

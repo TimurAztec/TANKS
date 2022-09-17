@@ -64,10 +64,6 @@ class Tractor extends Entity {
         }));
     }
 
-    public clone(): Tractor {
-        return new Tractor(this);
-    }
-
     public takeDamage(damage: number): void {
         if (this.immortal) return;
         this.health -= damage;

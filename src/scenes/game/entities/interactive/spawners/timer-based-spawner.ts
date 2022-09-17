@@ -15,10 +15,6 @@ class TimerBasedSpawner extends Spawner {
         }));
     }
 
-    public clone(): TimerBasedSpawner {
-        return new TimerBasedSpawner(this);
-    }
-
     public setTimeBetweenSpawns(time: number): TimerBasedSpawner {
         this._timeBetweenSpawns = time;
         return this;

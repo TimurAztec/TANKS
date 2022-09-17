@@ -14,9 +14,6 @@ class SmallExplosionFX extends Entity {
         (this._skin as AnimatedSprite).play();
         new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.EXPLODE_SMALL].url}).play();
     }
-
-    clone(): SmallExplosionFX { return new SmallExplosionFX }
-
 }
 
 export { SmallExplosionFX }

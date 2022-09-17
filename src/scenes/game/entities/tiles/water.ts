@@ -62,11 +62,6 @@ class Water extends Entity {
             }
         }
     }
-
-    public clone(): Water {
-        return new Water(this);
-    }
-
 }
 
 export { Water }

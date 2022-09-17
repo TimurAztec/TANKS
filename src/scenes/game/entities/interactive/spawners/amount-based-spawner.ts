@@ -25,10 +25,6 @@ class AmountBasedSpawner extends Spawner {
         this.setComponent(new StaticMovementComponent());
     }
 
-    public clone(): AmountBasedSpawner {
-        return new AmountBasedSpawner(this);
-    }
-
     public setTimeBetweenSpawns(time: number): AmountBasedSpawner {
         this._timeBetweenSpawns = time;
         return this;

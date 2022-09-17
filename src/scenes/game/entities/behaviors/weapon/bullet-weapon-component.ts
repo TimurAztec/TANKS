@@ -30,6 +30,4 @@ export class BulletWeaponComponent extends AbstractWeaponComponent {
         bullet.launch(this._entity.angle);
     }
 
-    public clone(): BulletWeaponComponent { return new BulletWeaponComponent(this) }
-
 }

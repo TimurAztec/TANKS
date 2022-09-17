@@ -47,10 +47,6 @@ class InWorldEventCounter extends Entity implements IEventListener {
         }
     }
 
-    public clone(): InWorldEventCounter {
-        return new InWorldEventCounter(this);
-    }
-
     public onEvent(event: string, data: any): void {
         super.onEvent(event, data);
         this._count++;
