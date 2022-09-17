@@ -64,7 +64,6 @@ export abstract class GameScene extends Scene implements IEventListener {
     // Так и с кодом ниже
     public update(dt: number) {
         super.update(dt);
-        console.log(dt);
 
         this.dynamicChildren = this.dynamicChildren.filter((entity) => {
             return !entity.destroyed

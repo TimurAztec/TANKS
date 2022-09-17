@@ -45,8 +45,8 @@ export class GameWonScene extends Scene {
         this.addChild(this.background);
         this.addChild(this.logoText);
 
-        if (SavesHandler.loadData('score')) {
-            this.score = new Text(`Score: ${SavesHandler.loadData('score')}`, new TextStyle({
+        if (SavesHandler.instance().loadData('score')) {
+            this.score = new Text(`Score: ${SavesHandler.instance().loadData('score')}`, new TextStyle({
                 fontSize: 84,
                 align: "center",
                 fill: "#ffffff",
@@ -68,7 +68,7 @@ export class GameWonScene extends Scene {
         this.music.play();
 
         this.startButton.on('click', () => {
-            SceneManager.changeScene(new MenuScene());
+            SceneManager.changeScene('MenuScene');
             this.music.stop();
             this.destroy();
         });

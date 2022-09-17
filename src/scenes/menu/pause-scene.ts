@@ -93,7 +93,8 @@ class PauseScene extends Scene implements IEventListener {
 
     protected exit(): void {
         SavesHandler.instance().saveData('score', 0);
-        SceneManager.changeScene(new MenuScene());
+        SceneManager.changeScene('MenuScene');
+        this._parentScene.destroy();
         EventManager.instance().unsubscribe('keydown', this);
         this.destroy();
     }

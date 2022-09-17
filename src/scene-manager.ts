@@ -46,20 +46,30 @@ export class SceneManager {
         }
     }
 
-    public static changeScene(scene: Scene): void {
-        if (SceneManager._currentScene) {
-            SceneManager._currentScene.visible = false;
+    public static changeScene(scene: Scene | string): void {
+        let newCurrentScene: Scene;
+        if (typeof scene == 'string') {
+            newCurrentScene = SceneManager._app.stage.children.find((child) => child.name == scene) as Scene;
+        }
+        if (scene instanceof Scene) {
+            newCurrentScene = scene;
         }
 
-        SceneManager._currentScene = scene;
+        if (newCurrentScene) {
+            if (SceneManager._currentScene) {
+                SceneManager._currentScene.visible = false;
+            }
 
-        SceneManager._currentScene.scale.set((SceneManager._app.renderer.height + SceneManager._app.renderer.height/3)/SceneManager.width,
-            SceneManager._app.renderer.height/SceneManager.height);
+            SceneManager._currentScene = newCurrentScene;
 
-        if (!SceneManager._app.stage.children.includes(SceneManager._currentScene)) {
-            SceneManager._app.stage.addChild(SceneManager._currentScene);
+            SceneManager._currentScene.scale.set((SceneManager._app.renderer.height + SceneManager._app.renderer.height/3)/SceneManager.width,
+                SceneManager._app.renderer.height/SceneManager.height);
+
+            if (!SceneManager._app.stage.children.includes(SceneManager._currentScene)) {
+                SceneManager._app.stage.addChild(SceneManager._currentScene);
+            }
+            SceneManager._currentScene.visible = true;
         }
-        SceneManager._currentScene.visible = true;
     }
 
     public static moveCameraTo(position: Point): void {

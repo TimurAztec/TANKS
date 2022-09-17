@@ -22,7 +22,7 @@ class EventManager {
 
     public unsubscribe(event: string, listener: IEventListener): void {
         const listeners: IEventListener[] = this._listeners.get(event);
-        if (listeners && listeners.indexOf(listener)) {
+        if (listeners && listeners.indexOf(listener) >= 0) {
             listeners.splice(listeners.indexOf(listener), 1);
             this._listeners.set(event, listeners);
         }

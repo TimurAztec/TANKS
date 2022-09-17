@@ -4,10 +4,8 @@ import { Constants } from "../../../constants";
 import { EventManager } from "../../../event-manager";
 import { SceneManager } from "../../../scene-manager";
 import { IEventListener } from "../../../utils/events/IEventListener";
-import { MenuScene } from "../../menu/menu-scene";
 import { GameConstants } from "../game-constants";
 import { GameScene } from "../game-scene";
-import { Level2Scene } from "./level2/level2";
 
 export abstract class LevelScene extends GameScene implements IEventListener {
 
@@ -35,8 +33,8 @@ export abstract class LevelScene extends GameScene implements IEventListener {
         if (event == GameConstants.Events.TEAM_WON) {
             this._preUpdateAction = () => {
                 this.pause();
-                this.dynamicChildren.length = 0;
-                this.tileMap.length = 0;
+                this.dynamicChildren = [];
+                this.tileMap = [];
                 new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.WIN].url, onend: () => {
                         this.onTeamWon();
                         this._preUpdateAction = () => {};
@@ -46,7 +44,7 @@ export abstract class LevelScene extends GameScene implements IEventListener {
     }
 
     protected onGameOver() {
-        SceneManager.changeScene(new MenuScene());
+        SceneManager.changeScene('MenuScene');
         this.destroy();
     }
 

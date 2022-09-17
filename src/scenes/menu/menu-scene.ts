@@ -72,7 +72,6 @@ export class MenuScene extends Scene {
 
     public startGame(): void {
         SceneManager.changeScene(new Level1Scene());
-        this.destroy();
     }
 
 }
