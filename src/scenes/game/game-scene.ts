@@ -91,7 +91,7 @@ export abstract class GameScene extends Scene implements IEventListener {
     public addChild<U extends DisplayObject[]>(...children: U): U[0] {
         const childrenCopy: Entity[] = [...children] as Entity[];
         this.dynamicChildren.push(
-            ...childrenCopy.filter((child: DisplayObject) => (child as Entity).getComponent(AbstractMovementComponent)) as Entity[]
+            ...childrenCopy.filter((child: Entity) => child.getComponent(AbstractMovementComponent))
             );
         let canBeAdded = true;
 
