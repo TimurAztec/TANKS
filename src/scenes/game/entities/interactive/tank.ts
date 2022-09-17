@@ -56,10 +56,6 @@ class Tank extends Entity {
         }));
     }
 
-    public clone(): Tank {
-        return new Tank(this);
-    }
-
     public takeDamage(damage: number): void {
         if (this.immortal) return;
         this.health -= damage;

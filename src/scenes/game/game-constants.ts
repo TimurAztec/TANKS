@@ -20,8 +20,8 @@ export namespace GameConstants {
 
     export class Events {
         public static readonly ENTITY_DESTROY: string = 'entity_destroy';
-        public static readonly TEAM_WON: string = 'entity_destroy';
-        public static readonly TEAM_LOST: string = 'entity_destroy';
+        public static readonly TEAM_WON: string = 'team_won';
+        public static readonly GAME_OVER: string = 'game_over';
     }
 
     export enum EntityIDs {

@@ -23,7 +23,7 @@ export abstract class GameScene extends Scene implements IEventListener {
     }
 
     protected loadLevel(level: LevelData): void {
-        this.tileMap.length = 0;
+        this.tileMap = [];
         for (let [zindex, tilemap] of level.depthLevels.entries()) {
             if (!this.tileMap.length) { this.tileMap = new Array(tilemap.length); }
             let x: number = this.tileSize/2;

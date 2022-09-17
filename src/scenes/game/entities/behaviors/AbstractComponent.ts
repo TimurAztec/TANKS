@@ -22,5 +22,8 @@ export abstract class AbstractComponent implements IComponent {
 
     public remove(): void {}
 
-    public abstract clone(): IComponent;
+    public clone(): AbstractComponent {
+        const cloned = this.constructor as new (value: AbstractComponent) => this;
+        return new cloned(this);
+    };
 }

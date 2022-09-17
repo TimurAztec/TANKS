@@ -69,7 +69,7 @@ class EntityFactory {
                 playerTank.setComponent(weapon);
                 playerTank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_1));
                 playerTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    EventManager.instance().notify(GameConstants.Events.TEAM_LOST, playerTank.getComponent(AbstractTeamComponent).getTeam);
+                    EventManager.instance().notify(GameConstants.Events.GAME_OVER, playerTank.getComponent(AbstractTeamComponent).getTeam);
                 }));
                 return playerTank;
             }
