@@ -52,7 +52,7 @@ class AmountBasedSpawner extends Spawner {
     public updateTilingData(tileMap: any[][], tileSize: number): void {
         const tilePos = getTitlePosition(this.position, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }
 

@@ -104,33 +104,22 @@ class Tank extends Entity {
         const tilePos = getTitlePosition(this.position, tileSize);
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x - 1]]
-        }
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x + 1]]
-        }
-        if (tileMap[tilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y + 1][tilePos.x]]
-        }
-        if (tileMap[tilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y - 1][tilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
-        }
-        if (tileMap[vectorTilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroupAdditionalTilesRelativePositions = [
+            new Point(tilePos.x-1,tilePos.y),
+            new Point(tilePos.x+1,tilePos.y),
+            new Point(tilePos.x,tilePos.y-1),
+            new Point(tilePos.x,tilePos.y+1),
+            new Point(vectorTilePos.x,vectorTilePos.y),
+            new Point(vectorTilePos.x - 1,vectorTilePos.y),
+            new Point(vectorTilePos.x + 1,vectorTilePos.y),
+            new Point(vectorTilePos.x,vectorTilePos.y - 1),
+            new Point(vectorTilePos.x,vectorTilePos.y + 1),
+        ]
+        for (const additionalTilePos of collisionGroupAdditionalTilesRelativePositions) {
+            if (tileMap[additionalTilePos.y] && tileMap[additionalTilePos.y][additionalTilePos.x]) {
+                collisionGroup.push(...tileMap[additionalTilePos.y][additionalTilePos.x]);
+            }
         }
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }

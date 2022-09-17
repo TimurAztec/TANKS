@@ -118,8 +118,8 @@ export abstract class GameScene extends Scene implements IEventListener {
         const childrenCopy: Entity[] = [...children] as Entity[];
         for (const child of childrenCopy) {
             const pos = getTitlePosition(child.position, this.tileSize);
-            const row = this.tileMap[pos.y];
-            const tile = this.tileMap[pos.y][pos.x];
+            const row = this.tileMap[pos.y] ? this.tileMap[pos.y] : undefined;
+            const tile = this.tileMap[pos.y][pos.x] ? this.tileMap[pos.y][pos.x] : undefined;
             if (row && tile) {
                 const index = tile.indexOf(child);
                 tile.splice(index, 1);
