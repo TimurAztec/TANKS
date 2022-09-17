@@ -22,7 +22,7 @@ class Base extends Entity implements IEventListener {
     public destroy(options?: IDestroyOptions | boolean): void {
         super.destroy(options);
         if (this.getComponent(AbstractTeamComponent)) {
-            EventManager.notify(GameConstants.Events.TEAM_LOST, this.getComponent(AbstractTeamComponent).getTeam);
+            EventManager.instance().notify(GameConstants.Events.TEAM_LOST, this.getComponent(AbstractTeamComponent).getTeam);
         }
     }
     

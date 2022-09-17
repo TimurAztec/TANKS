@@ -16,9 +16,9 @@ export class Level1Scene extends GameScene {
         super();
 
         this.loadLevel(levelData);
-        EventManager.subscribe(GameConstants.Events.TEAM_LOST, this);
-        EventManager.subscribe(GameConstants.Events.TEAM_WON, this);
-        SavesHandler.saveData(Constants.GlobalNames.SCORE, 0);
+        EventManager.instance().subscribe(GameConstants.Events.TEAM_LOST, this);
+        EventManager.instance().subscribe(GameConstants.Events.TEAM_WON, this);
+        SavesHandler.instance().saveData(Constants.GlobalNames.SCORE, 0);
     }
 
     public onEvent(event: string, data: any): void {

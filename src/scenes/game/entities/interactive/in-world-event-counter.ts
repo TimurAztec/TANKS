@@ -20,10 +20,10 @@ class InWorldEventCounter extends Entity implements IEventListener {
 
     public setEventToCount(event: string): InWorldEventCounter {
         if (this._eventToCount) {
-            EventManager.unsubscribe(this._eventToCount, this);
+            EventManager.instance().unsubscribe(this._eventToCount, this);
         }
         this._eventToCount = event;
-        EventManager.subscribe(this._eventToCount, this);
+        EventManager.instance().subscribe(this._eventToCount, this);
         return this;
     }
 

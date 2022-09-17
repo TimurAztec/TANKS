@@ -1,27 +1,35 @@
 import { IEventListener } from "./utils/events/IEventListener";
 
-// this class better to have as singleton
 class EventManager {
-    private constructor() {}
+    protected static _instance: EventManager;
 
-    private static _listeners: Map<string, IEventListener[]> = new Map<string, IEventListener[]>();
+    protected constructor() {}
 
-    public static subscribe(event: string, listener: any): void {
-        const listeners: any[] = EventManager._listeners.get(event);
-        EventManager._listeners.set(event, listeners ? [...listeners, listener] : [listener]);
+    public static instance(): EventManager {
+        if (!EventManager._instance) {
+            EventManager._instance = new EventManager();
+        }
+
+        return EventManager._instance;
     }
 
-    // don't use `any`, typescript is created for types
-    public static unsubscribe(event: string, listener: any): void {
-        const listeners: IEventListener[] = EventManager._listeners.get(event);
+    protected _listeners: Map<string, IEventListener[]> = new Map<string, IEventListener[]>();
+
+    public subscribe(event: string, listener: IEventListener): void {
+        const listeners: any[] = this._listeners.get(event);
+        this._listeners.set(event, listeners ? [...listeners, listener] : [listener]);
+    }
+
+    public unsubscribe(event: string, listener: IEventListener): void {
+        const listeners: IEventListener[] = this._listeners.get(event);
         if (listeners && listeners.indexOf(listener)) {
             listeners.splice(listeners.indexOf(listener), 1);
-            EventManager._listeners.set(event, listeners);
+            this._listeners.set(event, listeners);
         }
     }
 
-    public static notify(event: string, data: any): void {
-        const listeners: IEventListener[] = EventManager._listeners.get(event);
+    public notify(event: string, data: any): void {
+        const listeners: IEventListener[] = this._listeners.get(event);
         if (listeners) {
             for (let listener of listeners) {
                 listener.onEvent(event, data);

@@ -18,7 +18,7 @@ class PauseScene extends Scene implements IEventListener {
     constructor() {
         super();
 
-        EventManager.subscribe('keydown', this);
+        EventManager.instance().subscribe('keydown', this);
 
         this.initVisuals();
         this.initActions();
@@ -87,14 +87,14 @@ class PauseScene extends Scene implements IEventListener {
     protected resumeParentScene(): void {
         SceneManager.changeScene(this._parentScene);
         this._parentScene.resume();
-        EventManager.unsubscribe('keydown', this);
+        EventManager.instance().unsubscribe('keydown', this);
         this.destroy();
     }
 
     protected exit(): void {
-        SavesHandler.saveData('score', 0);
+        SavesHandler.instance().saveData('score', 0);
         SceneManager.changeScene(new MenuScene());
-        EventManager.unsubscribe('keydown', this);
+        EventManager.instance().unsubscribe('keydown', this);
         this.destroy();
     }
 }

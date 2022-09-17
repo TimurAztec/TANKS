@@ -26,7 +26,17 @@ import { GameConstants } from "../game-constants";
 import { Constants } from "../../../constants";
 
 class EntityFactory {
-    private constructor() {}
+    protected static _instance: EntityFactory;
+
+    protected constructor() {}
+
+    public static instance(): EntityFactory {
+        if (!EntityFactory._instance) {
+            EntityFactory._instance = new EntityFactory();
+        }
+
+        return EntityFactory._instance;
+    }
 
     public static getEntity(entityID: number): Entity {
         switch (entityID) {
@@ -59,7 +69,7 @@ class EntityFactory {
                 playerTank.setComponent(weapon);
                 playerTank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_1));
                 playerTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    EventManager.notify(GameConstants.Events.TEAM_LOST, playerTank.getComponent(AbstractTeamComponent).getTeam);
+                    EventManager.instance().notify(GameConstants.Events.TEAM_LOST, playerTank.getComponent(AbstractTeamComponent).getTeam);
                 }));
                 return playerTank;
             }
@@ -73,8 +83,8 @@ class EntityFactory {
                 tank.setComponent(weapon);
                 tank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
                 tank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    EventManager.notify(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2, tank);
-                    SavesHandler.saveData(Constants.GlobalNames.SCORE, ((SavesHandler.loadData(Constants.GlobalNames.SCORE) as number) + 10));
+                    EventManager.instance().notify(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2, tank);
+                    SavesHandler.instance().saveData(Constants.GlobalNames.SCORE, ((SavesHandler.instance().loadData(Constants.GlobalNames.SCORE) as number) + 10));
                 }));
                 return tank;
             }
@@ -102,7 +112,7 @@ class EntityFactory {
                 supportTank.setComponent(weapon);
                 supportTank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
                 supportTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    SavesHandler.saveData(Constants.GlobalNames.SCORE, ((SavesHandler.loadData(Constants.GlobalNames.SCORE) as number) + 10));
+                    SavesHandler.instance().saveData(Constants.GlobalNames.SCORE, ((SavesHandler.instance().loadData(Constants.GlobalNames.SCORE) as number) + 10));
                 }));
                 return supportTank;
             }
@@ -131,7 +141,7 @@ class EntityFactory {
                     .timesToCount(12)
                     .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
                     .onCountEnded(() => {
-                        EventManager.notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
+                        EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
                     });
                 return counter
             }

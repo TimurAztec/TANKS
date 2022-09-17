@@ -15,8 +15,8 @@ export class Level2Scene extends GameScene {
         super();
 
         this.loadLevel(levelData);
-        EventManager.subscribe(GameConstants.Events.TEAM_LOST, this);
-        EventManager.subscribe(GameConstants.Events.TEAM_WON, this);
+        EventManager.instance().subscribe(GameConstants.Events.TEAM_LOST, this);
+        EventManager.instance().subscribe(GameConstants.Events.TEAM_WON, this);
     }
 
 
