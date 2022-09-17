@@ -50,6 +50,11 @@ class EntityFactory {
                 floor.setSkin({assetName: Constants.AssetsTextures.GRASS, numberOfFrames: 10, animationSpeed: 0.1});
                 return floor;
             }
+            case GameConstants.EntityIDs.STONE_PATH: {
+                const floor = new Floor();
+                floor.setSkin({assetName: Constants.AssetsTextures.STONE_PATH, numberOfFrames: 1, });
+                return floor;
+            }
             case GameConstants.EntityIDs.LEAVES:
                 return new Leaves();
             case GameConstants.EntityIDs.HARD_WALL:
@@ -134,11 +139,51 @@ class EntityFactory {
                     spawner.setSkin({hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }
-            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER: {
+            case GameConstants.EntityIDs.ENEMY_MEDIUM_SPAWNER: {
+                const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getEntity(902))
+                    .setTimeBetweenSpawns(250)
+                    .setCollisionGroup([
+                        GameConstants.EntityTypes.TANK,
+                        GameConstants.EntityTypes.TRACTOR,
+                        GameConstants.EntityTypes.DEAD_TANK,
+                        GameConstants.EntityTypes.HARD_WALL,
+                        GameConstants.EntityTypes.SMALL_WALL,
+                        GameConstants.EntityTypes.WATER,
+                        GameConstants.EntityTypes.AT_HEDGEHOGS,
+                        GameConstants.EntityTypes.BASE
+                    ])
+                    .setTimesToSpawn(8)
+                    .setMaxAmountPerTime(2);
+                    spawner.setSkin({hitboxWidth: 32, hitboxHeight: 32})
+                    return spawner
+            }
+            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER_SMALL: {
                 const counter = new InWorldEventCounter();
                 counter.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
                 counter
                     .timesToCount(12)
+                    .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
+                    .onCountEnded(() => {
+                        EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
+                    });
+                return counter
+            }
+            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER_MEDIUM: {
+                const counter = new InWorldEventCounter();
+                counter.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
+                counter
+                    .timesToCount(24)
+                    .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
+                    .onCountEnded(() => {
+                        EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
+                    });
+                return counter
+            }
+            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER_BIG: {
+                const counter = new InWorldEventCounter();
+                counter.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
+                counter
+                    .timesToCount(36)
                     .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
                     .onCountEnded(() => {
                         EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);

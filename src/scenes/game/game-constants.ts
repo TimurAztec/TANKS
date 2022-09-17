@@ -28,6 +28,7 @@ export namespace GameConstants {
     export enum EntityIDs {
         DIRT = 101,
         GRASS = 102,
+        STONE_PATH = 103,
         LEAVES = 112,
         HARD_WALL = 201,
         WALL = 202,
@@ -39,7 +40,10 @@ export namespace GameConstants {
         ENEMY_SOLDIER = 904,
         ENEMY_SUPPORT_TANK = 905,
         ENEMY_SMALL_SPAWNER = 912,
-        ENEMY_DEATH_COUNTER = 919,
+        ENEMY_MEDIUM_SPAWNER = 913,
+        ENEMY_DEATH_COUNTER_SMALL = 916,
+        ENEMY_DEATH_COUNTER_MEDIUM = 917,
+        ENEMY_DEATH_COUNTER_BIG = 918,
         RANDOM_BONUS_SPAWNER = 921,
         PLAYER_BASE = 777
     }
