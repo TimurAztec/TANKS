@@ -16,6 +16,7 @@ import {getTitlePosition, validatePointIsPositive} from "../../../../utils/utils
 import { SceneManager } from "../../../../scene-manager";
 import { Constants } from "../../../../constants";
 import { GameConstants } from "../../game-constants";
+import { Tractor } from "./tractor";
 
 class Bullet extends Entity {
     protected _speed: number = 6;
@@ -25,46 +26,47 @@ class Bullet extends Entity {
         super(source);
         this._speed = source?._speed || 6;
         this.setComponent(new BasicTeamComponent());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.HARD_WALL:
-                    this.explode(new SmallExplosionFX());
-                    break;
-                case GameConstants.EntityTypes.SMALL_WALL:
-                    this.explode(new SmallExplosionFX());
-                    object.destroy();
-                    break;
-                case GameConstants.EntityTypes.TANK:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+        this.setComponent(new BasicAabbCollisionComponent()
+            .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, ((object: Entity) => {
+                this.explode(new SmallExplosionFX());
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.SMALL_WALL, ((object: Entity) => {
+                this.explode(new SmallExplosionFX());
+                object.destroy();
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.TANK, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.destroy();
                     (object as Tank).takeDamage(1);
-                    break;
-                case GameConstants.EntityTypes.DEAD_TANK:
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.DEAD_TANK, ((object: Entity) => {
+                this.destroy();
+                (object as Tank).takeDamage(1);
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.destroy();
-                    (object as DeadTank).takeDamage(1);
-                    break;
-                case GameConstants.EntityTypes.TRACTOR:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
-                    this.destroy();
-                    (object as Tank).takeDamage(1);
-                    break;
-                case GameConstants.EntityTypes.SOLDIER:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                    (object as Tractor).takeDamage(1);
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.SOLDIER, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.explode(new SmallExplosionFX());
                     (object as Soldier).takeDamage(9999);
-                    break;
-                case GameConstants.EntityTypes.BULLET:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BULLET, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.explode(new SmallExplosionFX());
                     object.destroy();
-                    break;
-                case GameConstants.EntityTypes.BASE:
-                    this.explode(new BigExplosionFX());
-                    object.destroy();
-                    break;
-            }
-        }));
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BULLET, ((object: Entity) => {
+                this.explode(new BigExplosionFX());
+                object.destroy();
+            }))
+        );
         this.setComponent(new ProjectileMovementComponent());
     }
 

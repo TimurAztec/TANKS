@@ -17,17 +17,12 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
         super(source);
         this.setComponent(new RandomControlComponent());
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
+        this.setComponent(new BasicAabbCollisionComponent().onCollision((object: Entity) => {
             if (this._collisionGroup.includes(object.entityType)) {
                 this._collides = true;
             }
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.HARD_WALL:
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-            }
-        }));
+        })
+        .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, () => {this.getComponent(AbstractMovementComponent).collides()}));
     }
 
     public setComponent(component: IComponent): void {

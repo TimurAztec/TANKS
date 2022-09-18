@@ -11,6 +11,10 @@ export abstract class AbstractTeamComponent extends AbstractComponent implements
         return this._team;
     }
 
+    public checkTeam(teamComponent: AbstractTeamComponent): boolean {
+        return this.getTeam() == teamComponent.getTeam();
+    }
+
     public setTeam(team: string): AbstractComponent {
         this._team = team;
         this._setTeamCallback();

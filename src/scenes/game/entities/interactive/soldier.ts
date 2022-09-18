@@ -12,6 +12,7 @@ import { DeadSoldier } from "../tiles/dead-soldier";
 import {getTitlePosition, validatePointIsPositive} from "../../../../utils/utils";
 import { SceneManager } from "../../../../scene-manager";
 import { GameConstants } from "../../game-constants";
+import { AbstractTeamComponent } from "../behaviors/team/abstract-team-component";
 
 class Soldier extends Entity {
     public speed: number;
@@ -23,25 +24,26 @@ class Soldier extends Entity {
         this.speed = source?.speed || 0.5;
         this.health = source?.health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
-            const stopObject: string[] = [
-                GameConstants.EntityTypes.HARD_WALL,
-                GameConstants.EntityTypes.SMALL_WALL,
-                GameConstants.EntityTypes.TANK,
-                GameConstants.EntityTypes.TRACTOR
-            ];
-            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.TANK:
+        this.setComponent(new BasicAabbCollisionComponent()
+            .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SMALL_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.TANK, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.takeDamage(9999);
-                    break;
-                case GameConstants.EntityTypes.BULLET:
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.takeDamage(9999);
-                    object.destroy();
-                    break;
-            }
-        }));
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BULLET, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
+                    this.takeDamage(9999);
+                }
+            }))
+
+        );
     }
 
     public takeDamage(damage: number): void {

@@ -16,7 +16,7 @@ class AmountBasedSpawner extends Spawner {
 
     constructor(source?: AmountBasedSpawner) {
         super(source);
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+        this.setComponent(new BasicAabbCollisionComponent().onCollision((object: Entity) => {
             if (object == this) return;
             if (this._collisionGroup.includes(object.entityType)) {
                 this._collides = true;

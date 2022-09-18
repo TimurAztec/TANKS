@@ -1,5 +1,5 @@
 import {Entity} from "../entity";
-import {AnimatedSprite, Loader, Point} from "pixi.js";
+import {Loader, Point} from "pixi.js";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
 import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-component";
 import {IComponent} from "../behaviors/IComponent";
@@ -33,32 +33,26 @@ class Tank extends Entity {
         this.speed = source?.speed || 2;
         this.health = source?.health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
-            const stopObject: string[] = [
-                GameConstants.EntityTypes.HARD_WALL,
-                GameConstants.EntityTypes.SMALL_WALL,
-                GameConstants.EntityTypes.AT_HEDGEHOGS,
-                GameConstants.EntityTypes.TANK,
-                GameConstants.EntityTypes.DEAD_TANK,
-                GameConstants.EntityTypes.TRACTOR
-            ];
-            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.SOLDIER:
-                    (object as Soldier).takeDamage(9999);
-                    break;
-                case GameConstants.EntityTypes.BULLET:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+        this.setComponent(new BasicAabbCollisionComponent()
+            .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SMALL_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.AT_HEDGEHOGS, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.TANK, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.DEAD_TANK, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SOLDIER, ((object: Entity) => {(object as Soldier).takeDamage(9999)}))
+            .onCollidedWith(GameConstants.EntityTypes.BULLET, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     this.takeDamage(1);
                     object.destroy();
-                    break;
-                case GameConstants.EntityTypes.BUFF:
-                    new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
-                    this.setComponent((object as Buff).getBuff());
-                    (object as Buff).destroy();
-            }
-        }));
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BUFF, ((object: Entity) => {
+                new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
+                this.setComponent((object as Buff).getBuff());
+                (object as Buff).destroy();
+            }))
+        );
     }
 
     public takeDamage(damage: number): void {
