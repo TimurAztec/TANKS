@@ -26,7 +26,17 @@ import { GameConstants } from "../game-constants";
 import { Constants } from "../../../constants";
 
 class EntityFactory {
-    private constructor() {}
+    protected static _instance: EntityFactory;
+
+    protected constructor() {}
+
+    public static instance(): EntityFactory {
+        if (!EntityFactory._instance) {
+            EntityFactory._instance = new EntityFactory();
+        }
+
+        return EntityFactory._instance;
+    }
 
     public static getEntity(entityID: number): Entity {
         switch (entityID) {
@@ -38,6 +48,11 @@ class EntityFactory {
             case GameConstants.EntityIDs.GRASS: {
                 const floor = new Floor();
                 floor.setSkin({assetName: Constants.AssetsTextures.GRASS, numberOfFrames: 10, animationSpeed: 0.1});
+                return floor;
+            }
+            case GameConstants.EntityIDs.STONE_PATH: {
+                const floor = new Floor();
+                floor.setSkin({assetName: Constants.AssetsTextures.STONE_PATH, numberOfFrames: 1, });
                 return floor;
             }
             case GameConstants.EntityIDs.LEAVES:
@@ -59,7 +74,7 @@ class EntityFactory {
                 playerTank.setComponent(weapon);
                 playerTank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_1));
                 playerTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    EventManager.notify(GameConstants.Events.TEAM_LOST, playerTank.getComponent(AbstractTeamComponent).getTeam);
+                    EventManager.instance().notify(GameConstants.Events.GAME_OVER, playerTank.getComponent(AbstractTeamComponent).getTeam);
                 }));
                 return playerTank;
             }
@@ -73,8 +88,8 @@ class EntityFactory {
                 tank.setComponent(weapon);
                 tank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
                 tank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    EventManager.notify(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2, tank);
-                    SavesHandler.saveData(Constants.GlobalNames.SCORE, ((SavesHandler.loadData(Constants.GlobalNames.SCORE) as number) + 10));
+                    EventManager.instance().notify(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2, tank);
+                    SavesHandler.instance().saveData(Constants.GlobalNames.SCORE, ((SavesHandler.instance().loadData(Constants.GlobalNames.SCORE) as number) + 10));
                 }));
                 return tank;
             }
@@ -102,7 +117,7 @@ class EntityFactory {
                 supportTank.setComponent(weapon);
                 supportTank.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
                 supportTank.setComponent(new BasicDestroyComponent().onDestroy(() => {
-                    SavesHandler.saveData(Constants.GlobalNames.SCORE, ((SavesHandler.loadData(Constants.GlobalNames.SCORE) as number) + 10));
+                    SavesHandler.instance().saveData(Constants.GlobalNames.SCORE, ((SavesHandler.instance().loadData(Constants.GlobalNames.SCORE) as number) + 10));
                 }));
                 return supportTank;
             }
@@ -124,14 +139,54 @@ class EntityFactory {
                     spawner.setSkin({hitboxWidth: 32, hitboxHeight: 32})
                     return spawner
             }
-            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER: {
+            case GameConstants.EntityIDs.ENEMY_MEDIUM_SPAWNER: {
+                const spawner =  new WanderingAmountBasedSpawner().setPrototypeEntity(EntityFactory.getEntity(902))
+                    .setTimeBetweenSpawns(250)
+                    .setCollisionGroup([
+                        GameConstants.EntityTypes.TANK,
+                        GameConstants.EntityTypes.TRACTOR,
+                        GameConstants.EntityTypes.DEAD_TANK,
+                        GameConstants.EntityTypes.HARD_WALL,
+                        GameConstants.EntityTypes.SMALL_WALL,
+                        GameConstants.EntityTypes.WATER,
+                        GameConstants.EntityTypes.AT_HEDGEHOGS,
+                        GameConstants.EntityTypes.BASE
+                    ])
+                    .setTimesToSpawn(8)
+                    .setMaxAmountPerTime(2);
+                    spawner.setSkin({hitboxWidth: 32, hitboxHeight: 32})
+                    return spawner
+            }
+            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER_SMALL: {
                 const counter = new InWorldEventCounter();
                 counter.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
                 counter
                     .timesToCount(12)
                     .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
                     .onCountEnded(() => {
-                        EventManager.notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
+                        EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
+                    });
+                return counter
+            }
+            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER_MEDIUM: {
+                const counter = new InWorldEventCounter();
+                counter.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
+                counter
+                    .timesToCount(24)
+                    .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
+                    .onCountEnded(() => {
+                        EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
+                    });
+                return counter
+            }
+            case GameConstants.EntityIDs.ENEMY_DEATH_COUNTER_BIG: {
+                const counter = new InWorldEventCounter();
+                counter.setComponent(new BasicTeamComponent().setTeam(GameConstants.Teams.PLAYER_2));
+                counter
+                    .timesToCount(36)
+                    .setEventToCount(GameConstants.Events.ENTITY_DESTROY + GameConstants.Teams.PLAYER_2)
+                    .onCountEnded(() => {
+                        EventManager.instance().notify(GameConstants.Events.TEAM_WON, GameConstants.Teams.PLAYER_1);
                     });
                 return counter
             }

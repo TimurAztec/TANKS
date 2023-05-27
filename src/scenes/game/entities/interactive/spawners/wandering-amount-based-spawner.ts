@@ -17,21 +17,12 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
         super(source);
         this.setComponent(new RandomControlComponent());
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
+        this.setComponent(new BasicAabbCollisionComponent().onCollision((object: Entity) => {
             if (this._collisionGroup.includes(object.entityType)) {
                 this._collides = true;
             }
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.HARD_WALL:
-                    this.getComponent(AbstractMovementComponent).collides();
-                    break;
-            }
-        }));
-    }
-
-    public clone(): WanderingAmountBasedSpawner {
-        return new WanderingAmountBasedSpawner(this);
+        })
+        .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, () => {this.getComponent(AbstractMovementComponent).collides()}));
     }
 
     public setComponent(component: IComponent): void {
@@ -57,21 +48,18 @@ class WanderingAmountBasedSpawner extends AmountBasedSpawner {
         const tilePos = getTitlePosition(this.position, tileSize);
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
-        }
-        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
-        }
-        if (vectorTilePos.y != 0 && tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
-        }
-        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
-        }
-        if (vectorTilePos.x != 0 && tileMap[vectorTilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroupAdditionalTilesRelativePositions = [
+            new Point(vectorTilePos.x,vectorTilePos.y),
+            new Point(vectorTilePos.x - 1,vectorTilePos.y),
+            new Point(vectorTilePos.x + 1,vectorTilePos.y),
+            new Point(vectorTilePos.x,vectorTilePos.y - 1),
+            new Point(vectorTilePos.x,vectorTilePos.y + 1),
+        ]
+        for (const additionalTilePos of collisionGroupAdditionalTilesRelativePositions) {
+            if (tileMap[additionalTilePos.y] && tileMap[additionalTilePos.y][additionalTilePos.x]) {
+                collisionGroup.push(...tileMap[additionalTilePos.y][additionalTilePos.x]);
+            }
         }
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }

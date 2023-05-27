@@ -18,16 +18,12 @@ class Water extends Entity {
         super(source);
         this.setSkin({ assetName: Constants.AssetsTextures.WATER });
         this.setComponent(new StaticMovementComponent());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
-            const drownObject: string[] = [
-                GameConstants.EntityTypes.TANK,
-                GameConstants.EntityTypes.DEAD_TANK,
-                GameConstants.EntityTypes.TRACTOR,
-                GameConstants.EntityTypes.SOLDIER
-            ];
-            if (drownObject.includes(object.entityType)) { this.drown(object); }
-        }));
+        this.setComponent(new BasicAabbCollisionComponent()
+            .onCollidedWith(GameConstants.EntityTypes.TANK, ((object: Entity) => {this.drown(object)}))
+            .onCollidedWith(GameConstants.EntityTypes.DEAD_TANK, ((object: Entity) => {this.drown(object)}))
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, ((object: Entity) => {this.drown(object)}))
+            .onCollidedWith(GameConstants.EntityTypes.SOLDIER, ((object: Entity) => {this.drown(object)}))
+            .onCollidedWith(GameConstants.EntityTypes.DEAD_SOLDIER, ((object: Entity) => {this.drown(object)})));
     }
 
     protected drown(object: Entity): void {
@@ -44,7 +40,7 @@ class Water extends Entity {
     public updateTilingData(tileMap: any[][], tileSize: number): void {
         const tilePos = getTitlePosition(this.position, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }
 
@@ -62,11 +58,6 @@ class Water extends Entity {
             }
         }
     }
-
-    public clone(): Water {
-        return new Water(this);
-    }
-
 }
 
 export { Water }

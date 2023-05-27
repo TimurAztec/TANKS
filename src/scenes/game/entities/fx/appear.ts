@@ -12,9 +12,6 @@ class AppearFX extends Entity {
         (this._skin as AnimatedSprite).loop = false;
         (this._skin as AnimatedSprite).play();
     }
-
-    clone(): AppearFX { return new AppearFX }
-
 }
 
 export { AppearFX }

@@ -36,6 +36,7 @@ const assets = [
     { name: Constants.AssetsTextures.AT_BARRICADE, url: "./assets/tiles/anti_tank_hedgehogs.png" },
     { name: Constants.AssetsTextures.HARD_WALL, url: "./assets/tiles/wall.png" },
     { name: Constants.AssetsTextures.DIRT, url: "./assets/tiles/dirt.png" },
+    { name: Constants.AssetsTextures.STONE_PATH, url: "./assets/tiles/stone_path.png" },
     { name: Constants.AssetsTextures.GRASS, url: "./assets/tiles/grass.png" },
     { name: Constants.AssetsTextures.WATER, url: "./assets/tiles/water.png" },
     { name: Constants.AssetsSounds.SHOT, url: "./assets/sounds/shot.wav" },

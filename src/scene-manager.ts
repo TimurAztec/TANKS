@@ -1,4 +1,4 @@
-import { Application, Point } from "pixi.js";
+import { Application, Point, Ticker } from "pixi.js";
 import {Scene} from "./scenes/scene";
 
 export class SceneManager {
@@ -11,9 +11,6 @@ export class SceneManager {
     private static _width: number;
     private static _height: number;
 
-    private static _lastTick: number = 0;
-
-
     public static get width(): number {
         return SceneManager._width;
     }
@@ -24,13 +21,11 @@ export class SceneManager {
         return SceneManager._currentScene;
     }
 
-    // Use this function ONCE to start the entire game
     public static initialize(width: number, height: number): void {
         if (!this._app) {
             SceneManager._width = width;
             SceneManager._height = height;
 
-            // Create our pixi app
             SceneManager._app = new Application({
                 view: document.getElementById("game-canvas") as HTMLCanvasElement,
                 resolution: window.devicePixelRatio || 1,
@@ -40,7 +35,7 @@ export class SceneManager {
                 height: height
             });
 
-            requestAnimationFrame(this.tick.bind(this));
+            SceneManager._app.ticker.add(SceneManager.update.bind(this));
         }
     }
 
@@ -51,40 +46,34 @@ export class SceneManager {
         }
     }
 
-    // Call this function when you want to go to a new scene
-    public static changeScene(scene: Scene): void {
-        if (SceneManager._currentScene) {
-            SceneManager._currentScene.visible = false;
-            // SceneManager._currentScene.destroy();
-            // SceneManager._app.stage.removeChild(SceneManager._currentScene.view);
+    public static changeScene(scene: Scene | string): void {
+        let newCurrentScene: Scene;
+        if (typeof scene == 'string') {
+            newCurrentScene = SceneManager._app.stage.children.find((child) => child.name == scene) as Scene;
+        }
+        if (scene instanceof Scene) {
+            newCurrentScene = scene;
         }
 
-        // Add the new one
-        SceneManager._currentScene = scene;
+        if (newCurrentScene) {
+            if (SceneManager._currentScene) {
+                SceneManager._currentScene.visible = false;
+            }
 
-        SceneManager._currentScene.scale.set((SceneManager._app.renderer.height + SceneManager._app.renderer.height/3)/SceneManager.width,
-            SceneManager._app.renderer.height/SceneManager.height);
+            SceneManager._currentScene = newCurrentScene;
 
-        if (!SceneManager._app.stage.children.includes(SceneManager._currentScene)) {
-            SceneManager._app.stage.addChild(SceneManager._currentScene);
+            SceneManager._currentScene.scale.set((SceneManager._app.renderer.height + SceneManager._app.renderer.height/3)/SceneManager.width,
+                SceneManager._app.renderer.height/SceneManager.height);
+
+            if (!SceneManager._app.stage.children.includes(SceneManager._currentScene)) {
+                SceneManager._app.stage.addChild(SceneManager._currentScene);
+            }
+            SceneManager._currentScene.visible = true;
         }
-        SceneManager._currentScene.visible = true;
     }
 
     public static moveCameraTo(position: Point): void {
         SceneManager._cameraPos = new Point().copyFrom(position);
-    }
-
-    private static tick(): void {
-        let newTick = Date.now();
-        let deltaTime = newTick - this._lastTick;
-        this._lastTick = newTick;
-        if (deltaTime < 0) deltaTime = 0;
-        if (deltaTime > 100) deltaTime = 100;
-        let deltaFrame = deltaTime * 60 / 1000;
-
-        SceneManager.update(deltaFrame);
-        requestAnimationFrame(this.tick.bind(this));
     }
 
     private static update(dt: number): void {

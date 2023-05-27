@@ -8,8 +8,8 @@ class PlayerControlComponent extends AbstractControlComponent implements IEventL
 
     constructor(source?: PlayerControlComponent) {
         super(source);
-        EventManager.subscribe('keydown', this);
-        EventManager.subscribe('keyup', this);
+        EventManager.instance().subscribe('keydown', this);
+        EventManager.instance().subscribe('keyup', this);
     }
 
     public onEvent(event:string, data:any): void {
@@ -54,7 +54,6 @@ class PlayerControlComponent extends AbstractControlComponent implements IEventL
         this.action();
     }
 
-    public clone(): PlayerControlComponent { return new PlayerControlComponent(this) }
 }
 
 export { PlayerControlComponent }

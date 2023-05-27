@@ -50,8 +50,6 @@ class SpawnSupportBuffComponent extends AbstractBuffComponent implements IBuffCo
         super.firstUpdate();
     }
 
-    public clone(): SpawnSupportBuffComponent { return new SpawnSupportBuffComponent(this) }
-
 }
 
 export {SpawnSupportBuffComponent}

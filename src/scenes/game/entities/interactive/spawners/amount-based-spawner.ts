@@ -16,17 +16,13 @@ class AmountBasedSpawner extends Spawner {
 
     constructor(source?: AmountBasedSpawner) {
         super(source);
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
+        this.setComponent(new BasicAabbCollisionComponent().onCollision((object: Entity) => {
             if (object == this) return;
             if (this._collisionGroup.includes(object.entityType)) {
                 this._collides = true;
             }
         }));
         this.setComponent(new StaticMovementComponent());
-    }
-
-    public clone(): AmountBasedSpawner {
-        return new AmountBasedSpawner(this);
     }
 
     public setTimeBetweenSpawns(time: number): AmountBasedSpawner {
@@ -56,7 +52,7 @@ class AmountBasedSpawner extends Spawner {
     public updateTilingData(tileMap: any[][], tileSize: number): void {
         const tilePos = getTitlePosition(this.position, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }
 

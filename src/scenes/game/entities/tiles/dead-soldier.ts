@@ -7,10 +7,6 @@ class DeadSoldier extends Entity {
         super(source);
         this.setSkin({assetName: Constants.AssetsTextures.SOLIDER_DEAD});
     }
-
-    public clone(): DeadSoldier {
-        return new DeadSoldier(this);
-    }
 }
 
 export { DeadSoldier }

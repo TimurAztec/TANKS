@@ -23,9 +23,6 @@ class ImmortalBuffComponent extends AbstractBuffComponent implements IBuffCompon
         this._entity.alpha = 1;
         super.endBuff();
     }
-
-    public clone(): ImmortalBuffComponent { return new ImmortalBuffComponent(this) }
-
 }
 
 export {ImmortalBuffComponent}

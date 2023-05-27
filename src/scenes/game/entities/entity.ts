@@ -74,7 +74,10 @@ abstract class Entity extends Container implements IEntity, IEventListener {
     }
 
     // Clones entity without PIXI properties
-    public abstract clone(): Entity;
+    public clone(): Entity {
+        const cloned = this.constructor as new (value: Entity) => this;
+        return new cloned(this);
+    };
 
     public setSkin(options?: SkinOptions): void {
         this._skinOptions = options;

@@ -1,20 +1,18 @@
-import {Scene} from "../scene";
 import {SceneManager} from "../../scene-manager";
 import {Loader, Point, Sprite, Text, TextStyle} from "pixi.js";
 import { Level1Scene } from "../game/levels/level1/level1";
 import {SavesHandler} from "../../utils/saves-handler";
 import {Constants} from "../../constants";
+import { PainScreenScene } from "./plain-screen-scene";
 
-export class MenuScene extends Scene {
+export class MenuScene extends PainScreenScene {
 
     protected background: Sprite;
     protected startButton: Sprite;
     protected score: Text;
     protected logoText: Text;
 
-    constructor() {
-        super();
-
+    protected initVisuals(): void {
         this.background = new Sprite(Loader.shared.resources[Constants.AssetsTextures.MENU_BG].texture);
         this.logoText = new Text('Orcs Thunder', new TextStyle({
             fontSize: 84,
@@ -43,8 +41,8 @@ export class MenuScene extends Scene {
         this.addChild(this.background);
         this.addChild(this.logoText);
 
-        if (SavesHandler.loadData('score')) {
-            this.score = new Text(`Score: ${SavesHandler.loadData('score') as number}`, new TextStyle({
+        if (SavesHandler.instance().loadData('score')) {
+            this.score = new Text(`Score: ${SavesHandler.instance().loadData('score') as number}`, new TextStyle({
                 fontSize: 84,
                 align: "center",
                 fill: "#ffffff",
@@ -54,10 +52,8 @@ export class MenuScene extends Scene {
             this.score.y = SceneManager.height / 2;
             this.addChild(this.score);
         }
-
         this.addChild(this.startButton);
 
-        this.initActions();
         SceneManager.moveCameraTo(new Point(0, 0));
     }
 
@@ -69,7 +65,6 @@ export class MenuScene extends Scene {
 
     public startGame(): void {
         SceneManager.changeScene(new Level1Scene());
-        this.destroy();
     }
 
 }

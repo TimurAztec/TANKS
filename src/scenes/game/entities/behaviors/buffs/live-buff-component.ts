@@ -12,8 +12,6 @@ class LiveBuffComponent extends AbstractBuffComponent implements IBuffComponent{
         super.firstUpdate();
     }
 
-    public clone(): LiveBuffComponent { return new LiveBuffComponent(this) }
-
 }
 
 export {LiveBuffComponent}

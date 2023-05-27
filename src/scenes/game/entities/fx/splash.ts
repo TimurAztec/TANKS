@@ -12,8 +12,6 @@ class Splash extends Entity {
         this._skin.play();
     }
 
-    clone(): Splash { return new Splash }
-
 }
 
 export { Splash }

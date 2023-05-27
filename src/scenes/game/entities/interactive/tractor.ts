@@ -31,39 +31,37 @@ class Tractor extends Entity {
         this.speed = source?.speed || 3;
         this.health = source?.health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
-            const stopObject: string[] = [
-                GameConstants.EntityTypes.HARD_WALL,
-                GameConstants.EntityTypes.SMALL_WALL,
-                GameConstants.EntityTypes.AT_HEDGEHOGS,
-                GameConstants.EntityTypes.TANK,
-                GameConstants.EntityTypes.DEAD_TANK,
-                GameConstants.EntityTypes.TRACTOR
-            ];
-            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.TANK:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
+        this.setComponent(new BasicAabbCollisionComponent()
+            .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SMALL_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.AT_HEDGEHOGS, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.DEAD_TANK, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SOLDIER, ((object: Entity) => {(object as Soldier).takeDamage(9999)}))
+            .onCollidedWith(GameConstants.EntityTypes.TANK, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
                     (object as Tank).takeDamage(1);
-                    break;
-                case GameConstants.EntityTypes.TRACTOR:
-                    if (this.getComponent(AbstractTeamComponent).getTeam() == object.getComponent(AbstractTeamComponent).getTeam()) break;
-                    (object as Tank).takeDamage(1);
-                    break;
-                case GameConstants.EntityTypes.SOLDIER:
-                    (object as Soldier).takeDamage(9999);
-                    break;
-                case GameConstants.EntityTypes.BUFF:
-                    new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
-                    this.setComponent((object as Buff).getBuff());
-                    (object as Buff).destroy();
-            }
-        }));
-    }
-
-    public clone(): Tractor {
-        return new Tractor(this);
+                    this.getComponent(AbstractMovementComponent).collides();
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
+                    (object as Tractor).takeDamage(1);
+                    this.getComponent(AbstractMovementComponent).collides();
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BULLET, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
+                    this.takeDamage(1);
+                    object.destroy();
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BUFF, ((object: Entity) => {
+                new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
+                this.setComponent((object as Buff).getBuff());
+                (object as Buff).destroy();
+            }))
+        );
     }
 
     public takeDamage(damage: number): void {
@@ -83,7 +81,7 @@ class Tractor extends Entity {
                     this._moveSound.pause();
                 }
                 if (!this._skin.playing) {
-                    this._skin.gotoAndPlay(0); 
+                    this._skin.gotoAndPlay(0);
                     this._moveSound.play();
                 }
 
@@ -114,33 +112,22 @@ class Tractor extends Entity {
         const tilePos = getTitlePosition(this.position, tileSize);
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x - 1]]
-        }
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x + 1]]
-        }
-        if (tileMap[tilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y + 1][tilePos.x]]
-        }
-        if (tileMap[tilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y - 1][tilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
-        }
-        if (tileMap[vectorTilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroupAdditionalTilesRelativePositions = [
+            new Point(tilePos.x-1,tilePos.y),
+            new Point(tilePos.x+1,tilePos.y),
+            new Point(tilePos.x,tilePos.y-1),
+            new Point(tilePos.x,tilePos.y+1),
+            new Point(vectorTilePos.x,vectorTilePos.y),
+            new Point(vectorTilePos.x - 1,vectorTilePos.y),
+            new Point(vectorTilePos.x + 1,vectorTilePos.y),
+            new Point(vectorTilePos.x,vectorTilePos.y - 1),
+            new Point(vectorTilePos.x,vectorTilePos.y + 1),
+        ]
+        for (const additionalTilePos of collisionGroupAdditionalTilesRelativePositions) {
+            if (tileMap[additionalTilePos.y] && tileMap[additionalTilePos.y][additionalTilePos.x]) {
+                collisionGroup.push(...tileMap[additionalTilePos.y][additionalTilePos.x]);
+            }
         }
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }

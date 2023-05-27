@@ -1,5 +1,5 @@
 import {Entity} from "../entity";
-import {AnimatedSprite, Loader, Point} from "pixi.js";
+import {Loader, Point} from "pixi.js";
 import {DirectionalWalkMovementBehavior} from "../behaviors/movement/direct-walk-movement-component";
 import {AbstractWeaponComponent} from "../behaviors/weapon/abstract-weapon-component";
 import {IComponent} from "../behaviors/IComponent";
@@ -33,31 +33,26 @@ class Tank extends Entity {
         this.speed = source?.speed || 2;
         this.health = source?.health || 1;
         this.setComponent(new DirectionalWalkMovementBehavior());
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
-            const stopObject: string[] = [
-                GameConstants.EntityTypes.HARD_WALL,
-                GameConstants.EntityTypes.SMALL_WALL,
-                GameConstants.EntityTypes.AT_HEDGEHOGS,
-                GameConstants.EntityTypes.TANK,
-                GameConstants.EntityTypes.DEAD_TANK,
-                GameConstants.EntityTypes.TRACTOR
-            ];
-            if (stopObject.includes(object.entityType)) { this.getComponent(AbstractMovementComponent).collides(); }
-            switch (object.entityType) {
-                case GameConstants.EntityTypes.SOLDIER:
-                    (object as Soldier).takeDamage(9999);
-                    break;
-                case GameConstants.EntityTypes.BUFF:
-                    new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
-                    this.setComponent((object as Buff).getBuff());
-                    (object as Buff).destroy();
-            }
-        }));
-    }
-
-    public clone(): Tank {
-        return new Tank(this);
+        this.setComponent(new BasicAabbCollisionComponent()
+            .onCollidedWith(GameConstants.EntityTypes.HARD_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SMALL_WALL, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.AT_HEDGEHOGS, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.TANK, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.DEAD_TANK, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.TRACTOR, () => {this.getComponent(AbstractMovementComponent).collides()})
+            .onCollidedWith(GameConstants.EntityTypes.SOLDIER, ((object: Entity) => {(object as Soldier).takeDamage(9999)}))
+            .onCollidedWith(GameConstants.EntityTypes.BULLET, ((object: Entity) => {
+                if (!this.getComponent(AbstractTeamComponent).checkTeam(object.getComponent(AbstractTeamComponent))) {
+                    this.takeDamage(1);
+                    object.destroy();
+                }
+            }))
+            .onCollidedWith(GameConstants.EntityTypes.BUFF, ((object: Entity) => {
+                new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.BONUS].url}).play();
+                this.setComponent((object as Buff).getBuff());
+                (object as Buff).destroy();
+            }))
+        );
     }
 
     public takeDamage(damage: number): void {
@@ -108,33 +103,22 @@ class Tank extends Entity {
         const tilePos = getTitlePosition(this.position, tileSize);
         const vectorTilePos = getTitlePosition(this.getComponent(AbstractMovementComponent).rotationVector, tileSize);
         if (!tileMap || !validatePointIsPositive(tilePos) || !validatePointIsPositive(vectorTilePos)) return;
-        let collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x - 1]]
-        }
-        if (tileMap[tilePos.y] && tileMap[tilePos.y][tilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y][tilePos.x + 1]]
-        }
-        if (tileMap[tilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y + 1][tilePos.x]]
-        }
-        if (tileMap[tilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[tilePos.y - 1][tilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x - 1]]
-        }
-        if (tileMap[vectorTilePos.y] && tileMap[vectorTilePos.y][vectorTilePos.x + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y][vectorTilePos.x + 1]]
-        }
-        if (tileMap[vectorTilePos.y + 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y + 1][vectorTilePos.x]]
-        }
-        if (tileMap[vectorTilePos.y - 1]) {
-            collisionGroup = [...collisionGroup, ...tileMap[vectorTilePos.y - 1][vectorTilePos.x]]
+        const collisionGroup = [...tileMap[tilePos.y][tilePos.x]];
+        const collisionGroupAdditionalTilesRelativePositions = [
+            new Point(tilePos.x-1,tilePos.y),
+            new Point(tilePos.x+1,tilePos.y),
+            new Point(tilePos.x,tilePos.y-1),
+            new Point(tilePos.x,tilePos.y+1),
+            new Point(vectorTilePos.x,vectorTilePos.y),
+            new Point(vectorTilePos.x - 1,vectorTilePos.y),
+            new Point(vectorTilePos.x + 1,vectorTilePos.y),
+            new Point(vectorTilePos.x,vectorTilePos.y - 1),
+            new Point(vectorTilePos.x,vectorTilePos.y + 1),
+        ]
+        for (const additionalTilePos of collisionGroupAdditionalTilesRelativePositions) {
+            if (tileMap[additionalTilePos.y] && tileMap[additionalTilePos.y][additionalTilePos.x]) {
+                collisionGroup.push(...tileMap[additionalTilePos.y][additionalTilePos.x]);
+            }
         }
         this.getComponent(AbstractCollisionComponent).setCollisionGroup(collisionGroup);
     }
@@ -146,8 +130,7 @@ class Tank extends Entity {
             dead.y = this.y;
             dead.angle = this.angle;
             SceneManager.currentScene.addChild(dead);
-            let i: number = Math.floor(randNum(3));
-            while(i--) {
+            for (let i = 0 ; i <= Math.floor(randNum(3)) ; i++) {
                 const soldier = new Soldier();
                 soldier.setSkin({assetName: Constants.AssetsTextures.SOLIDER, numberOfFrames: 13, scaleX: 0.75, scaleY: 0.5, animationSpeed: 0.5});
                 soldier.setComponent(new RandomControlComponent());

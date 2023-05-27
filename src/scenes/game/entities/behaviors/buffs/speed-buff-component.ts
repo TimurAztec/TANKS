@@ -10,9 +10,6 @@ class SpeedBuffComponent extends AbstractBuffComponent implements IBuffComponent
         this._changeTo = 4;
         super.firstUpdate();
     }
-
-    public clone(): SpeedBuffComponent { return new SpeedBuffComponent(this) }
-
 }
 
 export {SpeedBuffComponent}

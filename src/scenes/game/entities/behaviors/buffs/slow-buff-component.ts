@@ -10,9 +10,6 @@ class SlowBuffComponent extends AbstractBuffComponent implements IBuffComponent{
         this._changeTo = 1;
         super.firstUpdate();
     }
-
-    public clone(): SlowBuffComponent { return new SlowBuffComponent(this) }
-
 }
 
 export {SlowBuffComponent}

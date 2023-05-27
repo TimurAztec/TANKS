@@ -9,14 +9,9 @@ class TimerBasedSpawner extends Spawner {
 
     constructor(source?: TimerBasedSpawner) {
         super(source);
-        this.setComponent(new BasicAabbCollisionComponent().onCollidedWith((object: Entity) => {
-            if (object == this) return;
+        this.setComponent(new BasicAabbCollisionComponent().onCollision((object: Entity) => {
             if (this._collisionGroup.includes(object.entityType)) this._collides = true;
         }));
-    }
-
-    public clone(): TimerBasedSpawner {
-        return new TimerBasedSpawner(this);
     }
 
     public setTimeBetweenSpawns(time: number): TimerBasedSpawner {

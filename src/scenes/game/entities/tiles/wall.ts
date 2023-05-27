@@ -26,10 +26,6 @@ class Wall extends Entity {
         this.setComponent(new StaticMovementComponent());
     }
 
-    public clone(): Wall {
-        return new Wall(this);
-    }
-
 }
 
 export { Wall }

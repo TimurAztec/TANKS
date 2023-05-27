@@ -15,7 +15,6 @@ class BigExplosionFX extends Entity {
         new Howl({ src: Loader.shared.resources[Constants.AssetsSounds.EXPLODE_BIG].url}).play();
     }
 
-    clone(): BigExplosionFX { return new BigExplosionFX }
 }
 
 export { BigExplosionFX }

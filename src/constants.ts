@@ -33,6 +33,7 @@ export namespace Constants {
         public static readonly HARD_WALL: string = 'hard_wall';
         public static readonly DIRT: string = 'dirt';
         public static readonly GRASS: string = 'grass';
+        public static readonly STONE_PATH: string = 'stone_path';
         public static readonly WATER: string = 'water';
     }
 

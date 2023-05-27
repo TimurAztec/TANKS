@@ -12,6 +12,7 @@ export abstract class AbstractComponent implements IComponent {
         return this._typeID
     }
 
+    // you are not using return value
     public setEntity<T extends Entity>(entity: T): AbstractComponent {
         this._entity = entity;
         return this;
@@ -21,5 +22,8 @@ export abstract class AbstractComponent implements IComponent {
 
     public remove(): void {}
 
-    public abstract clone(): IComponent;
+    public clone(): AbstractComponent {
+        const cloned = this.constructor as new (value: AbstractComponent) => this;
+        return new cloned(this);
+    };
 }
